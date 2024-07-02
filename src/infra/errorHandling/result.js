@@ -8,22 +8,22 @@ o mesmo problema.
 export class Result {
     isSuccess;
     error;
-    value;
+    #value;
 
     constructor(isSuccess,error,value) {
         this.isSuccess = isSuccess;
         this.error = error;
-        this.value = value;
+        this.#value = value;
 
         Object.freeze(this)
     }
 
     getValue(){
-        if(this.isSuccess) return this.value
+        return this.#value
     }
 
     static ok(value){
-        return new this(true,null,value);
+        return new Result(true,null,value);
     }
 
     static fail(error){

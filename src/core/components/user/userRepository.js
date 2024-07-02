@@ -1,8 +1,8 @@
-import { DataBaseMysql } from "../../../infra/database/database";
-import { Result } from "../../../infra/errorHandling/result";
-import { loggers } from "../../../util/logger";
-import { RepositoryOperationError } from "../../errorsAplication/appErrors";
-import { User } from "../../models/user";
+import { DataBaseMysql } from "../../../infra/database/database.js";
+import { Result } from "../../../infra/errorHandling/result.js";
+import { loggers } from "../../../util/logger.js";
+import { RepositoryOperationError } from "../../errorsAplication/appErrors.js";
+import { User } from "../../models/user.js";
 
 
 export class UserRepository extends DataBaseMysql {
@@ -25,7 +25,7 @@ export class UserRepository extends DataBaseMysql {
             return Result.ok(contacts);
         } catch (error) {
             loggers.warn(`não foi possivel buscar contatos do usuário`);
-            return Result.fail(RepositoryOperationError.create("findMany", "User"))
+            return Result.fail(RepositoryOperationError.create())
         }
     }
 
@@ -35,13 +35,13 @@ export class UserRepository extends DataBaseMysql {
             const [user] = await connection.query(`
                 SELECT * 
                 FROM user
-                WHERE userName = ? and passwordHash = ?
+                WHERE userName = ? and passwordHash = ? and isActive = true
                 `, [userName, passwordHash]);
             connection.release();
             return Result.ok(user);
         } catch (error) {
             loggers.warn("não foi possivel buscar o usuario");
-            return Result.fail(RepositoryOperationError.create("findOne", "User"))
+            return Result.fail(RepositoryOperationError.create())
         }
     }
 
@@ -72,7 +72,7 @@ export class UserRepository extends DataBaseMysql {
             return Result.ok(user);
         } catch (error) {
             loggers.warn("não foi possivel criar o usuario");
-            return Result.fail(RepositoryOperationError.create("insertOne","User"))
+            return Result.fail(RepositoryOperationError.create())
         }
     }
 
@@ -102,7 +102,31 @@ export class UserRepository extends DataBaseMysql {
             return Result.ok(user);
         } catch (error) {
             loggers.warn("não foi possivel atualizar o usuario");
-            return Result.fail(RepositoryOperationError.create("updateOne","User"))
+            return Result.fail(RepositoryOperationError.create())
+        }
+    }
+
+    async findByUserName(userName){
+        try {
+            const connection = await this.getConnection();
+            const [hasValue] = await connection.query(`SELECT * FROM user WHERE userName = ?`,[userName])
+            connection.release();
+            return Result.ok(hasValue);
+        } catch (error) {
+            loggers.warn("não foi possivel pegar usuário pelo nome");
+            return Result.fail(RepositoryOperationError.create())
+        }
+    }
+
+    async findByEmail(email){
+        try {
+            const connection = await this.getConnection();
+            const [hasValue] = await connection.query(`SELECT * FROM user WHERE email = ?`,[email])
+            connection.release();
+            return Result.ok(hasValue);
+        } catch (error) {
+            loggers.warn("não foi possivel pegar usuário pelo email");
+            return Result.fail(RepositoryOperationError.create())
         }
     }
 }

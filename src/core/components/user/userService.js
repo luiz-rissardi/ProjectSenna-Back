@@ -1,0 +1,127 @@
+import { RepositoryContext } from "../../../infra/repositoryContext/repository.js";
+import { Result } from "../../../infra/errorHandling/result.js";
+import { randomUUID as v4 } from "crypto";
+import { EncryptService } from "./encryptService.js";
+import { User } from "../../models/user.js";
+import { loggers } from "../../../util/logger.js";
+import { UnexpectedError, UserNotFoundException } from "../../errorsAplication/appErrors.js";
+import { EmailAlreadyExistsError, UserNameAlreadyExistsError } from "../../errorsAplication/domainErrors.js";
+
+export class UserService {
+
+    #repositoryContext;
+    /**
+     * @param {RepositoryContext} repositoryContext 
+     */
+    constructor(repositoryContext) {
+        this.#repositoryContext = repositoryContext;
+    }
+
+    async createUser(userName, userDescription, email, photo, languages, password) {
+        try {
+            const userId = v4();
+            const contactId = v4();
+            const isActive = true;
+            const lastOnline = new Date();
+            const passwordHash = EncryptService.encrypt(password);
+            const resultValidate = await this.#validateUserNameAndEmail(userName, email);
+
+            if (!resultValidate.isSuccess) {
+                return Result.fail(resultValidate.error)
+            }
+
+            const user = new User(userName, isActive, email, photo, userDescription, userId, lastOnline, languages, contactId, passwordHash);
+            if (user.isValid()) {
+                const result = await this.#repositoryContext.insertOne(user);
+                if (result.isSuccess) {
+                    //remove passwordHash antes de retornar o user
+                    Reflect.deleteProperty(user, "passwordHash");
+                    return Result.ok(user);
+                } else {
+                    return Result.fail(result.error);
+                }
+            } else {
+                Result.fail(...user.notifications.notificationsData);
+            }
+
+        } catch (error) {
+            loggers.warn("um erro aconteceu", error.message);
+            return Result.fail(UnexpectedError.create("erro interno do servidor"))
+        }
+    }
+
+    async findUser(userName, password) {
+        try {
+            const passwordHash = EncryptService.encrypt(password)
+            const result = this.#repositoryContext.findOne(userName, passwordHash);
+            if (result.isSuccess) {
+                const user = result.getValue();
+                if (user) {
+                    return Result.ok(user);
+                }
+                return Result.fail(UserNotFoundException.create())
+            }
+            return Result.fail(UnexpectedError.create("um erro aconteceu"))
+        } catch (error) {
+            loggers.warn("não foi possivel pegar o usuario ", error.message);
+            return Result.fail(UnexpectedError.create("erro intrerno do servidor"))
+        }
+    }
+
+    async findContactsOfUser(contactId){
+        try {
+            const result = await this.#repositoryContext.findMany(contactId);
+            if(result.isSuccess){
+                return Result.ok(result.getValue())
+            }
+            return Result.fail(result.error);
+        } catch (error) {
+            loggers.warn("não foi possivel pegar os contatos do usuario ",error.message);
+            return Result.fail(UnexpectedError.create("erro interno do servidor"))
+        }
+    }
+
+    async updateUser(userName, userDescription, email, photo, languages, isActive, contactId, userId, lastOnline, password) {
+        try {
+            const resultValidate = await this.#validateUserNameAndEmail(userName, email);
+            if (!resultValidate.isSuccess) {
+                return Result.fail(resultValidate.error)
+            }
+
+            const passwordHash = EncryptService.encrypt(password)
+            const user = new User(userName, isActive, email, photo, userDescription, userId, lastOnline, languages, contactId, passwordHash)
+
+            if (user.isValid()) {
+                const result = await this.#repositoryContext.putOne(user);
+                if (result.isSuccess) {
+                    //remove passwordHash antes de retornar o user
+                    Reflect.deleteProperty(user, "passwordHash");
+                    return Result.ok(user)
+                } else {
+                    return Result.fail(result.error);
+                }
+
+            } else {
+                return Result.fail(user.notifications.notificationsData);
+            }
+
+        } catch (error) {
+            loggers.warn("não foi possivel atualizar o usuario ",error.message);
+            return Result.fail(UnexpectedError.create("erro interno do servidor"))
+        }
+    }
+
+    async #validateUserNameAndEmail(userName, userEmail) {
+        const [userNameAlredyExist, emailAlredyExist] = await Promise.all([
+            this.#repositoryContext.findByUserName(userName),
+            this.#repositoryContext.findByEmail(userEmail)
+        ]);
+
+        const fails = [];
+        if (userNameAlredyExist) fails.push(UserNameAlreadyExistsError.create());
+        if (emailAlredyExist) fails.push(EmailAlreadyExistsError.create());
+        if (fails.length != 0) return Result.fail(...fails);
+        return Result.ok();
+
+    }
+}
