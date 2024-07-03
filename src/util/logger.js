@@ -1,4 +1,5 @@
 import { createLogger, format, transports } from 'winston';
+import { DateFormat } from './dateFormated.js';
 
 const typeOfLogs = createLogger({
     level: 'debug', // Defina o nível de log desejado (pode ser 'debug', 'info', 'warn', 'error', etc.)

@@ -24,23 +24,23 @@ export class UserRepository extends DataBaseMysql {
             connection.release();
             return Result.ok(contacts);
         } catch (error) {
-            loggers.warn(`não foi possivel buscar contatos do usuário`);
+            loggers.warn(`não foi possivel buscar contatos do usuário `,error);
             return Result.fail(RepositoryOperationError.create())
         }
     }
 
-    async findOne([userName, passwordHash]) {
+    async findOne([email, passwordHash]) {
         try {
             const connection = await this.getConnection();
-            const [user] = await connection.query(`
+            const [[user]] = await connection.query(`
                 SELECT * 
                 FROM user
-                WHERE userName = ? and passwordHash = ? and isActive = true
-                `, [userName, passwordHash]);
+                WHERE email = ? and passwordHash = ? and isActive = true
+                `, [email, passwordHash]);
             connection.release();
             return Result.ok(user);
         } catch (error) {
-            loggers.warn("não foi possivel buscar o usuario");
+            loggers.warn("não foi possivel buscar o usuario ",error);
             return Result.fail(RepositoryOperationError.create())
         }
     }
@@ -71,7 +71,7 @@ export class UserRepository extends DataBaseMysql {
             connection.release();
             return Result.ok(user);
         } catch (error) {
-            loggers.warn("não foi possivel criar o usuario");
+            loggers.warn("não foi possivel criar o usuario ",error);
             return Result.fail(RepositoryOperationError.create())
         }
     }
@@ -101,19 +101,7 @@ export class UserRepository extends DataBaseMysql {
             connection.release();
             return Result.ok(user);
         } catch (error) {
-            loggers.warn("não foi possivel atualizar o usuario");
-            return Result.fail(RepositoryOperationError.create())
-        }
-    }
-
-    async findByUserName(userName){
-        try {
-            const connection = await this.getConnection();
-            const [hasValue] = await connection.query(`SELECT * FROM user WHERE userName = ?`,[userName])
-            connection.release();
-            return Result.ok(hasValue);
-        } catch (error) {
-            loggers.warn("não foi possivel pegar usuário pelo nome");
+            loggers.warn("não foi possivel atualizar o usuario ",error);
             return Result.fail(RepositoryOperationError.create())
         }
     }
@@ -125,7 +113,7 @@ export class UserRepository extends DataBaseMysql {
             connection.release();
             return Result.ok(hasValue);
         } catch (error) {
-            loggers.warn("não foi possivel pegar usuário pelo email");
+            loggers.warn("não foi possivel pegar usuário pelo email ",error);
             return Result.fail(RepositoryOperationError.create())
         }
     }

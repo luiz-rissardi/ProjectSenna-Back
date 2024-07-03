@@ -1,4 +1,6 @@
 
+import crypto from "crypto"
+
 export class EncryptService {
     static encrypt(password) {
         const hash = crypto

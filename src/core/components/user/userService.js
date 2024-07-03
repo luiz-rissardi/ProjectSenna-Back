@@ -5,7 +5,7 @@ import { EncryptService } from "./encryptService.js";
 import { User } from "../../models/user.js";
 import { loggers } from "../../../util/logger.js";
 import { UnexpectedError, UserNotFoundException } from "../../errorsAplication/appErrors.js";
-import { EmailAlreadyExistsError, UserNameAlreadyExistsError } from "../../errorsAplication/domainErrors.js";
+import { EmailAlreadyExistsExeption } from "../../errorsAplication/domainErrors.js";
 
 export class UserService {
 
@@ -24,7 +24,7 @@ export class UserService {
             const isActive = true;
             const lastOnline = new Date();
             const passwordHash = EncryptService.encrypt(password);
-            const resultValidate = await this.#validateUserNameAndEmail(userName, email);
+            const resultValidate = await this.#validateUserEmail(email);
 
             if (!resultValidate.isSuccess) {
                 return Result.fail(resultValidate.error)
@@ -32,7 +32,7 @@ export class UserService {
 
             const user = new User(userName, isActive, email, photo, userDescription, userId, lastOnline, languages, contactId, passwordHash);
             if (user.isValid()) {
-                const result = await this.#repositoryContext.insertOne(user);
+                const result = await this.#repositoryContext.insertOne(...user);
                 if (result.isSuccess) {
                     //remove passwordHash antes de retornar o user
                     Reflect.deleteProperty(user, "passwordHash");
@@ -50,13 +50,13 @@ export class UserService {
         }
     }
 
-    async findUser(userName, password) {
+    async findUser(email, password) {
         try {
             const passwordHash = EncryptService.encrypt(password)
-            const result = this.#repositoryContext.findOne(userName, passwordHash);
+            const result = await this.#repositoryContext.findOne(email, passwordHash);
             if (result.isSuccess) {
                 const user = result.getValue();
-                if (user) {
+                if (user.length != 0) {
                     return Result.ok(user);
                 }
                 return Result.fail(UserNotFoundException.create())
@@ -83,7 +83,7 @@ export class UserService {
 
     async updateUser(userName, userDescription, email, photo, languages, isActive, contactId, userId, lastOnline, password) {
         try {
-            const resultValidate = await this.#validateUserNameAndEmail(userName, email);
+            const resultValidate = await this.#validateUserEmail(email);
             if (!resultValidate.isSuccess) {
                 return Result.fail(resultValidate.error)
             }
@@ -92,7 +92,7 @@ export class UserService {
             const user = new User(userName, isActive, email, photo, userDescription, userId, lastOnline, languages, contactId, passwordHash)
 
             if (user.isValid()) {
-                const result = await this.#repositoryContext.putOne(user);
+                const result = await this.#repositoryContext.putOne(...user);
                 if (result.isSuccess) {
                     //remove passwordHash antes de retornar o user
                     Reflect.deleteProperty(user, "passwordHash");
@@ -111,15 +111,13 @@ export class UserService {
         }
     }
 
-    async #validateUserNameAndEmail(userName, userEmail) {
-        const [userNameAlredyExist, emailAlredyExist] = await Promise.all([
-            this.#repositoryContext.findByUserName(userName),
+    async #validateUserEmail(userEmail) {
+        const [ emailAlredyExist] = await Promise.all([
             this.#repositoryContext.findByEmail(userEmail)
         ]);
 
         const fails = [];
-        if (userNameAlredyExist) fails.push(UserNameAlreadyExistsError.create());
-        if (emailAlredyExist) fails.push(EmailAlreadyExistsError.create());
+        if (emailAlredyExist) fails.push(EmailAlreadyExistsExeption.create());
         if (fails.length != 0) return Result.fail(...fails);
         return Result.ok();
 

@@ -22,6 +22,7 @@ export class DataBaseMysql extends UICrud{
 
     #pool
     constructor(connectionString) {
+        super()
         try {
             this.#pool = createPool(connectionString);
             loggers.info(`banco conectado com sucesso`);
