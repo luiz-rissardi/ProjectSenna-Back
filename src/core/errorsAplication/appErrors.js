@@ -50,12 +50,12 @@ export class RepositoryOperationError {
 // service errors
 export class InvalidCredentialsException {
     constructor() {
-        this.message = "Invalid username or password";
-        this.name = "InvalidCredentialsError";
+        this.message = "nome de usuario ou senha invalidos";
+        this.name = "InvalidCredentialsException";
     }
 
     static create() {
-        return new InvalidCredentialsError();
+        return new InvalidCredentialsException();
     }
 }
 

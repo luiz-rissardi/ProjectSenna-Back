@@ -1,10 +1,10 @@
-import { RepositoryContext } from "../../../infra/repositoryContext/repository.js";
+import { RepositoryContext } from "../../../infra/repository/context/contextRepository.js";
 import { Result } from "../../../infra/errorHandling/result.js";
 import { randomUUID as v4 } from "crypto";
-import { EncryptService } from "./encryptService.js";
+import { EncryptService } from "../../../services/encryptService.js";
 import { User } from "../../models/user.js";
 import { loggers } from "../../../util/logger.js";
-import { UnexpectedError, UserNotFoundException } from "../../errorsAplication/appErrors.js";
+import { InvalidCredentialsException, UnexpectedError } from "../../errorsAplication/appErrors.js";
 import { EmailAlreadyExistsExeption } from "../../errorsAplication/domainErrors.js";
 
 export class UserService {
@@ -25,14 +25,14 @@ export class UserService {
             const lastOnline = new Date();
             const passwordHash = EncryptService.encrypt(password);
             const resultValidate = await this.#validateUserEmail(email);
-
+       
             if (!resultValidate.isSuccess) {
                 return Result.fail(resultValidate.error)
             }
-
             const user = new User(userName, isActive, email, photo, userDescription, userId, lastOnline, languages, contactId, passwordHash);
+
             if (user.isValid()) {
-                const result = await this.#repositoryContext.insertOne(...user);
+                const result = await this.#repositoryContext.insertOne(user);
                 if (result.isSuccess) {
                     //remove passwordHash antes de retornar o user
                     Reflect.deleteProperty(user, "passwordHash");
@@ -45,25 +45,27 @@ export class UserService {
             }
 
         } catch (error) {
-            loggers.warn("um erro aconteceu", error.message);
+            loggers.warn("um erro aconteceu", error);
             return Result.fail(UnexpectedError.create("erro interno do servidor"))
         }
     }
 
     async findUser(email, password) {
         try {
+            
             const passwordHash = EncryptService.encrypt(password)
             const result = await this.#repositoryContext.findOne(email, passwordHash);
             if (result.isSuccess) {
                 const user = result.getValue();
-                if (user.length != 0) {
+                if (user) {
+                    Reflect.deleteProperty(user, "passwordHash");
                     return Result.ok(user);
                 }
-                return Result.fail(UserNotFoundException.create())
+                return Result.fail(InvalidCredentialsException.create())
             }
             return Result.fail(UnexpectedError.create("um erro aconteceu"))
         } catch (error) {
-            loggers.warn("não foi possivel pegar o usuario ", error.message);
+            loggers.warn("não foi possivel pegar o usuario ", error);
             return Result.fail(UnexpectedError.create("erro intrerno do servidor"))
         }
     }
@@ -112,12 +114,10 @@ export class UserService {
     }
 
     async #validateUserEmail(userEmail) {
-        const [ emailAlredyExist] = await Promise.all([
-            this.#repositoryContext.findByEmail(userEmail)
-        ]);
+        const result = await this.#repositoryContext.findByEmail(userEmail)
 
         const fails = [];
-        if (emailAlredyExist) fails.push(EmailAlreadyExistsExeption.create());
+        if (result.getValue().length != 0) fails.push(EmailAlreadyExistsExeption.create());
         if (fails.length != 0) return Result.fail(...fails);
         return Result.ok();
 

@@ -9,6 +9,7 @@ import { UserRoutes } from "../routes/user.routes.js";
 import { UserFactory } from "../../core/components/user/factory.js";
 
 dotenv.config()
+
 const app = express();
 const server = createServer(app);
 

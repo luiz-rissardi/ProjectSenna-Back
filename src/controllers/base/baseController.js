@@ -1,8 +1,9 @@
 import { UnexpectedError } from "../../core/errorsAplication/appErrors.js";
 
 
-new WeakMap().get()
 export class BaseController{
+
+
     ok(data) {
         return {
             data,
@@ -19,7 +20,7 @@ export class BaseController{
 
     InternalServerError() {
         return {
-            error: UnexpectedError("erro interno no servidor"),
+            error: UnexpectedError.create("erro interno no servidor"),
             statusCode: 500
         }
     }

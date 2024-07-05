@@ -10,6 +10,6 @@ export class Notifications{
     }
 
     hasNotification(){
-        return this.notificationsData.length != 0;
+        return this.notificationsData.length == 0;
     }
 }

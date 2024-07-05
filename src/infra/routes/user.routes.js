@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { UserController } from "../../controllers/userController.js";
+import { AdapterExpressController } from "../adpterRequests/adpaterController.js";
 
 export class UserRoutes {
 
@@ -13,14 +14,21 @@ export class UserRoutes {
         this.#controller = controller;
     }
 
-    getRoutes(){
-        this.#router.route("/user/login").post(
-            this.#controller.login.bind(this.#controller)
+    getRoutes() {
+        this.#router.route("/user/login").get(
+            AdapterExpressController.adapt(this.#controller.findUser.bind(this.#controller))
         )
 
-        this.#router.route("/user").post(
-            this.#controller.createUser.bind(this.#controller)
-        )
+        this.#router.route("/user")
+            .post(
+                AdapterExpressController.adapt(this.#controller.createUser.bind(this.#controller))
+            )
+        
+        this.#router.route("/user/:userId")
+            .put(
+                AdapterExpressController.adapt(this.#controller.updateUser.bind(this.#controller))
+            )
+
 
         return this.#router
     }
