@@ -15,7 +15,7 @@ export class UserRepository extends BaseRepository {
         try {
             const connection = await this.getConnection();
             const [contacts] = await connection.query(`
-                SELECT SELECT U.userName, U.photo, U.userId
+                SELECT U.userName, U.photo, U.userId
                 FROM contact as C
                 inner join User as U
                 on C.userId = U.userId

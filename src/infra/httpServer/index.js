@@ -6,7 +6,6 @@ import dotenv from "dotenv"
 import bodyParser from "body-parser";
 
 import { UserRoutes } from "../routes/user.routes.js";
-import { UserFactory } from "../../core/components/user/factory.js";
 
 dotenv.config()
 
@@ -25,8 +24,8 @@ server.listen(3000)
     })
     
 function ServerFactory(){
-    const userController = UserFactory.getController();
-    const userRoutes = new UserRoutes(userController);
+
+    const userRoutes = new UserRoutes();
 
     return {userRoutes}
 }

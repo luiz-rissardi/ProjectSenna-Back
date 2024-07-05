@@ -6,12 +6,10 @@ export class UserRoutes {
 
     #controller;
     #router;
-    /**
-     * @param {UserController} controller 
-     */
-    constructor(controller) {
+
+    constructor() {
         this.#router = Router()
-        this.#controller = controller;
+        this.#controller = new UserController();
     }
 
     getRoutes() {
@@ -27,6 +25,11 @@ export class UserRoutes {
         this.#router.route("/user/:userId")
             .put(
                 AdapterExpressController.adapt(this.#controller.updateUser.bind(this.#controller))
+            )
+        
+        this.#router.route("/user/contact/:contactId")
+            .get(
+                AdapterExpressController.adapt(this.#controller.findContactsOfUser.bind(this.#controller))
             )
 
 

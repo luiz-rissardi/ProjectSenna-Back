@@ -15,6 +15,7 @@ export class UserController {
                 ["createUser", new ClusterProcessService(1).initCluster("./src/core/useCases/user/createUser.js")],
                 ["findUser", new ClusterProcessService(1).initCluster("./src/core/useCases/user/findUser.js")],
                 ["updateUser", new ClusterProcessService(2).initCluster("./src/core/useCases/user/updateUser.js")],
+                ["findContacts", new ClusterProcessService(1).initCluster("./src/core/useCases/user/findContactsOfUser.js")],
             ]
         )
     }
@@ -88,6 +89,28 @@ export class UserController {
             }
         })
     }
+
+    async findContactsOfUser(params, body) {
+        const { contactId } = params;
+        return new Promise((resolve, reject) => {
+            try {
+                const chosenProcess = this.#useCases.get("findContacts").getProcess();
+                function handler(data) {
+                    resolve(
+                        Readable.from(JSON.stringify(data))
+                    )
+                    chosenProcess.removeListener("message", handler);
+                    data = undefined;
+                }
+                chosenProcess.on("message", handler);
+                chosenProcess.send({ contactId });
+
+            } catch (error) {
+                reject(UnexpectedError.create(error.message))
+            }
+        })
+    }
+
 
 
 }
