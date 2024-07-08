@@ -18,7 +18,7 @@ export class ClusterProcessService {
      * @param {string} task 
      * @returns {ChildProcess}
      */
-    roundRobin() {
+    #roundRobin() {
         const availableProcesses = [...this.#processses.values()];
         if (availableProcesses.length >= this.#index) this.#index = 0;
         const chosenProcess = availableProcesses[this.#index];
@@ -31,7 +31,7 @@ export class ClusterProcessService {
 
         return {
             getProcess: () => {
-                return this.roundRobin()
+                return this.#roundRobin()
             }
         }
     }

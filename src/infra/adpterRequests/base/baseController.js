@@ -1,24 +1,24 @@
-import { UnexpectedError } from "../../core/errorsAplication/appErrors.js";
+import { UnexpectedError } from "../../../core/errorsAplication/appErrors.js";
 
 
 export class BaseController{
 
 
-    ok(data) {
+    static ok(data) {
         return {
             data,
             statusCode: 200
         };
     }
 
-    badRequest(message) {
+    static badRequest(message) {
         return {
-            message,
+            data:message,
             statusCode: 400
         };
     }
 
-    InternalServerError() {
+    static InternalServerError() {
         return {
             error: UnexpectedError.create("erro interno no servidor"),
             statusCode: 500

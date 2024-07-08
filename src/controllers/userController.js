@@ -1,13 +1,12 @@
 import { UnexpectedError } from "../core/errorsAplication/appErrors.js";
 import { ClusterProcessService } from "../services/clusterProcessService.js";
 import { Readable } from "stream";
+import { loggers } from "../util/logger.js";
 
 export class UserController {
 
     #useCases;
-    /**
-     * @param {ClusterProcessService} clusterProcesses 
-     */
+
     constructor() {
 
         this.#useCases = new Map(
@@ -39,6 +38,7 @@ export class UserController {
                 chosenProcess.send({ userName, userDescription, email, photo, languages, password });
 
             } catch (error) {
+                loggers.error(UnexpectedError.create(error.message))
                 reject(UnexpectedError.create(error.message))
             }
         })
@@ -63,6 +63,7 @@ export class UserController {
                 chosenProcess.send({ email, password });
 
             } catch (error) {
+                loggers.error(UnexpectedError.create(error.message))
                 reject(UnexpectedError.create(error.message))
             }
         })
@@ -85,6 +86,7 @@ export class UserController {
                 chosenProcess.send({ userName, userDescription, email, photo, languages, lastOnline, isActive, password, userId });
 
             } catch (error) {
+                loggers.error(UnexpectedError.create(error.message))
                 reject(UnexpectedError.create(error.message))
             }
         })
@@ -106,6 +108,7 @@ export class UserController {
                 chosenProcess.send({ contactId });
 
             } catch (error) {
+                loggers.error(UnexpectedError.create(error.message))
                 reject(UnexpectedError.create(error.message))
             }
         })

@@ -6,26 +6,32 @@ import dotenv from "dotenv"
 import bodyParser from "body-parser";
 
 import { UserRoutes } from "../routes/user.routes.js";
+import { ChatRoutes } from "../routes/chat.routes.js";
 
-dotenv.config()
 
 const app = express();
 const server = createServer(app);
 
+// configurações adicionais
+dotenv.config()
 app.use(bodyParser.json());
 app.use(helmet());
 app.use(cors());
-const {userRoutes}  = ServerFactory()
+
+//rotas
+const { userRoutes, chatRoutes } = ServerFactory()
 app.use(userRoutes.getRoutes())
+app.use(chatRoutes.getRoutes())
 
 server.listen(3000)
     .on("listening", () => {
         console.log(`server is running at port ${server.address().port}`);
     })
-    
-function ServerFactory(){
+
+function ServerFactory() {
 
     const userRoutes = new UserRoutes();
+    const chatRoutes = new ChatRoutes();
 
-    return {userRoutes}
+    return { userRoutes, chatRoutes }
 }

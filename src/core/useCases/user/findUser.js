@@ -25,7 +25,7 @@ export class FindUserUseCase extends UseCase {
                 }
                 return Result.fail(InvalidCredentialsException.create())
             }
-            return Result.fail(UnexpectedError.create("um erro aconteceu"))
+            return Result.fail(result.error)
         } catch (error) {
             loggers.warn("não foi possivel pegar o usuario ", error);
             return Result.fail(UnexpectedError.create("erro intrerno do servidor"))

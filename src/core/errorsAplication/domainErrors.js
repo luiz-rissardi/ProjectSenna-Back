@@ -11,3 +11,4 @@ export class EmailAlreadyExistsExeption {
         return new EmailAlreadyExistsExeption()
     }
 }
+

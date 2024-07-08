@@ -1,24 +1,40 @@
 import { createPool } from "mysql2";
 import { loggers } from "../../../util/logger.js";
+import { ConnectioDataBaseError } from "../../../core/errorsAplication/appErrors.js";
+import { Result } from "../../errorHandling/result.js";
 
-class UICrud{
-    findMany(){
+class UICrud {
+
+    /**
+     * @returns {Result}
+     */
+    findMany() {
         throw new Error("metodo não implementado")
     }
 
-    findOne(){
+    /**
+     * @returns {Result}
+     */
+    findOne() {
         throw new Error("metodo não implementado")
     }
 
-    insertOne(){
+    /**
+     * @returns {Result}
+     */
+    insertOne() {
         throw new Error("metodo não implementado")
     }
-    putOne(){
+
+    /**
+     * @returns {Result}
+     */
+    putOne() {
         throw new Error("metodo não implementado")
     }
 }
 
-export class BaseRepository extends UICrud{
+export class BaseRepository extends UICrud {
 
     #pool
     static instance = null;
@@ -26,16 +42,16 @@ export class BaseRepository extends UICrud{
     constructor(connectionString) {
         super()
         try {
-            if(BaseRepository.instance == null){
+            if (BaseRepository.instance == null) {
                 this.#pool = createPool(connectionString);
                 loggers.info(`banco conectado com sucesso`);
             }
         } catch (error) {
-            loggers.error(`não foi possivel conectar o banco de dados, ${error.message}`)
+            loggers.error(ConnectioDataBaseError.create())
         }
     }
 
-    async getConnection(){
+    async getConnection() {
         try {
             return await this.#pool.promise().getConnection();
         } catch (error) {
@@ -43,5 +59,5 @@ export class BaseRepository extends UICrud{
             throw new Error("não foi possivel pegar conexão")
         }
     }
-    
+
 }
