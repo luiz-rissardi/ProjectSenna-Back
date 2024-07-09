@@ -24,7 +24,7 @@ export class AdapterExpressController extends BaseController {
                             )
                         }else{
                             res.write(
-                                JSON.stringify(this.badRequest(error.message))
+                                JSON.stringify(this.badRequest(error))
                             )
 
                         }

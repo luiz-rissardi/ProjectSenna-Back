@@ -15,18 +15,17 @@ export class CreateChat extends UseCase {
     async execute(chatType) {
         try {
             const chatId = randomUUID();
-            const chat = new Chat(chatId, chatType, true);
+            const chat = new Chat(chatId, chatType);
             
             if (chat.isValid()) {
                 const result = await this.repository.insertOne(chat);
                 if (result.isSuccess) {
-                    console.log("valido 2");
                     return Result.ok(chat);
                 } else {
                     return Result.fail(result.error);
                 }
             } else {
-                return Result.fail(chat.notifications.notificationsData);
+                return Result.fail(chat.getNotifications());
             }
         } catch (error) {
             loggers.warn("não foi possivel criar um novo chat", error);

@@ -36,7 +36,7 @@ export class UpdateUserUseCase extends UseCase {
                 }
 
             } else {
-                return Result.fail(user.notifications.notificationsData);
+                return Result.fail(user.getNotifications());
             }
 
         } catch (error) {

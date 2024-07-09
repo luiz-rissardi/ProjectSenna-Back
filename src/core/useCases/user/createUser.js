@@ -39,7 +39,7 @@ export class CreateUserUseCase extends UseCase {
                     return Result.fail(result.error);
                 }
             } else {
-                Result.fail(...user.notifications.notificationsData);
+                Result.fail(user.getNotifications());
             }
 
         } catch (error) {

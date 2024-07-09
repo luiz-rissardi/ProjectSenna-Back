@@ -20,8 +20,8 @@ export class ChatRepository extends BaseRepository{
         try {
             const connection = await this.getConnection();
             await connection.query(`
-                INSERT INTO chat VALUES(?,?,?)
-                `,[chat.chatType, chat.isActive, chat.chatId]);
+                INSERT INTO chat VALUES(?,?)
+                `,[chat.chatType, chat.chatId]);
             connection.release();
             return Result.ok(chat);
         } catch (error) {
