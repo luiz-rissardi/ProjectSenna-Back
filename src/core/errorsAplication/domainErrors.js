@@ -12,3 +12,14 @@ export class EmailAlreadyExistsExeption {
     }
 }
 
+export class UserBlockingException {
+    constructor() {
+        this.message = "seu usuário está bloqueado";
+        this.name = "UserBlockingException"
+    }
+
+    static create() {
+        return new UserBlockingException();
+    }
+}
+

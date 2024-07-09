@@ -19,7 +19,7 @@ export class CreateUserUseCase extends UseCase {
         try {
             const userId = v4();
             const contactId = v4();
-            const isActive = true;
+            const isActive = false;
             const lastOnline = new Date();
             const passwordHash = EncryptService.encrypt(password);
             const resultValidate = await this.#validateUserEmail(email);

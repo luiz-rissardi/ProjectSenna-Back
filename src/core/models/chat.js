@@ -6,6 +6,11 @@ export class Chat {
     #notifications = new Notifications();
     #typesOfChat = ["group","forum","conversarion"];
 
+    /**
+     * 
+     * @param {string} chatId 
+     * @param {string} chatType 
+     */
     constructor(chatId,chatType){
         this.chatId = chatId;
         this.chatType = chatType;

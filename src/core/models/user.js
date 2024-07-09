@@ -3,7 +3,19 @@ import { Notifications } from "../../infra/notifications/notifications.js";
 export class User {
 
     #notifications = new Notifications();
-
+    
+    /**
+     * @param {string} userName 
+     * @param {boolean} isActive 
+     * @param {string} email 
+     * @param {string} photo 
+     * @param {string} userDescription 
+     * @param {string} userId 
+     * @param {Date} lastOnline 
+     * @param {string} languages 
+     * @param {string} contactId 
+     * @param {string} passwordHash 
+     */
     constructor(userName, isActive, email, photo, userDescription, userId, lastOnline, languages, contactId = null, passwordHash = null) {
         this.userName = userName;
         this.isActive = isActive;

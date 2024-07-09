@@ -4,6 +4,7 @@ import helmet from "helmet";
 import cors from "cors";
 import dotenv from "dotenv"
 import bodyParser from "body-parser";
+import { Server } from "socket.io"
 
 import { UserRoutes } from "../routes/user.routes.js";
 import { ChatRoutes } from "../routes/chat.routes.js";
@@ -11,6 +12,7 @@ import { ChatRoutes } from "../routes/chat.routes.js";
 
 const app = express();
 const server = createServer(app);
+const socketServer = new Server(server)
 
 // configurações adicionais
 dotenv.config()

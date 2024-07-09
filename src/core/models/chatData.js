@@ -8,6 +8,15 @@ export class ChatData {
     #notifications = new Notifications()
     #memberTypes = ["member","master"]
 
+    /**
+     * 
+     * @param {string} chatId 
+     * @param {string} userId 
+     * @param {Date} lastClear 
+     * @param {Boolean} isActive 
+     * @param {string} memberType 
+     * @param {Date} dateOfBlocking 
+     */
     constructor(chatId,userId,lastClear,isActive,memberType,dateOfBlocking){
         this.chatId = chatId;
         this.userId = userId;
