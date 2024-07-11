@@ -1,9 +1,9 @@
-import { Notifications } from "../../infra/notifications/notifications.js";
+import { NotificationContext } from "./DomainNotifications/notifications.js";
 
 
 export class Chat {
 
-    #notifications = new Notifications();
+    #notifications = new NotificationContext();
     #typesOfChat = ["group","forum","conversarion"];
 
     /**

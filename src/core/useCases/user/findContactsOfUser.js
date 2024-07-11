@@ -1,7 +1,7 @@
 import { Result } from "../../../infra/errorHandling/result.js";
 import { RepositoryContext } from "../../../infra/repository/context/contextRepository.js";
 import { UserRepository } from "../../../infra/repository/userRepository.js";
-import { UnexpectedError } from "../../errorsAplication/appErrors.js";
+import { UnexpectedError } from "../../aplicationException/appErrors.js";
 import { UseCase } from "../base/useCase.js";
 
 
@@ -19,7 +19,7 @@ export class findContactsOfUser extends UseCase{
             }
             return Result.fail(result.error);
         } catch (error) {
-            loggers.warn("não foi possivel pegar os contatos do usuario ",error);
+            loggers.warn(UnexpectedError.create(error.message));
             return Result.fail(UnexpectedError.create("erro interno do servidor"))
         }
     }

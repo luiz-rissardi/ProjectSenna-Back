@@ -4,8 +4,8 @@ import { UserRepository } from "../../../infra/repository/userRepository.js";
 import { EncryptService } from "../../../services/encryptService.js";
 import { DateFormat } from "../../../util/dateFormated.js";
 import { loggers } from "../../../util/logger.js";
-import { UnexpectedError } from "../../errorsAplication/appErrors.js";
-import { EmailAlreadyExistsExeption } from "../../errorsAplication/domainErrors.js";
+import { UnexpectedError } from "../../aplicationException/appErrors.js";
+import { EmailAlreadyExistsExeption } from "../../aplicationException/domainException.js";
 import { User } from "../../models/user.js";
 import { UseCase } from "../base/useCase.js";
 
@@ -24,9 +24,8 @@ export class UpdateUserUseCase extends UseCase {
 
             const passwordHash = EncryptService.encrypt(password)
             const user = new User(userName, isActive, email, photo, userDescription, userId, DateFormat(lastOnline), languages, null, passwordHash)
-
             if (user.isValid()) {
-                const result = await this.repository.putOne(user);
+                const result = await this.repository.patchOne(user);
                 if (result.isSuccess) {
                     //remove passwordHash antes de retornar o user
                     Reflect.deleteProperty(user, "passwordHash");
@@ -40,7 +39,7 @@ export class UpdateUserUseCase extends UseCase {
             }
 
         } catch (error) {
-            loggers.warn("não foi possivel atualizar o usuario ", error);
+            loggers.warn(UnexpectedError.create(error));
             return Result.fail(UnexpectedError.create("erro interno do servidor"))
         }
     }

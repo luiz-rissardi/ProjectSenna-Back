@@ -7,7 +7,7 @@ export class RepositoryContext {
     constructor(strategyContext) {
         this.#context = strategyContext;
         // add another methods of the strategy context;
-        const forbidenMethods = ["findMany", "findOne", "insertOne", "putOne","constructor"]
+        const forbidenMethods = ["findMany", "findOne", "insertOne", "patchOne","constructor"]
         Object.getOwnPropertyNames(strategyContext.__proto__)
             .filter(key => !forbidenMethods.includes(key))
             .map(key => {
@@ -27,7 +27,8 @@ export class RepositoryContext {
         return this.#context.insertOne(args);
     }
 
-    putOne(...args) {
-        return this.#context.putOne(args);
+    patchOne(...args) {
+        return this.#context.patchOne(args);
     }
+
 }

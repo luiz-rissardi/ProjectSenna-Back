@@ -1,4 +1,4 @@
-import { UnexpectedError } from "../../../core/errorsAplication/appErrors.js";
+import { UnexpectedError } from "../../../core/aplicationException/appErrors.js";
 
 
 export class BaseController{

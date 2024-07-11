@@ -1,33 +1,35 @@
-import { Notifications } from "../../infra/notifications/notifications.js";
+import { NotificationContext } from "./DomainNotifications/notifications.js";
 
 
 
 export class Message {
 
-    #notifications = new Notifications()
+    #notifications = new NotificationContext()
     #messageTypes = ["text","audio","image","file"]
+    #statusTypes = ["read","unread"]
 
     /**
      * @param {string} message
-     * @param {string} userName 
      * @param {Date} dateSender 
-     * @param {boolean} isActive
      * @param {string} userId 
      * @param {string} chatId 
      * @param {number} messageId 
      * @param {string} originLanguessage
      * @param {string} messageType 
+     * @param {string} status 
+     * @param {Blob} data 
      */
-    constructor(message, userName, dateSender, isActive, userId, chatId, messageId, originLangue, messageType) {
+    constructor(message,dateSender, userId, chatId, messageId, originLangue, messageType,status,data) {
         this.message = message;
-        this.userName = userName;
         this.dateSender = dateSender;
-        this.isActive = isActive;
         this.userId = userId;
         this.chatId = chatId;
         this.messageId = messageId;
         this.originLangue = originLangue;
         this.messageType = messageType;
+        this.status = status;
+        this.data = data    
+
     }
 
     getNotifications(){
@@ -45,6 +47,12 @@ export class Message {
         
         if(!this.#messageTypes.includes(this.messageType)){
             this.#notifications.addNotification({ name: "messageType", message: "o tipo da mensagem é invalido" })
+        }
+        if(!this.#statusTypes.includes(this.status)){
+            this.#notifications.addNotification({ name: "status", message: "o status da mensagem é invalido" })
+        }
+        if(this.messageType != "text" && this.data.constructor != Blob){
+            this.#notifications.addNotification({ name: "messageFile", message: "o tipo de message file é inválido" })
         }
 
         return this.#notifications.hasNotification()

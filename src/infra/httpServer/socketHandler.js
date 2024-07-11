@@ -12,7 +12,6 @@ export class SocketHandler {
         this.#socketServer = new Server(server);
 
         this.#socketServer.on("connection", (socket) => {
-
             socket.on("listen-chats",
                 /**
                 * @param {Chat[]} chats
@@ -26,7 +25,6 @@ export class SocketHandler {
     }
 
     /**
-     * 
      * @param {string} chatId 
      * @param { Message } message 
      */

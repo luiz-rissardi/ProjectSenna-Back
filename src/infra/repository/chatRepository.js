@@ -1,4 +1,4 @@
-import { RepositoryOperationError } from "../../core/errorsAplication/appErrors.js";
+import { RepositoryOperationError } from "../../core/aplicationException/appErrors.js";
 import { Chat } from "../../core/models/chat.js";
 import { loggers } from "../../util/logger.js";
 import { Result } from "../errorHandling/result.js";
@@ -25,7 +25,7 @@ export class ChatRepository extends BaseRepository{
             connection.release();
             return Result.ok(chat);
         } catch (error) {
-            loggers.warn("não foi possivel buscar o usuario ", error);
+            loggers.error("não foi possivel inserir um novo chat ", error);
             return Result.fail(RepositoryOperationError.create())
         }
     }

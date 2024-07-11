@@ -1,6 +1,6 @@
 import { BaseRepository } from "./base/database.js";
 import { Result } from "../errorHandling/result.js";
-import { RepositoryOperationError } from "../../core/errorsAplication/appErrors.js";
+import { RepositoryOperationError } from "../../core/aplicationException/appErrors.js";
 import { ChatData } from "../../core/models/chatData.js";
 import { loggers } from "../../util/logger.js";
 
@@ -21,11 +21,11 @@ export class ChatDataRepository extends BaseRepository {
             await connection.query(`
                 INSERT INTO chatData
                 VALUES (?,?,?,?,?,?)
-                `, [chatData.memberType, chatData.lastClear, chatData.isActive, chatData.userId, chatData.chatId, chatData.dateOfBloking]);
+                `, [chatData.memberType, chatData.lastClear, chatData.isActive, chatData.userId, chatData.chatId, chatData.dateOfBlocking]);
             connection.release();
             return Result.ok(chatData);
         } catch (error) {
-            loggers.warn("não foi possivel inserir usuario no chat", error);
+            loggers.error("não foi possivel inserir usuario no chat", error);
             return Result.fail(RepositoryOperationError.create())
         }
     }
@@ -34,7 +34,7 @@ export class ChatDataRepository extends BaseRepository {
      * 
      * @param { ChatData[] } chatData 
      */
-    async putOne([chatData]) {
+    async patchOne([chatData]) {
         try {
             const connection = await this.getConnection();
             
@@ -77,7 +77,7 @@ export class ChatDataRepository extends BaseRepository {
             
             return Result.ok(chatData);
         } catch (error) {
-            loggers.warn("não foi possivel atuaizar o chat usuario ", error);
+            loggers.error("não foi possivel atualizar o chat usuario ", error);
             return Result.fail(RepositoryOperationError.create());
         }
         
@@ -96,7 +96,7 @@ export class ChatDataRepository extends BaseRepository {
             connection.release();
             return Result.ok(chatsData);
         } catch (error) {
-            loggers.warn("não foi possivel buscar os chats ", error);
+            loggers.error("não foi possivel buscar os chats ", error);
             return Result.fail(RepositoryOperationError.create())
         }
     }

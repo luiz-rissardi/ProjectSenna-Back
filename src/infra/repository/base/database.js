@@ -1,6 +1,6 @@
 import { createPool } from "mysql2";
 import { loggers } from "../../../util/logger.js";
-import { ConnectioDataBaseError } from "../../../core/errorsAplication/appErrors.js";
+import { ConnectioDataBaseError } from "../../../core/aplicationException/appErrors.js";
 import { Result } from "../../errorHandling/result.js";
 
 class UICrud {
@@ -29,7 +29,7 @@ class UICrud {
     /**
      * @returns {Result}
      */
-    putOne() {
+    patchOne() {
         throw new Error("metodo não implementado")
     }
 }

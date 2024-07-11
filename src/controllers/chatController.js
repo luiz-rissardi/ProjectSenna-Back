@@ -1,16 +1,16 @@
 import { ClusterProcessService } from "../services/clusterProcessService.js";
 import { Readable } from "stream"
 import { loggers } from "../util/logger.js";
-import { UnexpectedError } from "../core/errorsAplication/appErrors.js";
+import { UnexpectedError } from "../core/aplicationException/appErrors.js";
 
 export class ChatController {
-    #useCases;
 
+    useCases
     constructor() {
-        this.#useCases = new Map(
+        this.useCases = new Map(
             [
                 ["createChat", new ClusterProcessService(2).initCluster("./src/core/useCases/chat/createChat.js")],
-                ["findChats", new ClusterProcessService(2).initCluster("./src/core/useCases/chat/findChats.js")],
+                ["findChats", new ClusterProcessService(2).initCluster("./src/core/useCases/chat/getChats.js")],
                 ["addUser", new ClusterProcessService(2).initCluster("./src/core/useCases/chat/addUserInChat.js")],
                 ["changeStateChat", new ClusterProcessService(1).initCluster("./src/core/useCases/chat/changeStateOfChat.js")],
                 ["clearMessages", new ClusterProcessService(1).initCluster("./src/core/useCases/chat/clearMessages.js")],
@@ -24,7 +24,7 @@ export class ChatController {
         const { userId } = params;
         return new Promise((resolve, reject) => {
             try {
-                const chosenProcess = this.#useCases.get("findChats").getProcess();
+                const chosenProcess = this.useCases.get("findChats").getProcess();
                 function handler(data) {
                     resolve(
                         Readable.from(JSON.stringify(data))
@@ -47,7 +47,7 @@ export class ChatController {
         const { userId, chatId } = params;
         return new Promise((resolve, reject) => {
             try {
-                const chosenProcess = this.#useCases.get("addUser").getProcess();
+                const chosenProcess = this.useCases.get("addUser").getProcess();
                 function handler(data) {
                     resolve(
                         Readable.from(JSON.stringify(data))
@@ -69,7 +69,7 @@ export class ChatController {
         const { userId, chatId } = params;
         return new Promise((resolve, reject) => {
             try {
-                const chosenProcess = this.#useCases.get("clearMessages").getProcess();
+                const chosenProcess = this.useCases.get("clearMessages").getProcess();
                 function handler(data) {
                     resolve(
                         Readable.from(JSON.stringify(data))
@@ -93,7 +93,7 @@ export class ChatController {
         const  { chatId, userId } = params;
         return new Promise((resolve, reject) => {
             try {
-                const chosenProcess = this.#useCases.get("changeStateChat").getProcess();
+                const chosenProcess = this.useCases.get("changeStateChat").getProcess();
                 function handler(data) {
                     resolve(
                         Readable.from(JSON.stringify(data))
@@ -115,7 +115,7 @@ export class ChatController {
         const { chatType } = body;
         return new Promise((resolve, reject) => {
             try {
-                const chosenProcess = this.#useCases.get("createChat").getProcess();
+                const chosenProcess = this.useCases.get("createChat").getProcess();
                 function handler(data) {
                     resolve(
                         Readable.from(JSON.stringify(data))

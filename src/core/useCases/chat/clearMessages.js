@@ -3,7 +3,7 @@ import { ChatDataRepository } from "../../../infra/repository/chatDataRepository
 import { RepositoryContext } from "../../../infra/repository/context/contextRepository.js";
 import { DateFormat } from "../../../util/dateFormated.js";
 import { loggers } from "../../../util/logger.js";
-import { UnexpectedError } from "../../errorsAplication/appErrors.js";
+import { UnexpectedError } from "../../aplicationException/appErrors.js";
 import { ChatData } from "../../models/chatData.js";
 import { UseCase } from "../base/useCase.js";
 
@@ -20,7 +20,7 @@ export class ClearMessageUseCase extends UseCase{
             const chatData = new ChatData(chatId,userId,dateLastClear,null,null,null);
 
             if(chatData.isValid()){
-                const result = await this.repository.putOne(chatData);
+                const result = await this.repository.patchOne(chatData);
                 if(result.isSuccess){
                     return Result.ok(result.getValue())
                 }

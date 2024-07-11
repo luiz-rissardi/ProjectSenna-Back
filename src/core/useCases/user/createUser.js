@@ -4,11 +4,11 @@ import { RepositoryContext } from "../../../infra/repository/context/contextRepo
 import { UserRepository } from "../../../infra/repository/userRepository.js";
 import { EncryptService } from "../../../services/encryptService.js";
 import { loggers } from "../../../util/logger.js";
-import { UnexpectedError } from "../../errorsAplication/appErrors.js";
+import { UnexpectedError } from "../../aplicationException/appErrors.js";
 import { User } from "../../models/user.js";
 import { UseCase } from "../base/useCase.js";
 import { randomUUID as v4 } from "crypto"
-import { EmailAlreadyExistsExeption } from "../../errorsAplication/domainErrors.js";
+import { EmailAlreadyExistsExeption } from "../../aplicationException/domainException.js";
 
 export class CreateUserUseCase extends UseCase {
     constructor(repository) {
@@ -39,11 +39,11 @@ export class CreateUserUseCase extends UseCase {
                     return Result.fail(result.error);
                 }
             } else {
-                Result.fail(user.getNotifications());
+                return Result.fail(user.getNotifications());
             }
 
         } catch (error) {
-            loggers.warn("um erro aconteceu", error);
+            loggers.warn(UnexpectedError.create(error.message));
             return Result.fail(UnexpectedError.create("erro interno do servidor"))
         }
     }

@@ -8,11 +8,12 @@ import { Server } from "socket.io"
 
 import { UserRoutes } from "../routes/user.routes.js";
 import { ChatRoutes } from "../routes/chat.routes.js";
+import { MessageRoutes } from "../routes/message.routes.js";
 
 
 const app = express();
 const server = createServer(app);
-const socketServer = new Server(server)
+// const socketServer = new Server(server)
 
 // configurações adicionais
 dotenv.config()
@@ -21,9 +22,10 @@ app.use(helmet());
 app.use(cors());
 
 //rotas
-const { userRoutes, chatRoutes } = ServerFactory()
+const { userRoutes, chatRoutes, messageRoutes } = ServerFactory()
 app.use(userRoutes.getRoutes())
 app.use(chatRoutes.getRoutes())
+app.use(messageRoutes.getRoutes())
 
 server.listen(3000)
     .on("listening", () => {
@@ -34,6 +36,7 @@ function ServerFactory() {
 
     const userRoutes = new UserRoutes();
     const chatRoutes = new ChatRoutes();
+    const messageRoutes = new MessageRoutes();
 
-    return { userRoutes, chatRoutes }
+    return { userRoutes, chatRoutes, messageRoutes }
 }

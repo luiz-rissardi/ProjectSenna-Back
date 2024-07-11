@@ -1,6 +1,6 @@
 import { Result } from "../../../infra/errorHandling/result.js";
 import { loggers } from "../../../util/logger.js";
-import { UnexpectedError } from "../../errorsAplication/appErrors.js";
+import { UnexpectedError } from "../../aplicationException/appErrors.js";
 import { UseCase } from "../base/useCase.js";
 import { Chat } from "../../models/chat.js";
 import { randomUUID } from "crypto";
@@ -28,7 +28,7 @@ export class CreateChat extends UseCase {
                 return Result.fail(chat.getNotifications());
             }
         } catch (error) {
-            loggers.warn("não foi possivel criar um novo chat", error);
+            loggers.warn(UnexpectedError.create(error.message));
             return Result.fail(UnexpectedError.create("erro interno do servidor"))
         }
     }

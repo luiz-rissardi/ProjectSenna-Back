@@ -1,11 +1,11 @@
-import { Notifications } from "../../infra/notifications/notifications.js";
+import { NotificationContext } from "./DomainNotifications/notifications.js";
 
 
 
 
 export class ChatData {
 
-    #notifications = new Notifications()
+    #notifications = new NotificationContext()
     #memberTypes = ["member","master"]
 
     /**

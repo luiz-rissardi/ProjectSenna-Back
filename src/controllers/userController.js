@@ -1,4 +1,4 @@
-import { UnexpectedError } from "../core/errorsAplication/appErrors.js";
+import { UnexpectedError } from "../core/aplicationException/appErrors.js";
 import { ClusterProcessService } from "../services/clusterProcessService.js";
 import { Readable } from "stream";
 import { loggers } from "../util/logger.js";

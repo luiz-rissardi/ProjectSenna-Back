@@ -1,7 +1,7 @@
 import { BaseRepository } from "./base/database.js";
 import { Result } from "../errorHandling/result.js";
 import { loggers } from "../../util/logger.js";
-import { RepositoryOperationError } from "../../core/errorsAplication/appErrors.js";
+import { RepositoryOperationError } from "../../core/aplicationException/appErrors.js";
 import { User } from "../../core/models/user.js";
 
 
@@ -24,7 +24,7 @@ export class UserRepository extends BaseRepository {
             connection.release();
             return Result.ok(contacts);
         } catch (error) {
-            loggers.warn(`não foi possivel buscar contatos do usuário `, error);
+            loggers.error(`não foi possivel buscar contatos do usuário `, error);
             return Result.fail(RepositoryOperationError.create())
         }
     }
@@ -35,12 +35,12 @@ export class UserRepository extends BaseRepository {
             const [[user]] = await connection.query(`
                 SELECT * 
                 FROM user
-                WHERE email = ? and passwordHash = ? and isActive = true
+                WHERE email = ? and passwordHash = ?
                 `, [email, passwordHash]);
             connection.release();
             return Result.ok(user);
         } catch (error) {
-            loggers.warn("não foi possivel buscar o usuario ", error);
+            loggers.error("não foi possivel buscar o usuario ", error);
             return Result.fail(RepositoryOperationError.create())
         }
     }
@@ -71,7 +71,7 @@ export class UserRepository extends BaseRepository {
             connection.release();
             return Result.ok(user);
         } catch (error) {
-            loggers.warn("não foi possivel criar o usuario ", error);
+            loggers.error("não foi possivel criar o usuario ", error);
             return Result.fail(RepositoryOperationError.create())
         }
     }
@@ -80,7 +80,7 @@ export class UserRepository extends BaseRepository {
      * 
      * @param {User[]} param0 
      */
-    async putOne([user]) {
+    async patchOne([user]) {
         try {
             const connection = await this.getConnection();
             await connection.query(`
@@ -101,7 +101,7 @@ export class UserRepository extends BaseRepository {
             connection.release();
             return Result.ok(user);
         } catch (error) {
-            loggers.warn("não foi possivel atualizar o usuario ", error);
+            loggers.error("não foi possivel atualizar o usuario ", error);
             return Result.fail(RepositoryOperationError.create())
         }
     }
@@ -113,7 +113,7 @@ export class UserRepository extends BaseRepository {
             connection.release();
             return Result.ok(user);
         } catch (error) {
-            loggers.warn("não foi possivel pegar usuário pelo email ", error);
+            loggers.error("não foi possivel pegar usuário pelo email ", error);
             return Result.fail(RepositoryOperationError.create())
         }
     }
