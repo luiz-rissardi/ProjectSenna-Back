@@ -1,6 +1,6 @@
 import { Result } from "../../../infra/errorHandling/result.js";
-import { ChatDataRepository } from "../../../infra/repository/chatDataRepository.js";
-import { RepositoryContext } from "../../../infra/repository/context/contextRepository.js";
+import { ChatDataMysql } from "../../../infra/database/chatDataRepository.js";
+import { RepositoryContext } from "../../../infra/database/context/contextRepository.js";
 import { DateFormat } from "../../../util/dateFormated.js";
 import { loggers } from "../../../util/logger.js";
 import { UnexpectedError } from "../../aplicationException/appErrors.js";
@@ -36,7 +36,7 @@ export class ClearMessageUseCase extends UseCase{
     }
 }
 
-const databaseStrategy = new ChatDataRepository(process.env.CONNECION_STRING);
+const databaseStrategy = new ChatDataMysql(process.env.CONNECION_STRING);
 const repositoryContext = new RepositoryContext(databaseStrategy);
 const useCase = new ClearMessageUseCase(repositoryContext);
 

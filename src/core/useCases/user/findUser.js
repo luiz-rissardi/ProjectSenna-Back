@@ -4,8 +4,8 @@ import { EncryptService } from "../../../services/encryptService.js";
 import { UnexpectedError } from "../../aplicationException/appErrors.js";
 import { InvalidCredentialsException } from "../../aplicationException/domainException.js";
 import { UseCase } from "../base/useCase.js";
-import { UserRepository } from "../../../infra/repository/userRepository.js";
-import { RepositoryContext } from "../../../infra/repository/context/contextRepository.js";
+import { UserMysql } from "../../../infra/database/userRepository.js";
+import { RepositoryContext } from "../../../infra/database/context/contextRepository.js";
 import { loggers } from "../../../util/logger.js";
 import { UserBlockingException } from "../../aplicationException/domainException.js";
 
@@ -38,7 +38,7 @@ export class FindUserUseCase extends UseCase {
     }
 }
 
-const databaseStrategy = new UserRepository(process.env.CONNECION_STRING);
+const databaseStrategy = new UserMysql(process.env.CONNECION_STRING);
 const repositoryContext = new RepositoryContext(databaseStrategy);
 const useCase = new FindUserUseCase(repositoryContext)
 

@@ -1,6 +1,6 @@
 import { Result } from "../../../infra/errorHandling/result.js";
-import { RepositoryContext } from "../../../infra/repository/context/contextRepository.js";
-import { UserRepository } from "../../../infra/repository/userRepository.js";
+import { RepositoryContext } from "../../../infra/database/context/contextRepository.js";
+import { UserMysql } from "../../../infra/database/userRepository.js";
 import { EncryptService } from "../../../services/encryptService.js";
 import { DateFormat } from "../../../util/dateFormated.js";
 import { loggers } from "../../../util/logger.js";
@@ -54,7 +54,7 @@ export class UpdateUserUseCase extends UseCase {
     }
 }
 
-const databaseStrategy = new UserRepository(process.env.CONNECION_STRING);
+const databaseStrategy = new UserMysql(process.env.CONNECION_STRING);
 const repositoryContext = new RepositoryContext(databaseStrategy);
 const useCase = new UpdateUserUseCase(repositoryContext)
 

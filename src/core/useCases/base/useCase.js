@@ -1,4 +1,4 @@
-import { BaseRepository } from "../../../infra/repository/base/database.js";
+import { BaseRepository } from "../../../infra/database/base/database.js";
 
 
 export class UseCase{

@@ -1,6 +1,6 @@
 import { Result } from "../../../infra/errorHandling/result.js";
-import { RepositoryContext } from "../../../infra/repository/context/contextRepository.js";
-import { MessageRepository } from "../../../infra/repository/messageRepository.js";
+import { RepositoryContext } from "../../../infra/database/context/contextRepository.js";
+import { MessageMysql } from "../../../infra/database/messageRepository.js";
 import { loggers } from "../../../util/logger.js";
 import { UnexpectedError } from "../../aplicationException/appErrors.js";
 import { ChatNotFoundException } from "../../aplicationException/domainException.js";
@@ -27,7 +27,7 @@ export class GetMessagesUseCase extends UseCase {
     }
 }
 
-const databaseStrategy = new MessageRepository(process.env.CONNECION_STRING);
+const databaseStrategy = new MessageMysql(process.env.CONNECION_STRING);
 const repositoryContext = new RepositoryContext(databaseStrategy);
 const useCase = new GetMessagesUseCase(repositoryContext);
 

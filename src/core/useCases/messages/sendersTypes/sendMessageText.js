@@ -1,8 +1,8 @@
-import { RepositoryContext } from "../../../../infra/repository/context/contextRepository.js";
-import { MessageRepository } from "../../../../infra/repository/messageRepository.js";
+import { RepositoryContext } from "../../../../infra/database/context/contextRepository.js";
+import { MessageMysql } from "../../../../infra/database/messageRepository.js";
 import { SendMessageText } from "../Messegers/messegerText.js";
 
-const databaseStrategy = new MessageRepository(process.env.CONNECION_STRING);
+const databaseStrategy = new MessageMysql(process.env.CONNECION_STRING);
 const repositoryContext = new RepositoryContext(databaseStrategy);
 const useCase = new SendMessageText(repositoryContext);
 

@@ -1,6 +1,6 @@
 import { Result } from "../../../infra/errorHandling/result.js";
-import { ChatDataRepository } from "../../../infra/repository/chatDataRepository.js";
-import { RepositoryContext } from "../../../infra/repository/context/contextRepository.js";
+import { ChatDataMysql } from "../../../infra/database/chatDataRepository.js";
+import { RepositoryContext } from "../../../infra/database/context/contextRepository.js";
 import { loggers } from "../../../util/logger.js";
 import { UnexpectedError } from "../../aplicationException/appErrors.js";
 import { ChatData } from "../../models/chatData.js";
@@ -31,7 +31,7 @@ export class AddUserInChat extends UseCase{
     }
 }
 
-const databaseStrategy = new ChatDataRepository(process.env.CONNECION_STRING);
+const databaseStrategy = new ChatDataMysql(process.env.CONNECION_STRING);
 const repositoryContext = new RepositoryContext(databaseStrategy);
 const useCase = new AddUserInChat(repositoryContext);
 

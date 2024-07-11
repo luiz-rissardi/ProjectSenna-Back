@@ -7,7 +7,7 @@ import { Result } from "../errorHandling/result.js";
 import { BaseRepository } from "./base/database.js";
 
 
-export class MessageRepository extends BaseRepository {
+export class MessageMysql extends BaseRepository {
     constructor(connectionString) {
         super(connectionString)
     }

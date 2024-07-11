@@ -1,6 +1,6 @@
 import { Result } from "../../../infra/errorHandling/result.js";
-import { RepositoryContext } from "../../../infra/repository/context/contextRepository.js";
-import { UserRepository } from "../../../infra/repository/userRepository.js";
+import { RepositoryContext } from "../../../infra/database/context/contextRepository.js";
+import { UserMysql } from "../../../infra/database/userRepository.js";
 import { UnexpectedError } from "../../aplicationException/appErrors.js";
 import { UseCase } from "../base/useCase.js";
 
@@ -25,7 +25,7 @@ export class findContactsOfUser extends UseCase{
     }
 }
 
-const databaseStrategy = new UserRepository(process.env.CONNECION_STRING);
+const databaseStrategy = new UserMysql(process.env.CONNECION_STRING);
 const repositoryContext = new RepositoryContext(databaseStrategy);
 const useCase = new findContactsOfUser(repositoryContext);
 

@@ -5,7 +5,7 @@ import { ChatData } from "../../core/models/chatData.js";
 import { loggers } from "../../util/logger.js";
 
 
-export class ChatDataRepository extends BaseRepository {
+export class ChatDataMysql extends BaseRepository {
 
     constructor(connectionString) {
         super(connectionString)
@@ -83,7 +83,7 @@ export class ChatDataRepository extends BaseRepository {
         
     }
 
-    async findMany(userId) {
+    async findMany([userId]) {
         try {
             const connection = await this.getConnection();
             const [chatsData] = await connection.query(`

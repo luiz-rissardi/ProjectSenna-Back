@@ -4,8 +4,8 @@ import { UnexpectedError } from "../../aplicationException/appErrors.js";
 import { UseCase } from "../base/useCase.js";
 import { Chat } from "../../models/chat.js";
 import { randomUUID } from "crypto";
-import { ChatRepository } from "../../../infra/repository/chatRepository.js";
-import { RepositoryContext } from "../../../infra/repository/context/contextRepository.js";
+import { ChatMysql } from "../../../infra/database/chatRepository.js";
+import { RepositoryContext } from "../../../infra/database/context/contextRepository.js";
 
 export class CreateChat extends UseCase {
     constructor(repositoryContext) {
@@ -34,7 +34,7 @@ export class CreateChat extends UseCase {
     }
 }
 
-const databaseStrategy = new ChatRepository(process.env.CONNECION_STRING);
+const databaseStrategy = new ChatMysql(process.env.CONNECION_STRING);
 const repositoryContext = new RepositoryContext(databaseStrategy);
 const useCase = new CreateChat(repositoryContext);
 

@@ -1,6 +1,6 @@
 import { Result } from "../../../infra/errorHandling/result.js";
-import { RepositoryContext } from "../../../infra/repository/context/contextRepository.js";
-import { MessageRepository } from "../../../infra/repository/messageRepository.js";
+import { RepositoryContext } from "../../../infra/database/context/contextRepository.js";
+import { MessageMysql } from "../../../infra/database/messageRepository.js";
 import { loggers } from "../../../util/logger.js";
 import { UseCase } from "../base/useCase.js";
 
@@ -12,7 +12,6 @@ export class ChangeStatusMessageUseCase extends UseCase{
     }
 
     /**
-     * 
      * @param {string[]} messagesId 
      */
     async execute(messagesId){
@@ -30,7 +29,7 @@ export class ChangeStatusMessageUseCase extends UseCase{
     }
 }
 
-const databaseStrategy = new MessageRepository(process.env.CONNECION_STRING);
+const databaseStrategy = new MessageMysql(process.env.CONNECION_STRING);
 const repositoryContext = new RepositoryContext(databaseStrategy);
 const useCase = new ChangeStatusMessageUseCase(repositoryContext);
 

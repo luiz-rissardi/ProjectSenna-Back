@@ -7,7 +7,7 @@ import { BaseRepository } from "./base/database.js";
 
 
 
-export class ChatRepository extends BaseRepository{
+export class ChatMysql extends BaseRepository{
     constructor(connectionString) {
         super(connectionString)
     }

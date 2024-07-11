@@ -5,7 +5,7 @@ import { RepositoryOperationError } from "../../core/aplicationException/appErro
 import { User } from "../../core/models/user.js";
 
 
-export class UserRepository extends BaseRepository {
+export class UserMysql extends BaseRepository {
     constructor(connectionString) {
         super(connectionString)
     }
