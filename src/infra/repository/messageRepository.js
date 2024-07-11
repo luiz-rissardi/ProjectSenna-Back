@@ -35,7 +35,7 @@ export class MessageRepository extends BaseRepository {
      * 
      * @param {string[]} messagesId 
      */
-    async pacthMany([messagesId]) {
+    async pacthMany([messagesId = []]) {
         try {
             const connection = await this.getConnection();
             await connection.beginTransaction();

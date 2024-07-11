@@ -1,8 +1,6 @@
 
-import { Writable } from "stream"
-import { BaseController } from "./base/baseController.js";
 
-export class AdapterExpressController extends BaseController {
+export class AdapterExpressController {
 
     /**
      * @param {Function} callback
@@ -14,32 +12,15 @@ export class AdapterExpressController extends BaseController {
             try {
                 const { params, body } = req;
                 const stream = await callback(params, body);
-                stream.pipe(new Writable({
-                    write: (chunk, enc, cb) => {
-                        cb();
-                        const { isSuccess, error, value } = JSON.parse(chunk.toString());
-                        if (isSuccess) {
-                            res.write(
-                                JSON.stringify(this.ok(value))
-                            )
-                        }else{
-                            res.write(
-                                JSON.stringify(this.badRequest(error))
-                            )
-
-                        }
-                    },
-                    final(cb) {
-                        res.end();
-                        cb();
-                    }
-                }))
+                stream.pipe(res)
             } catch (error) {
                 res.writeHead(500);
-                res.write(
-                    JSON.stringify(this.InternalServerError())
+                res.json(
+                    {
+                        error: UnexpectedError.create("erro interno no servidor"),
+                        statusCode: 500
+                    }
                 )
-                res.end();
             }
         }
     }
