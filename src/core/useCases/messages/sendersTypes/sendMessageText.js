@@ -2,8 +2,8 @@ import { RepositoryContext } from "../../../../infra/repository/context/contextR
 import { MessageRepository } from "../../../../infra/repository/messageRepository.js";
 import { SendMessageText } from "../Messegers/messegerText.js";
 
-const messageRepository = new MessageRepository(process.env.CONNECION_STRING);
-const repositoryContext = new RepositoryContext(messageRepository);
+const databaseStrategy = new MessageRepository(process.env.CONNECION_STRING);
+const repositoryContext = new RepositoryContext(databaseStrategy);
 const useCase = new SendMessageText(repositoryContext);
 
 process.on("message", async ({ messageText, userId, chatId, language }) => {

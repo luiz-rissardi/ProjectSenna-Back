@@ -38,8 +38,8 @@ export class FindUserUseCase extends UseCase {
     }
 }
 
-const userStrategy = new UserRepository(process.env.CONNECION_STRING);
-const repositoryContext = new RepositoryContext(userStrategy);
+const databaseStrategy = new UserRepository(process.env.CONNECION_STRING);
+const repositoryContext = new RepositoryContext(databaseStrategy);
 const useCase = new FindUserUseCase(repositoryContext)
 
 process.on("message", async ({ email, password }) => {

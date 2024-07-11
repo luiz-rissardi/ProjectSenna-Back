@@ -36,8 +36,8 @@ export class ClearMessageUseCase extends UseCase{
     }
 }
 
-const chatDataRepository = new ChatDataRepository(process.env.CONNECION_STRING);
-const repositoryContext = new RepositoryContext(chatDataRepository);
+const databaseStrategy = new ChatDataRepository(process.env.CONNECION_STRING);
+const repositoryContext = new RepositoryContext(databaseStrategy);
 const useCase = new ClearMessageUseCase(repositoryContext);
 
 process.on("message",async({ userId,chatId })=>{

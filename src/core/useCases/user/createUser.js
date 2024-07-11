@@ -59,8 +59,8 @@ export class CreateUserUseCase extends UseCase {
 
 
 
-const userStrategy = new UserRepository(process.env.CONNECION_STRING);
-const repositoryContext = new RepositoryContext(userStrategy);
+const databaseStrategy = new UserRepository(process.env.CONNECION_STRING);
+const repositoryContext = new RepositoryContext(databaseStrategy);
 const useCase = new CreateUserUseCase(repositoryContext);
 
 process.on("message", async ({ userName, userDescription, email, photo, languages, password }) => {

@@ -25,8 +25,8 @@ export class findContactsOfUser extends UseCase{
     }
 }
 
-const userRepository = new UserRepository(process.env.CONNECION_STRING);
-const repositoryContext = new RepositoryContext(userRepository);
+const databaseStrategy = new UserRepository(process.env.CONNECION_STRING);
+const repositoryContext = new RepositoryContext(databaseStrategy);
 const useCase = new findContactsOfUser(repositoryContext);
 
 process.on("message",async ({contactId})=>{

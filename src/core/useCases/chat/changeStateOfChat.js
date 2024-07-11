@@ -44,8 +44,8 @@ export class ChangeStateOfChat extends UseCase {
     }
 }
 
-const chatDataRepository = new ChatDataRepository(process.env.CONNECION_STRING);
-const repositoryContext = new RepositoryContext(chatDataRepository);
+const databaseStrategy = new ChatDataRepository(process.env.CONNECION_STRING);
+const repositoryContext = new RepositoryContext(databaseStrategy);
 const useCase = new ChangeStateOfChat(repositoryContext);
 
 process.on("message", async ({ userId, chatId, isActive }) => {

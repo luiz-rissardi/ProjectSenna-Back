@@ -34,8 +34,8 @@ export class CreateChat extends UseCase {
     }
 }
 
-const chatRepository = new ChatRepository(process.env.CONNECION_STRING);
-const repositoryContext = new RepositoryContext(chatRepository);
+const databaseStrategy = new ChatRepository(process.env.CONNECION_STRING);
+const repositoryContext = new RepositoryContext(databaseStrategy);
 const useCase = new CreateChat(repositoryContext);
 
 process.on("message", async ({ chatType }) => {

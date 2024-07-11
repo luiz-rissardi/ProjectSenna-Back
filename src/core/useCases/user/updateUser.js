@@ -54,8 +54,8 @@ export class UpdateUserUseCase extends UseCase {
     }
 }
 
-const userRepository = new UserRepository(process.env.CONNECION_STRING);
-const repositoryContext = new RepositoryContext(userRepository);
+const databaseStrategy = new UserRepository(process.env.CONNECION_STRING);
+const repositoryContext = new RepositoryContext(databaseStrategy);
 const useCase = new UpdateUserUseCase(repositoryContext)
 
 process.on("message", async ({ userName, userDescription, email, photo, languages, isActive, contactId, lastOnline, password, userId }) => {
