@@ -1,5 +1,5 @@
 import { UnexpectedError } from "../../core/aplicationException/appErrors.js";
-
+import { Writable } from "stream"
 
 export class AdapterExpressController {
 
@@ -15,7 +15,6 @@ export class AdapterExpressController {
                 body["messageArrayBuffer"] = req?.file?.buffer;
                 const stream = await callback(params, body);
                 stream.pipe(res)
-                // stream.pipe(res)
             } catch (error) {
                 console.log(error);
                 res.writeHead(500);

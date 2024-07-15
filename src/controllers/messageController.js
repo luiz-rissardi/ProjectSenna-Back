@@ -10,7 +10,7 @@ export class MessageController extends BaseController {
                 ["sendAudio", new ClusterProcessService(1).initCluster("./src/core/useCases/messages/sendersTypes/sendMessageAudio.js")],
                 ["sendFile", new ClusterProcessService(1).initCluster("./src/core/useCases/messages/sendersTypes/sendMessageFile.js")],
                 ["sendImage", new ClusterProcessService(1).initCluster("./src/core/useCases/messages/sendersTypes/sendMessageImage.js")],
-                ["getMessages", new ClusterProcessService(1).initCluster("./src/core/useCases/messages/getMessages.js")],
+                ["getMessages", new ClusterProcessService(3).initCluster("./src/core/useCases/messages/getMessages.js")],
                 ["updateMessage", new ClusterProcessService(1).initCluster("./src/core/useCases/messages/updateMessage.js")],
                 ["deleteMessage", new ClusterProcessService(1).initCluster("./src/core/useCases/messages/deleteMessage.js")],
             ]

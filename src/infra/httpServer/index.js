@@ -4,7 +4,8 @@ import helmet from "helmet";
 import cors from "cors";
 import dotenv from "dotenv"
 import bodyParser from "body-parser";
-import { Server } from "socket.io"
+// import expressStatusMonitor from "express-status-monitor";
+// import { Server } from "socket.io"
 
 import { UserRoutes } from "../routes/user.routes.js";
 import { ChatRoutes } from "../routes/chat.routes.js";
@@ -17,6 +18,7 @@ const server = createServer(app);
 
 // configurações adicionais
 dotenv.config()
+// app.use(expressStatusMonitor())
 app.use(bodyParser.json());
 app.use(helmet());
 app.use(cors());
@@ -38,5 +40,5 @@ function ServerFactory() {
     const chatRoutes = new ChatRoutes();
     const messageRoutes = new MessageRoutes();
 
-    return { userRoutes, chatRoutes, messageRoutes }
+    return {  messageRoutes,userRoutes,chatRoutes }
 }

@@ -144,7 +144,6 @@ export class MessageMysql extends BaseRepository {
                SELECT 
                 M.messageId AS messageId,
                 U.userName,
-                MF.data AS data,
                 M.dateMessage,
                 M.messageType,
                 M.originLanguage,
@@ -153,8 +152,6 @@ export class MessageMysql extends BaseRepository {
 				M.status,
                 M.userId
                 FROM message as M
-                left JOIN messageFile as MF
-                on M.messageId = MF.messageId
                 INNER JOIN user as U
                 on U.userId = M.userId
                 WHERE chatId = ?
