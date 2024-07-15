@@ -9,9 +9,6 @@ const useCase = new SendMessageFile(repositoryContext);
 
 process.on("message", async ({ messageText, userId, chatId, language, messageArrayBuffer }) => {
     const messageType = "image";
-    const data = new Blob(messageArrayBuffer, {
-        type: "image/png"
-    });
-    const result = await useCase.execute({ messageText, userId, chatId, language, messageType, data });
+    const result = await useCase.execute(messageText, userId, chatId, language, messageType, messageArrayBuffer );
     process.send({ ...result, value: result.getValue() })
 })

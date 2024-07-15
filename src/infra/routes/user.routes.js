@@ -24,7 +24,7 @@ export class UserRoutes {
             )
 
         this.#router.route("/user/:userId")
-            .put(
+            .patch(
                 AdapterExpressController.adapt(this.#controller.updateUser.bind(this.#controller))
             )
 

@@ -1,6 +1,13 @@
 import { Router } from "express";
 import { AdapterExpressController } from "../adpterRequests/adpaterController.js";
 import { MessageController } from "../../controllers/messageController.js";
+import multer from "multer";
+
+const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 10 * 1024 * 1024 }
+})
+
 
 export class MessageRoutes {
 
@@ -20,14 +27,18 @@ export class MessageRoutes {
             .post(
                 AdapterExpressController.adapt(this.#controller.sendMessageText.bind(this.#controller))
             )
+
         this.#router.route("/chat/:chatId/message/audio")
             .post(
                 AdapterExpressController.adapt(this.#controller.sendMessageAudio.bind(this.#controller))
             )
+''
         this.#router.route("/chat/:chatId/message/image")
             .post(
+                upload.single('messageArrayBuffer'),
                 AdapterExpressController.adapt(this.#controller.sendMessageImage.bind(this.#controller))
             )
+
         this.#router.route("/chat/:chatId/message/file")
             .post(
                 AdapterExpressController.adapt(this.#controller.sendMessageFile.bind(this.#controller))

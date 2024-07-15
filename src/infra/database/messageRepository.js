@@ -12,21 +12,44 @@ export class MessageMysql extends BaseRepository {
         super(connectionString)
     }
 
+
     /**
-     * @param {string} chatId 
-     * @param {Blob} data 
+     * @param {Message[]} param0 
      */
-    async indexFileToMessage([messageId, data]) {
+    async insertMessageFile([message]) {
         try {
             const connection = await this.getConnection();
-            await connection.query(`
-                INSERT INTO messageFile
-                VALUES(?,?)
-                `, [data, messageId]);
-            connection.release();
-            return Result.ok(data);
+            await connection.beginTransaction();
+            const buffer = Buffer.from(message.data);
+            try {
+                await connection.query(`
+                    INSERT INTO message
+                    VALUES(?,?,?,?,?,?,?,?)
+                    `, [
+                    message.messageId, message.dateSender,
+                    message.messageType, message.originLangue,
+                    message.chatId, message.message,
+                    message.userId, message.status
+                ]);
+
+                await connection.query(`
+                    INSERT INTO messageFile (data,messageId)
+                    VALUES(?,?)
+                    `, [
+                    buffer, message.messageId
+                ]);
+                await connection.commit();
+                connection.release();
+                return Result.ok(message);
+
+            } catch (error) {
+                await connection.rollback();
+                connection.release();
+                loggers.error("não foi possivel salvar mensagem de arquivo no chat", error);
+                return Result.fail(RepositoryOperationError.create())
+            }
         } catch (error) {
-            loggers.error("não foi possivel indexar o arquivo no chat", error);
+            loggers.error("não foi possivel salvar mensagem de arquivo no chat", error);
             return Result.fail(RepositoryOperationError.create())
         }
     }
@@ -67,12 +90,13 @@ export class MessageMysql extends BaseRepository {
                 `, [
                 message.messageId, message.dateSender,
                 message.messageType, message.originLangue,
-                message.chatId,message.message,
+                message.chatId, message.message,
                 message.userId, message.status
             ]);
             connection.release();
             return Result.ok(message);
-        } catch (error) {s
+        } catch (error) {
+            s
             loggers.error("não foi possivel inserir a mensagem", error);
             return Result.fail(RepositoryOperationError.create())
         }
@@ -115,7 +139,6 @@ export class MessageMysql extends BaseRepository {
 
     async findMany([chatId]) {
         try {
-            console.log(chatId);
             const connection = await this.getConnection();
             const [messages] = await connection.query(`
                SELECT 

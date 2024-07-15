@@ -1,3 +1,4 @@
+import { UnexpectedError } from "../../core/aplicationException/appErrors.js";
 
 
 export class AdapterExpressController {
@@ -11,9 +12,12 @@ export class AdapterExpressController {
         return async (req, res) => {
             try {
                 const { params, body } = req;
+                body["messageArrayBuffer"] = req?.file?.buffer;
                 const stream = await callback(params, body);
                 stream.pipe(res)
+                // stream.pipe(res)
             } catch (error) {
+                console.log(error);
                 res.writeHead(500);
                 res.json(
                     {

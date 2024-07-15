@@ -1,10 +1,12 @@
 
 
 import { Result } from "../../../../infra/errorHandling/result.js";
+import { DateFormat } from "../../../../util/dateFormated.js";
 import { loggers } from "../../../../util/logger.js";
 import { UnexpectedError } from "../../../aplicationException/appErrors.js";
 import { Message } from "../../../models/message.js";
 import { UseCase } from "../../base/useCase.js";
+import { randomUUID } from "crypto"
 
 export class SendMessageFile extends UseCase {
 
@@ -18,22 +20,20 @@ export class SendMessageFile extends UseCase {
             const messageId = randomUUID();
             const status = "unread";
             const message = new Message(messageText, dateSenderMessage, userId, chatId, messageId, language, messageType, status, data);
+
             if (message.isValid()) {
-                const [result1, result2] = await Promise.all([
-                    this.repository.insertOne(message),
-                    this.repository.indexFileToMessage(message.messageId, message.data)
-                ]);
-                if (result1.isSuccess && result2.isSuccess) {
+                const result = await this.repository.insertMessageFile(message);
+                if (result.isSuccess) {
                     return Result.ok(message)
                 } else {
-                    // os result1. error e result2.error são a mesma coisa
-                    return Result.fail(result1.error);
+                    return Result.fail(result.error);
                 }
             } else {
                 return Result.fail(message.getNotifications())
             }
         } catch (error) {
-            loggers.warn(UnexpectedError.create(error.message));
+            console.log(error);
+            loggers.warn(UnexpectedError.create(error));
             return Result.fail(UnexpectedError.create("erro interno do servidor"))
         }
     }

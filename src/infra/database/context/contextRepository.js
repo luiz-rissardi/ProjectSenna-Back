@@ -11,7 +11,9 @@ export class RepositoryContext {
         Object.getOwnPropertyNames(strategyContext.__proto__)
             .filter(key => !forbidenMethods.includes(key))
             .map(key => {
-                this[key] = strategyContext[key].bind(strategyContext)
+                this[key] = (...args)=>{
+                    return strategyContext[key].bind(strategyContext)(args)
+                }
             })
     }
 

@@ -51,9 +51,9 @@ export class Message {
         if(!this.#statusTypes.includes(this.status)){
             this.#notifications.addNotification({ name: "status", message: "o status da mensagem é invalido" })
         }
-        if(this.messageType != "text" && this.data.constructor != Blob){
-            this.#notifications.addNotification({ name: "messageFile", message: "o tipo de message file é inválido" })
-        }
+        // if(this.messageType != "text" && !this.data instanceof Blob){
+        //     this.#notifications.addNotification({ name: "messageFile", message: "o tipo de message file é inválido" })
+        // }
 
         return this.#notifications.hasNotification()
     }

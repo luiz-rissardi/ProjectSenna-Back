@@ -6,28 +6,28 @@ import { Result } from "../../errorHandling/result.js";
 class UICrud {
 
     /**
-     * @returns {Result}
+     * @returns {Promise<Result>}
      */
     findMany() {
         throw new Error("metodo não implementado")
     }
 
     /**
-     * @returns {Result}
+     * @returns {Promise<Result>}
      */
     findOne() {
         throw new Error("metodo não implementado")
     }
 
     /**
-     * @returns {Result}
+     * @returns {Promise<Result>}
      */
     insertOne() {
         throw new Error("metodo não implementado")
     }
 
     /**
-     * @returns {Result}
+     * @returns {Promise<Result>}
      */
     patchOne() {
         throw new Error("metodo não implementado")
