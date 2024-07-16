@@ -1,5 +1,4 @@
 import { UnexpectedError } from "../../core/aplicationException/appErrors.js";
-import { Writable } from "stream"
 
 export class AdapterExpressController {
 

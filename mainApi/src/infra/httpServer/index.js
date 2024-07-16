@@ -40,5 +40,9 @@ function ServerFactory() {
     const chatRoutes = new ChatRoutes();
     const messageRoutes = new MessageRoutes();
 
-    return {  messageRoutes,userRoutes,chatRoutes }
+    return {
+        messageRoutes,
+        userRoutes,
+        chatRoutes
+    }
 }
