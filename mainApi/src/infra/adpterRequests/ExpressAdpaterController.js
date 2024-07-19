@@ -1,7 +1,7 @@
 import { UnexpectedError } from "../../core/aplicationException/appErrors.js";
 import { loggers } from "../../util/logger.js";
 
-export class AdapterExpressController {
+export class ExpressAdapterController {
 
     /**
      * @param {Function} callback
@@ -13,7 +13,7 @@ export class AdapterExpressController {
             try {
                 const { params, body } = req;
                 body["messageArrayBuffer"] = req?.file?.buffer;
-                const stream = await callback(params, body)
+                const stream = callback(params, body)
                 stream.pipe(res);
             } catch (error) {
                 res.writeHead(500);

@@ -7,9 +7,9 @@ import bodyParser from "body-parser";
 // import expressStatusMonitor from "express-status-monitor";
 // import { Server } from "socket.io"
 
-import { UserRoutes } from "../routes/user.routes.js";
-import { ChatRoutes } from "../routes/chat.routes.js";
-import { MessageRoutes } from "../routes/message.routes.js";
+import { UserRoutes } from "../../routes/express/user.routes.js";
+import { ChatRoutes } from "../../routes/express/chat.routes.js";
+import { MessageRoutes } from "../../routes/express/message.routes.js";
 
 
 const app = express();
@@ -24,7 +24,7 @@ app.use(helmet());
 app.use(cors());
 
 //rotas
-const { userRoutes, chatRoutes, messageRoutes } = ServerFactory()
+const { userRoutes, chatRoutes, messageRoutes } = setupRoutes()
 app.use(userRoutes.getRoutes())
 app.use(chatRoutes.getRoutes())
 app.use(messageRoutes.getRoutes())
@@ -34,7 +34,7 @@ server.listen(3000)
         console.log(`server is running at port ${server.address().port}`);
     })
 
-function ServerFactory() {
+function setupRoutes() {
 
     const userRoutes = new UserRoutes();
     const chatRoutes = new ChatRoutes();
