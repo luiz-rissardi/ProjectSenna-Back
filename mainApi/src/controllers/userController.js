@@ -14,21 +14,21 @@ export class UserController extends BaseController{
         super(useCases);
     }
 
-    async createUser(params, body) {
+    createUser(params, body) {
         return this.executeAction("createUser")(params,body)
     }
 
-    async findUser(params, body) {
+    findUser(params, body) {
         return this.executeAction("findUser")(params,body)
     }
 
-    async updateUser(params, body) {
+    updateUser(params, body) {
         return this.executeAction("updateUser")(params,body)
         
     }
 
-    async findContactsOfUser(params, body) {
-        return this.executeAction("findContacts")(params,body)
+    findContactsOfUser(params, body) {
+        return this.executeActionStream("findContacts")(params,body)
     }
 
 

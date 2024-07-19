@@ -14,15 +14,18 @@ export class UserMysql extends BaseRepository {
     async findMany([contactId]) {
         try {
             const connection = await this.getConnection();
-            const [contacts] = await connection.query(`
+            const stream = connection
+                .query(`
                 SELECT U.userName, U.photo, U.userId
                 FROM contact as C
                 inner join User as U
                 on C.userId = U.userId
                 WHERE C.contactId = ?;
-                `, [contactId]);
+                `, [contactId])
+                .stream()
+
             connection.release();
-            return Result.ok(contacts);
+            return Result.ok(stream);
         } catch (error) {
             loggers.error(`não foi possivel buscar contatos do usuário `, error);
             return Result.fail(RepositoryOperationError.create())
@@ -32,7 +35,9 @@ export class UserMysql extends BaseRepository {
     async findOne([email, passwordHash]) {
         try {
             const connection = await this.getConnection();
-            const [[user]] = await connection.query(`
+            const [[user]] = await connection
+                .promise()
+                .query(`
                 SELECT * 
                 FROM user
                 WHERE email = ? and passwordHash = ?
@@ -53,21 +58,23 @@ export class UserMysql extends BaseRepository {
     async insertOne([user]) {
         try {
             const connection = await this.getConnection();
-            await connection.query(`
+            await connection
+                .promise()
+                .query(`
                 INSERT INTO User (userName, isActive, photo, email, lastOnline, languages, userDescription, passwordHash, contactId, userId)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             `, [
-                user.userName,
-                user.isActive,
-                user.photo,
-                user.email,
-                user.lastOnline,
-                user.languages,
-                user.userDescription,
-                user.passwordHash,
-                user.contactId,
-                user.userId
-            ]);
+                    user.userName,
+                    user.isActive,
+                    user.photo,
+                    user.email,
+                    user.lastOnline,
+                    user.languages,
+                    user.userDescription,
+                    user.passwordHash,
+                    user.contactId,
+                    user.userId
+                ]);
             connection.release();
             return Result.ok(user);
         } catch (error) {
@@ -83,21 +90,23 @@ export class UserMysql extends BaseRepository {
     async patchOne([user]) {
         try {
             const connection = await this.getConnection();
-            await connection.query(`
+            await connection
+                .promise()
+                .query(`
                 UPDATE User 
                 SET userName = ?, isActive = ?, photo = ?, email = ?, lastOnline = ?, languages = ?, userDescription = ?, passwordHash = ?
                 WHERE userId = ?
             `, [
-                user.userName,
-                user.isActive,
-                user.photo,
-                user.email,
-                user.lastOnline,
-                user.languages,
-                user.userDescription,
-                user.passwordHash,
-                user.userId
-            ]);
+                    user.userName,
+                    user.isActive,
+                    user.photo,
+                    user.email,
+                    user.lastOnline,
+                    user.languages,
+                    user.userDescription,
+                    user.passwordHash,
+                    user.userId
+                ]);
             connection.release();
             return Result.ok(user);
         } catch (error) {
@@ -109,7 +118,7 @@ export class UserMysql extends BaseRepository {
     async findByEmail(email) {
         try {
             const connection = await this.getConnection();
-            const [[user]] = await connection.query(`SELECT * FROM user WHERE email = ?`, [email])
+            const [[user]] = await connection.promise().query(`SELECT * FROM user WHERE email = ?`, [email])
             connection.release();
             return Result.ok(user);
         } catch (error) {

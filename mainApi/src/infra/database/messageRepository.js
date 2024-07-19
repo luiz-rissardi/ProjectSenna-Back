@@ -12,50 +12,7 @@ export class MessageMysql extends BaseRepository {
         super(connectionString)
     }
 
-
     /**
-     * @param {Message[]} param0 
-     */
-    async insertMessageFile([message]) {
-        try {
-            const connection = await this.getConnection();
-            await connection.beginTransaction();
-            const buffer = Buffer.from(message.data);
-            try {
-                await connection.query(`
-                    INSERT INTO message
-                    VALUES(?,?,?,?,?,?,?,?)
-                    `, [
-                    message.messageId, message.dateSender,
-                    message.messageType, message.originLangue,
-                    message.chatId, message.message,
-                    message.userId, message.status
-                ]);
-
-                await connection.query(`
-                    INSERT INTO messageFile (data,messageId)
-                    VALUES(?,?)
-                    `, [
-                    buffer, message.messageId
-                ]);
-                await connection.commit();
-                connection.release();
-                return Result.ok(message);
-
-            } catch (error) {
-                await connection.rollback();
-                connection.release();
-                loggers.error("não foi possivel salvar mensagem de arquivo no chat", error);
-                return Result.fail(RepositoryOperationError.create())
-            }
-        } catch (error) {
-            loggers.error("não foi possivel salvar mensagem de arquivo no chat", error);
-            return Result.fail(RepositoryOperationError.create())
-        }
-    }
-
-    /**
-     * 
      * @param {string[]} messagesId 
      */
     async pacthMany([messagesId = []]) {
@@ -63,7 +20,9 @@ export class MessageMysql extends BaseRepository {
             const connection = await this.getConnection();
             await connection.beginTransaction();
             for (const messageId of messagesId) {
-                connection.query(`
+                connection
+                    .promise()
+                    .query(`
                     UPDATE message
                     SET status = "read"
                     WHERE messageId = ?
@@ -84,19 +43,20 @@ export class MessageMysql extends BaseRepository {
     async insertOne([message]) {
         try {
             const connection = await this.getConnection();
-            await connection.query(`
+            await connection
+                .promise()
+                .query(`
                 INSERT INTO message
                 VALUES(?,?,?,?,?,?,?,?)
                 `, [
-                message.messageId, message.dateSender,
-                message.messageType, message.originLangue,
-                message.chatId, message.message,
-                message.userId, message.status
-            ]);
+                    message.messageId, message.dateSender,
+                    message.messageType, message.originLangue,
+                    message.chatId, message.message,
+                    message.userId, message.status
+                ]);
             connection.release();
             return Result.ok(message);
         } catch (error) {
-            s
             loggers.error("não foi possivel inserir a mensagem", error);
             return Result.fail(RepositoryOperationError.create())
         }
@@ -106,14 +66,16 @@ export class MessageMysql extends BaseRepository {
     async patchOne([messageId, dateSender, message, originLanguage]) {
         try {
             const connection = await this.getConnection();
-            await connection.query(`
+            await connection
+                .promise()
+                .query(`
                 UPDATE message
                 SET dateSender = ?, message = ?, originLanguage = ?
                 WHERE messageId = ?
                 `, [
-                dateSender, message, originLanguage,
-                messageId
-            ])
+                    dateSender, message, originLanguage,
+                    messageId
+                ])
             connection.release();
             return Result.ok(message);
         } catch (error) {
@@ -125,7 +87,9 @@ export class MessageMysql extends BaseRepository {
     async deleteOne([messageId]) {
         try {
             const connection = await this.getConnection();
-            await connection.query(`
+            await connection
+                .promise()
+                .query(`
                 DELETE  FROM message
                 WHERE messageId = ?
                 `, [messageId])
@@ -140,7 +104,8 @@ export class MessageMysql extends BaseRepository {
     async findMany([chatId]) {
         try {
             const connection = await this.getConnection();
-            const [messages] = await connection.query(`
+            const stream = connection
+                .query(`
                SELECT 
                 M.messageId AS messageId,
                 U.userName,
@@ -155,9 +120,11 @@ export class MessageMysql extends BaseRepository {
                 INNER JOIN user as U
                 on U.userId = M.userId
                 WHERE chatId = ?
-                `, [chatId]);
+                `, [chatId])
+                .stream();
             connection.release();
-            return Result.ok(messages);
+
+            return Result.ok(stream);
         } catch (error) {
             loggers.error("não foi possivel pegar as mensagens do chat", error);
             return Result.fail(RepositoryOperationError.create())

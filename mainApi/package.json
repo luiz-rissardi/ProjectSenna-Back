@@ -5,9 +5,10 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": "npx nodemon src/infra/httpServer/index.js",
-    "cluster": "npx nodemon src/infra/httpServer/cluster.js",
-    "at": "npx autocannon -d 5 http://localhost:3000/chat/95171413-c9f0-42f9-9a83-81913a4c4dfc/messages"
+    "start": "npx nodemon src/infra/server/index.js",
+    "cluster": "npx nodemon src/infra/server/cluster.js",
+    "at": "npx autocannon -c 2000 -d 20 http://localhost:3000/chat/95171413-c9f0-42f9-9a83-81913a4c4dfc/messages",
+    "at2": "npx autocannon -c 2000 -d 20 http://localhost:3000/user/contact/cdd1414a-7613-4a53-8ffc-1a39b54f3c46"
   },
   "keywords": [],
   "author": "",

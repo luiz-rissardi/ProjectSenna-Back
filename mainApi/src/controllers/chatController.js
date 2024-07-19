@@ -7,7 +7,7 @@ export class ChatController extends BaseController{
         const useCases = new Map(
             [
                 ["createChat", new ClusterProcessService(2).initCluster("./src/core/useCases/chat/createChat.js")],
-                ["findChats", new ClusterProcessService(2).initCluster("./src/core/useCases/chat/getChats.js")],
+                ["findChats", new ClusterProcessService(4).initCluster("./src/core/useCases/chat/getChats.js")],
                 ["addUser", new ClusterProcessService(2).initCluster("./src/core/useCases/chat/addUserInChat.js")],
                 ["changeStateChat", new ClusterProcessService(1).initCluster("./src/core/useCases/chat/changeStateOfChat.js")],
                 ["clearMessages", new ClusterProcessService(1).initCluster("./src/core/useCases/chat/clearMessages.js")],
@@ -19,7 +19,7 @@ export class ChatController extends BaseController{
     
 
     findChats(params, body) {
-        return this.executeAction("findChats")(params,body)
+        return this.executeActionStream("findChats")(params,body)
     }
 
     addUserInChat(params, body) {

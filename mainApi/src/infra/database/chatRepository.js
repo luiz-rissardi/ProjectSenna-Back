@@ -7,7 +7,7 @@ import { BaseRepository } from "./base/database.js";
 
 
 
-export class ChatMysql extends BaseRepository{
+export class ChatMysql extends BaseRepository {
     constructor(connectionString) {
         super(connectionString)
     }
@@ -16,12 +16,15 @@ export class ChatMysql extends BaseRepository{
      * 
      * @param {Chat[]} param0 
      */
-    async insertOne([chat]){
+    async insertOne([chat]) {
         try {
             const connection = await this.getConnection();
-            await connection.query(`
+            await connection
+                .promise()
+                .query(`
                 INSERT INTO chat VALUES(?,?)
-                `,[chat.chatType, chat.chatId]);
+                `, [chat.chatType, chat.chatId]);
+                
             connection.release();
             return Result.ok(chat);
         } catch (error) {

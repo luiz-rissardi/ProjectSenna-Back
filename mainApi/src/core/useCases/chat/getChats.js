@@ -33,5 +33,27 @@ const useCase = new GetChatsUseCase(repositoryContext);
 
 process.on("message", async ({ userId }) => {
     const result = await useCase.execute(userId);
-    process.send({ ...result, value: result.getValue() })
+    const stream = result.getValue();
+
+    if (result.isSuccess == false) {
+        process.send({ ...result })
+        return;
+    }
+
+    const group = []
+    stream.on("data", (chunk) => {
+        if (group.length == 5) {
+            process.send(JSON.stringify(group));
+            group.length = 0
+        }
+        group.push(chunk);
+
+    })
+    stream.on("end", () => {
+        if (group.length != 0) {
+            process.send(JSON.stringify(group));
+            group.length = 0
+        }
+        process.send(null)
+    })
 })

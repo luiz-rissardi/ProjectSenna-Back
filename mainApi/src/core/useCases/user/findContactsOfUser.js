@@ -5,17 +5,17 @@ import { UnexpectedError } from "../../aplicationException/appErrors.js";
 import { UseCase } from "../base/useCase.js";
 
 
-
-export class findContactsOfUser extends UseCase{
+export class findContactsOfUser extends UseCase {
     constructor(repositoryContext) {
         super(repositoryContext)
     }
 
-    async execute(contactId){
+    async execute(contactId) {
         try {
             const result = await this.repository.findMany(contactId);
-            if(result.isSuccess){
-                return Result.ok(result.getValue())
+            if (result.isSuccess) {
+                const stream = result.getValue();
+                return Result.ok(stream)
             }
             return Result.fail(result.error);
         } catch (error) {
@@ -29,7 +29,30 @@ const databaseStrategy = new UserMysql(process.env.CONNECION_STRING);
 const repositoryContext = new RepositoryContext(databaseStrategy);
 const useCase = new findContactsOfUser(repositoryContext);
 
-process.on("message",async ({contactId})=>{
+process.on("message", async ({ contactId }) => {
     const result = await useCase.execute(contactId);
-    process.send({...result,value:result.getValue()}); 
+    const stream = result.getValue();
+
+    if (result.isSuccess == false) {
+        process.send({ ...result })
+        return;
+    }
+
+    const group = []
+    stream.on("data", (chunk) => {
+        if (group.length == 10) {
+            process.send(JSON.stringify(group));
+            group.length = 0
+        }
+        group.push(chunk);
+
+    })
+    stream.on("end", () => {
+        if (group.length != 0) {
+            process.send(JSON.stringify(group));
+            group.length = 0
+        }
+        process.send(null)
+    })
+
 })

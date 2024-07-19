@@ -14,7 +14,6 @@ export class ClusterProcessService {
     }
 
     /**
-    
      * @param {string} task 
      * @returns {ChildProcess}
      */

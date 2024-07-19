@@ -1,4 +1,5 @@
 import { UnexpectedError } from "../../core/aplicationException/appErrors.js";
+import { loggers } from "../../util/logger.js";
 
 export class AdapterExpressController {
 
@@ -12,10 +13,9 @@ export class AdapterExpressController {
             try {
                 const { params, body } = req;
                 body["messageArrayBuffer"] = req?.file?.buffer;
-                const stream = await callback(params, body);
-                stream.pipe(res)
+                const stream = await callback(params, body)
+                stream.pipe(res);
             } catch (error) {
-                console.log(error);
                 res.writeHead(500);
                 res.json(
                     {
@@ -23,6 +23,7 @@ export class AdapterExpressController {
                         statusCode: 500
                     }
                 )
+                loggers.error(error)
             }
         }
     }

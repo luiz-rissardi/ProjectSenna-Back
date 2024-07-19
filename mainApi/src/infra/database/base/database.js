@@ -52,12 +52,12 @@ export class BaseRepository extends UICrud {
     }
 
     async getConnection() {
-        try {
-            return await this.#pool.promise().getConnection();
-        } catch (error) {
-            loggers.error(error)
-            throw new Error("não foi possivel pegar conexão")
-        }
+        return new Promise((resolve, reject) => {
+            this.#pool.getConnection((err, con) => {
+                if (err) reject(err);
+                resolve(con);
+            });
+        })
     }
 
 }

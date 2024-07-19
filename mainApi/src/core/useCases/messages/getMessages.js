@@ -6,7 +6,6 @@ import { UnexpectedError } from "../../aplicationException/appErrors.js";
 import { ChatNotFoundException } from "../../aplicationException/domainException.js";
 import { UseCase } from "../base/useCase.js";
 
-
 export class GetMessagesUseCase extends UseCase {
     constructor(repositoryContext) {
         super(repositoryContext);
@@ -16,7 +15,8 @@ export class GetMessagesUseCase extends UseCase {
         try {
             const result = await this.repository.findMany(chatId);
             if (result.isSuccess) {
-                return Result.ok(result.getValue())
+                const stream = result.getValue();
+                return Result.ok(stream)
             } else {
                 return Result.fail(ChatNotFoundException.create());
             }
@@ -33,5 +33,27 @@ const useCase = new GetMessagesUseCase(repositoryContext);
 
 process.on("message", async ({ chatId }) => {
     const result = await useCase.execute(chatId);
-    process.send({ ...result, value: result.getValue() })
+    const stream = result.getValue();
+
+    if (result.isSuccess == false) {
+        process.send({ ...result })
+        return;
+    }
+
+    const group = []
+    stream.on("data", (chunk) => {
+        if (group.length == 10) {
+            process.send(JSON.stringify(group));
+            group.length = 0
+        } 
+        group.push(chunk);
+
+    })
+    stream.on("end", () => {
+        if (group.length != 0) {
+            process.send(JSON.stringify(group));
+            group.length = 0
+        }
+        process.send(null)
+    })
 })

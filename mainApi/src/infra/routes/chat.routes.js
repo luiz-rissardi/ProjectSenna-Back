@@ -19,6 +19,7 @@ export class ChatRoutes {
                 AdapterExpressController.adapt(this.#controller.createChat.bind(this.#controller))
             );
 
+            // alterar o estado do chat para bloqueado e vice versa
         this.#router.route("/user/:userId/chat/:chatId/state")
             .patch(
                 AdapterExpressController.adapt(this.#controller.changeStateOfChat.bind(this.#controller))

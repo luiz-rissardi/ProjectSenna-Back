@@ -18,7 +18,9 @@ export class ChatDataMysql extends BaseRepository {
     async insertOne([chatData]) {
         try {
             const connection = await this.getConnection();
-            await connection.query(`
+            await connection
+            .promise()
+            .query(`
                 INSERT INTO chatData
                 VALUES (?,?,?,?,?,?)
                 `, [chatData.memberType, chatData.lastClear, chatData.isActive, chatData.userId, chatData.chatId, chatData.dateOfBlocking]);
@@ -72,7 +74,7 @@ export class ChatDataMysql extends BaseRepository {
             `;
         
             // Executa a query com os valores dinâmicos
-            await connection.query(query, values);
+            await connection.promise().query(query, values);
             connection.release();
             
             return Result.ok(chatData);
@@ -86,15 +88,18 @@ export class ChatDataMysql extends BaseRepository {
     async findMany([userId]) {
         try {
             const connection = await this.getConnection();
-            const [chatsData] = await connection.query(`
+            const stream = connection
+            .query(`
                 SELECT * 
                 FROM chatData as CT
                 INNER JOIN chat as C
                 on C.chatId = CT.chatId
                 WHERE userId = ?
-                `,[userId]);
+                `,[userId])
+            .stream();
+
             connection.release();
-            return Result.ok(chatsData);
+            return Result.ok(stream);
         } catch (error) {
             loggers.error("não foi possivel buscar os chats ", error);
             return Result.fail(RepositoryOperationError.create())

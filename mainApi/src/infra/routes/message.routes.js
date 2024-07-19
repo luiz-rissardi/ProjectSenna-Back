@@ -23,27 +23,10 @@ export class MessageRoutes {
     getRoutes() {
 
         // rotas de send messages 
-        this.#router.route("/chat/:chatId/message/text")
+        this.#router.route("/chat/:chatId/message/send")
             .post(
-                AdapterExpressController.adapt(this.#controller.sendMessageText.bind(this.#controller))
+                AdapterExpressController.adapt(this.#controller.sendMessage.bind(this.#controller))
             )
-
-        this.#router.route("/chat/:chatId/message/audio")
-            .post(
-                AdapterExpressController.adapt(this.#controller.sendMessageAudio.bind(this.#controller))
-            )
-''
-        this.#router.route("/chat/:chatId/message/image")
-            .post(
-                upload.single('messageArrayBuffer'),
-                AdapterExpressController.adapt(this.#controller.sendMessageImage.bind(this.#controller))
-            )
-
-        this.#router.route("/chat/:chatId/message/file")
-            .post(
-                AdapterExpressController.adapt(this.#controller.sendMessageFile.bind(this.#controller))
-            )
-
 
         // rotas para pegar todas messages de um chat
         this.#router.route("/chat/:chatId/messages")
@@ -57,8 +40,8 @@ export class MessageRoutes {
                 AdapterExpressController.adapt(this.#controller.readMessages.bind(this.#controller))
             )
 
-        // atualizar mensagem 
         this.#router.route("/chat/message/:messageId")
+            // atualizar mensagem 
             .patch(
                 AdapterExpressController.adapt(this.#controller.updateMessage.bind(this.#controller))
             )

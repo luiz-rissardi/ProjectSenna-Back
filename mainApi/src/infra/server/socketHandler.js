@@ -1,7 +1,7 @@
 import { Server } from "socket.io";
 import { Chat } from "../../core/models/chat.js";
 import { Message } from "../../core/models/message.js";
-import { ChatData } from "../../core/models/chatData";
+import { ChatData } from "../../core/models/chatData.js";
 
 
 export class SocketHandler {
