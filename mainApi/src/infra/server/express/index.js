@@ -9,6 +9,7 @@ import bodyParser from "body-parser";
 
 import { UserRoutes } from "../../routes/express/user.routes.js";
 import { ChatRoutes } from "../../routes/express/chat.routes.js";
+import { GroupRoutes } from "../../routes/express/group.routes.js";
 import { MessageRoutes } from "../../routes/express/message.routes.js";
 
 
@@ -24,10 +25,11 @@ app.use(helmet());
 app.use(cors());
 
 //rotas
-const { userRoutes, chatRoutes, messageRoutes } = setupRoutes()
+const { userRoutes, chatRoutes, messageRoutes, groupRoutes } = setupRoutes()
 app.use(userRoutes.getRoutes())
 app.use(chatRoutes.getRoutes())
 app.use(messageRoutes.getRoutes())
+app.use(groupRoutes.getRoutes())
 
 server.listen(3000)
     .on("listening", () => {
@@ -39,10 +41,12 @@ function setupRoutes() {
     const userRoutes = new UserRoutes();
     const chatRoutes = new ChatRoutes();
     const messageRoutes = new MessageRoutes();
+    const groupRoutes = new GroupRoutes();
 
     return {
         messageRoutes,
         userRoutes,
-        chatRoutes
+        chatRoutes,
+        groupRoutes
     }
 }

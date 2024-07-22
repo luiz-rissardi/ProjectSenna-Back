@@ -22,7 +22,7 @@ export class ChangeStateOfChat extends UseCase {
                 dateOfBlock = null
             }  // bloquear chat 
             else {
-                dateOfBlock = DateFormat(new Date().toISOString());
+                dateOfBlock = DateFormat(new Date());
             }
 
             const chatData = new ChatData(chatId, userId, null, isActive, null, dateOfBlock);

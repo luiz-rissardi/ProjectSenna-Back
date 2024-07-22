@@ -38,16 +38,16 @@ export class InvalidCredentialsException {
 
 
 
-export class UserNotFoundException {
-    constructor() {
-        this.message = "nenhum usuario não encontrado";
-        this.name = "UserNotFoundException"
-    }
+// export class UserNotFoundException {
+//     constructor() {
+//         this.message = "nenhum usuario não encontrado";
+//         this.name = "UserNotFoundException"
+//     }
 
-    static create() {
-        return new UserNotFoundException();
-    }
-}
+//     static create() {
+//         return new UserNotFoundException();
+//     }
+// }
 
 export class ChatNotFoundException {
     constructor() {
@@ -59,4 +59,17 @@ export class ChatNotFoundException {
         return new ChatNotFoundException();
     }
 }
+
+
+export class ChatInvalidKeyException {
+    constructor() {
+        this.message = "a chave do chat é inválida";
+        this.name = "ChatInvalidKeyException"
+    }
+
+    static create() {
+        return new ChatInvalidKeyException();
+    }
+}
+
 

@@ -1,19 +1,22 @@
 import { NotificationContext } from "./DomainNotifications/notifications.js";
 
 
-export class Chat {
+export class Group {
 
     #notifications = new NotificationContext();
-    #typesOfChat = ["group","forum","conversation"];
 
     /**
      * 
      * @param {string} chatId 
-     * @param {string} chatType 
+     * @param {string} groupName 
+     * @param {string} groupDescription 
+     * @param {string} groupPhoto
      */
-    constructor(chatId,chatType){
+    constructor(chatId,groupName,groupDescription,groupPhoto){
         this.chatId = chatId;
-        this.chatType = chatType;
+        this.groupName = groupName;
+        this.groupDescription = groupDescription;
+        this.groupPhoto = groupPhoto;
     }
 
     getNotifications(){
@@ -25,8 +28,8 @@ export class Chat {
             this.#notifications.addNotification({ name: "chatId", message: "o chatId é Obrigatorio" })
         }
 
-        if(!this.#typesOfChat.includes(this.chatType)){
-            this.#notifications.addNotification({ name: "chatType", message: "tipo de chat invalido" })
+        if(this.groupName == undefined || this.groupName == ""){
+            this.#notifications.addNotification({ name: "groupName", message: "preencha o nome do grupo" })
         }
 
         return this.#notifications.hasNotification()

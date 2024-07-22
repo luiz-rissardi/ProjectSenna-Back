@@ -15,9 +15,9 @@ export class UpdateUserUseCase extends UseCase {
         super(repositoryContext)
     }
 
-    async execute({userName, userDescription, email, photo, languages, isActive, lastOnline, password, userId}) {
+    async execute({ userName, userDescription, email, photo, languages, isActive, lastOnline, password, userId }) {
         try {
-            const resultValidate = await this.#validateUserEmail(email,userId);
+            const resultValidate = await this.#validateUserEmail(email, userId);
             if (!resultValidate.isSuccess) {
                 return Result.fail(resultValidate.error)
             }
@@ -44,11 +44,11 @@ export class UpdateUserUseCase extends UseCase {
         }
     }
 
-    async #validateUserEmail(userEmail,userId) {
+    async #validateUserEmail(userEmail, userId) {
         const result = await this.repository.findByEmail(userEmail)
-        const fails = [];
-        if (result.getValue() != undefined && result.getValue().userId != userId) fails.push(EmailAlreadyExistsExeption.create());
-        if (fails.length != 0) return Result.fail(...fails);
+        if (result.getValue() != undefined && result.getValue().userId != userId) {
+            return Result.fail(EmailAlreadyExistsExeption.create());
+        }
         return Result.ok();
 
     }
@@ -59,6 +59,6 @@ const repositoryContext = new RepositoryContext(databaseStrategy);
 const useCase = new UpdateUserUseCase(repositoryContext)
 
 process.on("message", async ({ userName, userDescription, email, photo, languages, isActive, contactId, lastOnline, password, userId }) => {
-    const result = await useCase.execute({userName, userDescription, email, photo, languages, isActive, lastOnline, password, userId})
-    process.send({...result,value:result.getValue()})
+    const result = await useCase.execute({ userName, userDescription, email, photo, languages, isActive, lastOnline, password, userId })
+    process.send({ ...result, value: result.getValue() })
 })

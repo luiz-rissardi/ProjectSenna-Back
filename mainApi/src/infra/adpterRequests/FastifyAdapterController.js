@@ -10,7 +10,7 @@ export class FastifyAdapterController {
                 if (body != undefined) {
                     body["messageArrayBuffer"] = request.file ? request.file.buffer : undefined;
                 }
-                const stream = callback(params, body);
+                const stream = await callback(params, body);
                 reply.type('application/octet-stream');
                 reply.send(stream)
                 return reply

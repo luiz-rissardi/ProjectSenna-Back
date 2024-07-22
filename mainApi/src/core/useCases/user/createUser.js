@@ -50,9 +50,9 @@ export class CreateUserUseCase extends UseCase {
 
     async #validateUserEmail(userEmail) {
         const result = await this.repository.findByEmail(userEmail)
-        const fails = [];
-        if (result.getValue() != undefined) fails.push(EmailAlreadyExistsExeption.create());
-        if (fails.length != 0) return Result.fail(...fails);
+        if (result.getValue() != undefined) {
+            return Result.fail(EmailAlreadyExistsExeption.create());
+        }
         return Result.ok();
     }
 }
@@ -65,5 +65,5 @@ const useCase = new CreateUserUseCase(repositoryContext);
 
 process.on("message", async ({ userName, userDescription, email, photo, languages, password }) => {
     const result = await useCase.execute(userName, userDescription, email, photo, languages, password)
-    process.send({...result,value:result.getValue()});
+    process.send({ ...result, value: result.getValue() });
 })

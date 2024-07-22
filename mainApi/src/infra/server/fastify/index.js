@@ -8,6 +8,7 @@ import { loggers } from '../../../util/logger.js';
 import { ChatRoutes } from "../../routes/fastify/chat.routes.js";
 import { UserRoutes } from "../../routes/fastify/user.routes.js";
 import { MessageRoutes } from "../../routes/fastify/message.routes.js";
+import { GroupRoutes } from '../../routes/fastify/group.routes.js';
 
 
 dotenv.config();
@@ -39,13 +40,14 @@ app.listen({
         loggers.error(err);
         process.exit(1);
     }
-    loggers.info(`O microserviço está sendo executado na porta ${port}`);
+    loggers.info(`O servidor está sendo executado na porta ${port}`);
 })
 
 
 
 function setupRoutes(fastifyApp) {
-    UserRoutes.setup(fastifyApp);
     MessageRoutes.setup(fastifyApp);
+    GroupRoutes.setup(fastifyApp);
+    UserRoutes.setup(fastifyApp);
     ChatRoutes.setup(fastifyApp);
 }
