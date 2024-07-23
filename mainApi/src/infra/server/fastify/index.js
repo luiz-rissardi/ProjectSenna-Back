@@ -4,6 +4,7 @@ import fastifyHelmet from '@fastify/helmet';
 import dotenv from 'dotenv';
 import fastifyMonitor from "fastify-status"
 
+import { SocketHandler } from '../socketHandler.js';
 import { loggers } from '../../../util/logger.js';
 import { ChatRoutes } from "../../routes/fastify/chat.routes.js";
 import { UserRoutes } from "../../routes/fastify/user.routes.js";
@@ -13,6 +14,7 @@ import { GroupRoutes } from '../../routes/fastify/group.routes.js';
 
 dotenv.config();
 const app = fastify();
+const socketHandler = SocketHandler.setup(app.server)
 
 //para ver saude da aplicação
 app.register(fastifyMonitor, {
@@ -42,6 +44,7 @@ app.listen({
     }
     loggers.info(`O servidor está sendo executado na porta ${port}`);
 })
+
 
 
 

@@ -17,10 +17,10 @@ export class ChangeStateOfChat extends UseCase {
         try {
             let dateOfBlock;
 
-            // desbloquear chat
+            // desbloquear / sair do chat
             if (isActive == true) {
                 dateOfBlock = null
-            }  // bloquear chat 
+            }  // bloquear / sair do chat 
             else {
                 dateOfBlock = DateFormat(new Date());
             }

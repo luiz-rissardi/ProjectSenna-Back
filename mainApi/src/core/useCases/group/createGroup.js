@@ -37,7 +37,7 @@ export class CreateGroup extends UseCase {
     }
 
     async #groupExists(groupId) {
-        const result = await this.repository.alreadyExist(groupId)
+        const result = await this.repository.chatIdIsValid(groupId)
         if (result.getValue().length == 0) {
             return Result.fail(ChatInvalidKeyException.create());
         }

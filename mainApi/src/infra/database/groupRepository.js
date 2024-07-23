@@ -52,7 +52,7 @@ export class GroupMysql extends BaseRepository {
         }
     }
 
-    async alreadyExist([chatId]) {
+    async chatIdIsValid([chatId]) {
         try {
             const connection = await this.getConnection();
             const [group] = await connection
