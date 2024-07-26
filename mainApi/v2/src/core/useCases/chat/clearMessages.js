@@ -16,7 +16,7 @@ export class ClearMessageUseCase extends UseCase{
 
     async execute(chatId,userId){
         try {
-            const dateLastClear = DateFormat(new Date().toISOString());
+            const dateLastClear = DateFormat(new Date());
             const chatData = new ChatData(chatId,userId,dateLastClear,null,null,null);
 
             if(chatData.isValid()){

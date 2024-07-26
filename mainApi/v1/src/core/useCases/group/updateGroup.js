@@ -1,7 +1,6 @@
 import { Result } from "../../../infra/errorHandling/result.js";
 import { loggers } from "../../../util/logger.js";
 import { UnexpectedError } from "../../aplicationException/appErrors.js";
-import { UseCase } from "../base/useCase.js";
 import { RepositoryContext } from "../../../infra/database/context/contextRepository.js";
 import { Group } from "../../models/groupData.js";
 import { GroupMysql } from "../../../infra/database/groupRepository.js";

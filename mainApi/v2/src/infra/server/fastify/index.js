@@ -49,8 +49,8 @@ app.listen({
 
 
 function setupRoutes(fastifyApp) {
-    MessageRoutes.setup(fastifyApp);
-    GroupRoutes.setup(fastifyApp);
+    // MessageRoutes.setup(fastifyApp);
+    // GroupRoutes.setup(fastifyApp);
     UserRoutes.setup(fastifyApp);
-    ChatRoutes.setup(fastifyApp);
+    // ChatRoutes.setup(fastifyApp);
 }

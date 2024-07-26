@@ -43,10 +43,13 @@ export class BaseRepository extends UICrud {
         super()
         try {
             if (BaseRepository.instance == null) {
+                BaseRepository.instance = this;
                 this.#pool = createPool(connectionString);
                 loggers.info(`banco conectado com sucesso`);
             }
+            return BaseRepository.instance
         } catch (error) {
+            console.log(error);
             loggers.error(ConnectioDataBaseError.create())
         }
     }
