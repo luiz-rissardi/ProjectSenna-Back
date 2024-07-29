@@ -4,17 +4,17 @@ import { RepositoryOperationError } from "../../core/aplicationException/appErro
 import { MessageFile } from "../../core/model/messageFile.js";
 import { loggers } from "../../util/logger.js";
 import { Result } from "../errorHandling/result.js"
-import { BaseRepository } from "./base/database.js";
+import { Repository } from "./base/database.js";
 
-export class MessageMysql extends BaseRepository {
+export class MessageMysql extends Repository {
     constructor(connectionString) {
         super(connectionString)
     }
 
     /**
-     * @param {MessageFile[]} messageFile 
+     * @param {MessageFile} messageFile 
      */
-    async insertOne([messageFile]) {
+    async insertOne(messageFile) {
         try {
 
             const buffer = Buffer.from(messageFile.data);
@@ -37,7 +37,7 @@ export class MessageMysql extends BaseRepository {
         }
     }
 
-    async findOne([messageId]) {
+    async findOne(messageId) {
         try {
             const connection = await this.getConnection();
             const stream = await connection
@@ -46,7 +46,6 @@ export class MessageMysql extends BaseRepository {
                     WHERE messageId = ?
                     `, [messageId])
                 .stream();
-
             connection.release();
             return Result.ok(stream);
         } catch (error) {
@@ -55,7 +54,7 @@ export class MessageMysql extends BaseRepository {
         }
     }
 
-    async deleteOne([messageId]) {
+    async deleteOne(messageId) {
         try {
             const connection = await this.getConnection();
             await connection

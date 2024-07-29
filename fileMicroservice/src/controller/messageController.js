@@ -3,14 +3,8 @@ import { BaseController } from "./base/baseController.js";
 
 export class MessageFileController extends BaseController {
     constructor() {
-        const useCases = new Map(
-            [
-                ["sendMessageFile", new ClusterProcessService(3).initCluster("./src/core/useCases/messages/sendMessageFile.js")],
-                ["deleteFileOfMessage", new ClusterProcessService(2).initCluster("./src/core/useCases/messages/deleteFileOfMessage.js")],
-                ["findFileOfMessage", new ClusterProcessService(5).initCluster("./src/core/useCases/messages/findFileOfMessage.js")],
-            ]
-        )
-        super(useCases);
+        const messageFileServiceProcess = new ClusterProcessService(3).initCluster("./src/core/service/messageFileService.js")
+        super(messageFileServiceProcess);
     }
 
 
@@ -19,11 +13,11 @@ export class MessageFileController extends BaseController {
     }
 
     deleteFileOfMessage(params, body) {
-        return this.executeAction("deleteFileOfMessage")(params, body);
+        return this.executeAction("deleteFile")(params, body);
     }
 
     findFileOfMessage(params, body) {
-        return this.executeAction("findFileOfMessage")(params, body);
+        return this.executeActionStream("findFilesOfMessage")(params, body);
     }
 }
 
