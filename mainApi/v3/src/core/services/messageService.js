@@ -45,9 +45,9 @@ class MessageService {
         }
     }
 
-    async getMessages({ chatId }) {
+    async getMessages({ chatId, skipMessage = 0 }) {
         try {
-            const result = await this.#messageStrategy.findMany(chatId);
+            const result = await this.#messageStrategy.findMany(chatId,skipMessage);
             if (result.isSuccess) {
                 const stream = result.getValue();
                 return Result.ok(stream)

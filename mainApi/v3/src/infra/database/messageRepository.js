@@ -101,8 +101,9 @@ export class MessageMysql extends Repository {
         }
     }
 
-    async findMany(chatId) {
+    async findMany(chatId,skipMessage) {
         try {
+            // botar um skip para pular as ja pegas
             const connection = await this.getConnection();
             const stream = connection
                 .query(`
@@ -120,6 +121,7 @@ export class MessageMysql extends Repository {
                 INNER JOIN user as U
                 on U.userId = M.userId
                 WHERE chatId = ?
+                LIMIT 50
                 `, [chatId])
                 .stream();
             connection.release();
@@ -132,3 +134,5 @@ export class MessageMysql extends Repository {
     }
 
 }
+
+
