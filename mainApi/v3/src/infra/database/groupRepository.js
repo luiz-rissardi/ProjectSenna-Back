@@ -2,18 +2,18 @@ import { RepositoryOperationError } from "../../core/aplicationException/appErro
 import { Group } from "../../core/models/groupData.js";
 import { loggers } from "../../util/logger.js";
 import { Result } from "../errorHandling/result.js";
-import { BaseRepository } from "./base/database.js";
+import { Repository } from "./base/database.js";
 
 
-export class GroupMysql extends BaseRepository {
+export class GroupMysql extends Repository {
     constructor(connectionString) {
         super(connectionString)
     }
 
     /**
-     * @param {Group[]} param0 
+     * @param {Group} group 
      */
-    async insertOne([group]) {
+    async insertOne(group) {
         try {
             const connection = await this.getConnection();
             await connection
@@ -31,9 +31,9 @@ export class GroupMysql extends BaseRepository {
     }
 
     /**
-     * @param {Group[]} param0 
+     * @param {Group} group 
      */
-    async patchOne([group]) {
+    async patchOne(group) {
         try {
             const connection = await this.getConnection();
             await connection
@@ -52,7 +52,7 @@ export class GroupMysql extends BaseRepository {
         }
     }
 
-    async chatIdIsValid([chatId]) {
+    async chatIdIsValid(chatId) {
         try {
             const connection = await this.getConnection();
             const [group] = await connection
@@ -72,7 +72,7 @@ export class GroupMysql extends BaseRepository {
         }
     }
 
-    async findOne([chatId]) {
+    async findOne(chatId) {
         try {
             const connection = await this.getConnection();
             const [group] = await connection

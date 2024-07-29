@@ -2,24 +2,24 @@ import { Result } from "../../infra/errorHandling/result.js";
 import { UnexpectedError } from "../aplicationException/appErrors.js";
 import { ChatNotFoundException } from "../aplicationException/domainException.js";
 import { MessageMysql } from "../../infra/database/messageRepository.js"
-import { RepositoryContext } from "../../infra/database/context/contextRepository.js"
 import { loggers } from "../../util/logger.js";
 import { randomUUID as v4 } from "crypto"
 import { Message } from "../models/message.js";
+import { Repository } from "../../infra/database/base/database.js";
 
 class MessageService {
 
-    #repositoryContext;
+    #messageStrategy;
     /**
-     * @param {RepositoryContext} repositoryContext 
+     * @param {Repository} messageStrategy 
      */
-    constructor(repositoryContext) {
-        this.#repositoryContext = repositoryContext;
+    constructor(messageStrategy) {
+        this.#messageStrategy = messageStrategy;
     }
 
     async changeStatusMessage({ messagesId }) {
         try {
-            const result = await this.#repositoryContext.pacthMany(messagesId);
+            const result = await this.#messageStrategy.patchMany(messagesId);
             if (result.isSuccess) {
                 return Result.ok("");
             } else {
@@ -33,7 +33,7 @@ class MessageService {
 
     async deleteMessage({ messageId }) {
         try {
-            const result = await this.#repositoryContext.deleteOne(messageId);
+            const result = await this.#messageStrategy.deleteOne(messageId);
             if (result.isSuccess) {
                 return Result.ok("messagem apagada com sucesso")
             } else {
@@ -47,7 +47,7 @@ class MessageService {
 
     async getMessages({ chatId }) {
         try {
-            const result = await this.#repositoryContext.findMany(chatId);
+            const result = await this.#messageStrategy.findMany(chatId);
             if (result.isSuccess) {
                 const stream = result.getValue();
                 return Result.ok(stream)
@@ -68,7 +68,7 @@ class MessageService {
 
             const message = new Message(messageText, dateSenderMessage, userId, chatId, messageId, language, messageType, status);
             if (message.isValid()) {
-                const result = await this.#repositoryContext.insertOne(message);
+                const result = await this.#messageStrategy.insertOne(message);
                 if (result.isSuccess) {
                     return Result.ok(message)
                 } else {
@@ -86,7 +86,7 @@ class MessageService {
     async updateMessage({ messageId, message, originLanguage }) {
         try {
             const dateSender = new Date();
-            const result = await this.#repositoryContext.patchOne(messageId, dateSender, message, originLanguage);
+            const result = await this.#messageStrategy.patchOne(messageId, dateSender, message, originLanguage);
             if (result.isSuccess) {
                 return Result.ok("mensagem ediatda com sucesso")
             } else {
@@ -100,8 +100,7 @@ class MessageService {
 }
 
 const databaseStrategy = new MessageMysql(process.env.CONNECION_STRING);
-const repositoryContext = new RepositoryContext(databaseStrategy);
-const service = new MessageService(repositoryContext)
+const service = new MessageService(databaseStrategy)
 
 process.on("message", async ({ actionName, data }) => {
     if (actionName == "changeStatusMessage") {

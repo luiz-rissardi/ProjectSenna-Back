@@ -3,25 +3,29 @@ import { loggers } from "../../util/logger.js";
 import { UnexpectedError } from "../aplicationException/appErrors.js";
 import { Chat } from "../models/chat.js";
 import { ChatData } from "../models/chatData.js";
-import { RepositoryContext } from "../../infra/database/context/contextRepository.js";
 import { randomUUID as v4 } from "crypto"
 import { ChatDataMysql } from "../../infra/database/chatDataRepository.js";
+import { ChatMysql } from "../../infra/database/chatRepository.js";
+import { Repository } from "../../infra/database/base/database.js";
 
 class ChatService {
 
-    #repositoryContext;
+    #chatDataStrategy;
+    #chatStrategy;
     /**
-     * @param {RepositoryContext} repositoryContext 
+     * @param {Repository} chatDataStrategy 
+     * @param {Repository} chatRepositoryContext 
      */
-    constructor(repositoryContext) {
-        this.#repositoryContext = repositoryContext;
+    constructor(chatDataStrategy,chatRepositoryContext) {
+        this.#chatDataStrategy = chatDataStrategy;
+        this.#chatStrategy = chatRepositoryContext;
     }
 
     async addUserInChat({ userId, chatId, memberType }) {
         try {
             const chatData = new ChatData(chatId, userId, null, true, memberType, null);
             if (chatData.isValid()) {
-                const result = await this.#repositoryContext.insertOne(chatData);
+                const result = await this.#chatDataStrategy.insertOne(chatData);
                 if (result.isSuccess) {
                     return Result.ok(result.getValue());
                 }
@@ -49,7 +53,7 @@ class ChatService {
             const chatData = new ChatData(chatId, userId, null, isActive, null, dateOfBlock);
 
             if (chatData.isValid()) {
-                const result = await this.#repositoryContext.patchOne(chatData);
+                const result = await this.#chatDataStrategy.patchOne(chatData);
                 if (result.isSuccess) {
                     return Result.ok(result.getValue())
                 }
@@ -70,7 +74,7 @@ class ChatService {
             const chatData = new ChatData(chatId, userId, dateLastClear, null, null, null);
 
             if (chatData.isValid()) {
-                const result = await this.#repositoryContext.patchOne(chatData);
+                const result = await this.#chatDataStrategy.patchOne(chatData);
                 if (result.isSuccess) {
                     return Result.ok(result.getValue())
                 }
@@ -91,7 +95,7 @@ class ChatService {
             const chat = new Chat(chatId, chatType);
 
             if (chat.isValid()) {
-                const result = await this.#repositoryContext.insertOne(chat);
+                const result = await this.#chatStrategy.insertOne(chat);
                 if (result.isSuccess) {
                     return Result.ok(chat);
                 } else {
@@ -108,7 +112,7 @@ class ChatService {
 
     async getChats({ userId }) {
         try {
-            const result = await this.#repositoryContext.findMany(userId);
+            const result = await this.#chatDataStrategy.findMany(userId);
             if (result.isSuccess) {
                 return Result.ok(result.getValue());
             }
@@ -122,9 +126,9 @@ class ChatService {
 }
 
 
-const databaseStrategy = new ChatDataMysql(process.env.CONNECION_STRING);
-const repositoryContext = new RepositoryContext(databaseStrategy);
-const service = new ChatService(repositoryContext);
+const chatDataDatabaseStrategy = new ChatDataMysql(process.env.CONNECION_STRING);
+const chatDatabaseStrategy = new ChatMysql(process.env.CONNECION_STRING);
+const service = new ChatService(chatDataDatabaseStrategy,chatDatabaseStrategy);
 
 process.on("message", async ({ actionName, data }) => {
     if (actionName == "addUserInChat") {

@@ -1,11 +1,11 @@
-import { BaseRepository } from "./base/database.js";
+import { Repository } from "./base/database.js";
 import { Result } from "../errorHandling/result.js";
 import { RepositoryOperationError } from "../../core/aplicationException/appErrors.js";
 import { ChatData } from "../../core/models/chatData.js";
 import { loggers } from "../../util/logger.js";
 
 
-export class ChatDataMysql extends BaseRepository {
+export class ChatDataMysql extends Repository {
 
     constructor(connectionString) {
         super(connectionString)
@@ -13,9 +13,9 @@ export class ChatDataMysql extends BaseRepository {
 
     /**
      * 
-     * @param { ChatData[] } chatData 
+     * @param { ChatData } chatData 
      */
-    async insertOne([chatData]) {
+    async insertOne(chatData) {
         try {
             const connection = await this.getConnection();
             await connection
@@ -34,9 +34,9 @@ export class ChatDataMysql extends BaseRepository {
 
     /**
      * 
-     * @param { ChatData[] } chatData 
+     * @param { ChatData } chatData 
      */
-    async patchOne([chatData]) {
+    async patchOne(chatData) {
         try {
             const connection = await this.getConnection();
             
@@ -85,7 +85,7 @@ export class ChatDataMysql extends BaseRepository {
         
     }
 
-    async findMany([userId]) {
+    async findMany(userId) {
         try {
             const connection = await this.getConnection();
             const stream = connection

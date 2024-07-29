@@ -1,20 +1,22 @@
 import { Result } from "../../infra/errorHandling/result.js";
 import { UnexpectedError } from "../aplicationException/appErrors.js";
 import { ChatInvalidKeyException, ChatNotFoundException } from "../aplicationException/domainException.js";
-import { RepositoryContext } from "../../infra/database/context/contextRepository.js"
 import { loggers } from "../../util/logger.js";
 import { Group } from "../models/groupData.js"
 import { GroupMysql } from "../../infra/database/groupRepository.js";
+import { Repository } from "../../infra/database/base/database.js";
 
 
 class GroupService {
 
-    #repositoryContext;
+    #groupStrategy;
+
     /**
-     * @param {RepositoryContext} repositoryContext 
+     * 
+     * @param {Repository} groupStrategy 
      */
-    constructor(repositoryContext) {
-        this.#repositoryContext = repositoryContext;
+    constructor(groupStrategy) {
+        this.#groupStrategy = groupStrategy;
     }
 
     async createGroup({chatId, groupName, groupDescription, groupPhoto}) {
@@ -26,7 +28,7 @@ class GroupService {
 
             const group = new Group(chatId, groupName, groupDescription, groupPhoto);
             if (group.isValid()) {
-                const result = await this.#repositoryContext.insertOne(group);
+                const result = await this.#groupStrategy.insertOne(group);
                 if (result.isSuccess) {
                     return Result.ok(group);
                 } else {
@@ -50,7 +52,7 @@ class GroupService {
 
             const group = new Group(chatId, groupName, groupDescription, groupPhoto);
             if (group.isValid()) {
-                const result = await this.#repositoryContext.patchOne(group);
+                const result = await this.#groupStrategy.patchOne(group);
                 if (result.isSuccess) {
                     return Result.ok(group);
                 } else {
@@ -67,7 +69,7 @@ class GroupService {
 
 
     async #chatIdKeyValidate(groupId) {
-        const result = await this.#repositoryContext.chatIdIsValid(groupId)
+        const result = await this.#groupStrategy.chatIdIsValid(groupId)
         if (result.getValue().length == 0) {
             return Result.fail(ChatInvalidKeyException.create());
         }
@@ -75,7 +77,7 @@ class GroupService {
     }
 
     async #groupExists(groupId) {
-        const result = await this.#repositoryContext.findOne(groupId)
+        const result = await this.#groupStrategy.findOne(groupId)
         if (result.getValue().length == 0) {
             return Result.fail(ChatNotFoundException.create());
         }
@@ -83,9 +85,8 @@ class GroupService {
     }
 }
 
-const databaseStrategy = new GroupMysql(process.env.CONNECION_STRING);
-const repositoryContext = new RepositoryContext(databaseStrategy);
-const service = new GroupService(repositoryContext);
+const groupStrategy = new GroupMysql(process.env.CONNECION_STRING);
+const service = new GroupService(groupStrategy);
 
 process.on("message", async ({ actionName, data }) => {
     if (actionName == "createGroup") {

@@ -47,7 +47,7 @@ export class ChatData {
             this.#notifications.addNotification({ name: "lastClear", message: "a data de limpeza é invalida" })
         }
 
-        if(!this.#memberTypes.includes(this.memberType) && this.memberType != null){
+        if(!this.#memberTypes.includes(this.memberType)){
             this.#notifications.addNotification({ name: "memberType", message: "tipo de membro é invalido" })
         }
 

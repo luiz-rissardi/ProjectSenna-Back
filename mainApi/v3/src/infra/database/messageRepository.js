@@ -4,10 +4,10 @@ import { RepositoryOperationError } from "../../core/aplicationException/appErro
 import { Message } from "../../core/models/message.js";
 import { loggers } from "../../util/logger.js";
 import { Result } from "../errorHandling/result.js";
-import { BaseRepository } from "./base/database.js";
+import { Repository } from "./base/database.js";
 
 
-export class MessageMysql extends BaseRepository {
+export class MessageMysql extends Repository {
     constructor(connectionString) {
         super(connectionString)
     }
@@ -15,9 +15,8 @@ export class MessageMysql extends BaseRepository {
     /**
      * @param {string[]} messagesId 
      */
-    async pacthMany([messagesId = []]) {
+    async patchMany(messagesId = []) {
         try {
-            console.log(messagesId);
             const connection = await this.getConnection();
             await connection.promise().beginTransaction();
             for (const messageId of messagesId) {
@@ -39,9 +38,9 @@ export class MessageMysql extends BaseRepository {
     }
 
     /**
-     * @param {Message[]} message 
+     * @param {Message} message 
      */
-    async insertOne([message]) {
+    async insertOne(message) {
         try {
             const connection = await this.getConnection();
             await connection
@@ -64,7 +63,7 @@ export class MessageMysql extends BaseRepository {
     }
 
 
-    async patchOne([messageId, dateSender, message, originLanguage]) {
+    async patchOne(messageId, dateSender, message, originLanguage) {
         try {
             const connection = await this.getConnection();
             await connection
@@ -85,7 +84,7 @@ export class MessageMysql extends BaseRepository {
         }
     }
 
-    async deleteOne([messageId]) {
+    async deleteOne(messageId) {
         try {
             const connection = await this.getConnection();
             await connection
@@ -102,7 +101,7 @@ export class MessageMysql extends BaseRepository {
         }
     }
 
-    async findMany([chatId]) {
+    async findMany(chatId) {
         try {
             const connection = await this.getConnection();
             const stream = connection

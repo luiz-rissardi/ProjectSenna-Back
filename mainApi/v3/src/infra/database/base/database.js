@@ -34,7 +34,7 @@ class UICrud {
     }
 }
 
-export class BaseRepository extends UICrud {
+export class Repository extends UICrud {
 
     #pool
     static instance = null;
@@ -42,7 +42,7 @@ export class BaseRepository extends UICrud {
     constructor(connectionString) {
         super()
         try {
-            if (BaseRepository.instance == null) {
+            if (Repository.instance == null) {
                 this.#pool = createPool(connectionString);
                 loggers.info(`banco conectado com sucesso`);
             }

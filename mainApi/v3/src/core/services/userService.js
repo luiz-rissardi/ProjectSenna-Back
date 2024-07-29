@@ -1,24 +1,25 @@
-import { UserMysql } from "../../../../v1/src/infra/database/userRepository.js";
-import { RepositoryContext } from "../../../../v1/src/infra/database/context/contextRepository.js";
-import { Result } from "../../../../v1/src/infra/errorHandling/result.js";
-import { UnexpectedError } from "../../../../v1/src/core/aplicationException/appErrors.js";
-import { UserBlockingException } from "../../../../v1/src/core/aplicationException/domainException.js";
-import { InvalidCredentialsException } from "../../../../v1/src/core/aplicationException/domainException.js";
+import { UserMysql } from "../../infra/database/userRepository.js";
+// import { userStrategy } from "../../../../v1/src/infra/database/context/contextRepository.js";
+import { Result } from "../../infra/errorHandling/result.js";
+import { UnexpectedError } from "../../core/aplicationException/appErrors.js";
+import { UserBlockingException } from "../../core/aplicationException/domainException.js";
+import { InvalidCredentialsException } from "../../core/aplicationException/domainException.js";
 import { loggers } from "../../util/logger.js";
 import { EmailAlreadyExistsExeption } from "../aplicationException/domainException.js";
 import { User } from "../models/user.js";
 import { randomUUID as v4 } from "crypto"
 import { EncryptService } from "../../util/encryptService.js";
+import { Repository } from "../../infra/database/base/database.js";
 
 class UserService {
 
-    #repositoryContext
+    #userStrategy
     /**
      * 
-     * @param {RepositoryContext} repositoryContext 
+     * @param {Repository} userStrategy 
      */
-    constructor(repositoryContext) {
-        this.#repositoryContext = repositoryContext;
+    constructor(userStrategy) {
+        this.#userStrategy = userStrategy;
     }
 
     async createUser({ userName, userDescription, email, photo, languages, password }) {
@@ -27,16 +28,15 @@ class UserService {
             const contactId = v4();
             const isActive = false;
             const lastOnline = new Date();
-            const passwordHash = EncryptService.encrypt(password);
             const resultValidate = await this.#EmailAlreadyExistToCreate(email);
 
             if (!resultValidate.isSuccess) {
                 return Result.fail(resultValidate.error)
             }
-            const user = new User(userName, isActive, email, photo, userDescription, userId, lastOnline, languages, contactId, passwordHash);
+            const user = new User(userName, isActive, email, photo, userDescription, userId, lastOnline, languages, contactId, password);
 
             if (user.isValid()) {
-                const result = await this.#repositoryContext.insertOne(user);
+                const result = await this.#userStrategy.insertOne(user);
                 if (result.isSuccess) {
                     //remove passwordHash antes de retornar o user
                     Reflect.deleteProperty(user, "passwordHash");
@@ -56,7 +56,7 @@ class UserService {
 
     async findContactsOfUser({ contactId }) {
         try {
-            const result = await this.#repositoryContext.findMany(contactId);
+            const result = await this.#userStrategy.findMany(contactId);
             if (result.isSuccess) {
                 const stream = result.getValue();
                 return Result.ok(stream)
@@ -69,10 +69,10 @@ class UserService {
         }
     }
 
-    async findUser({ email, password }) {
+    async findUser({ email, password = "" }) {
         try {
             const passwordHash = EncryptService.encrypt(password);
-            const result = await this.#repositoryContext.findOne(email, passwordHash);
+            const result = await this.#userStrategy.findOne(email, passwordHash);
             if (result.isSuccess) {
                 const user = result.getValue();
                 if (user) {
@@ -98,10 +98,9 @@ class UserService {
                 return Result.fail(resultValidate.error)
             }
 
-            const passwordHash = EncryptService.encrypt(password)
-            const user = new User(userName, isActive, email, photo, userDescription, userId, lastOnline, languages, null, passwordHash)
+            const user = new User(userName, isActive, email, photo, userDescription, userId, lastOnline, languages, null, password)
             if (user.isValid()) {
-                const result = await this.#repositoryContext.patchOne(user);
+                const result = await this.#userStrategy.patchOne(user);
                 if (result.isSuccess) {
                     //remove passwordHash antes de retornar o user
                     Reflect.deleteProperty(user, "passwordHash");
@@ -122,7 +121,7 @@ class UserService {
 
     // verifica se o email já existe
     async #EmailAlreadyExistToCreate(userEmail) {
-        const result = await this.#repositoryContext.findByEmail(userEmail)
+        const result = await this.#userStrategy.findByEmail(userEmail)
         if (result.getValue() != undefined) {
             return Result.fail(EmailAlreadyExistsExeption.create());
         }
@@ -131,7 +130,7 @@ class UserService {
 
     // verifica se o email que voce quer mudar já existe em outro usuario
     async #EmailAlreadyExistToUpdate(userEmail, userId) {
-        const result = await this.#repositoryContext.findByEmail(userEmail)
+        const result = await this.#userStrategy.findByEmail(userEmail)
         if (result.getValue() != undefined && result.getValue().userId != userId) {
             return Result.fail(EmailAlreadyExistsExeption.create());
         }
@@ -140,8 +139,7 @@ class UserService {
 }
 
 const databaseStrategy = new UserMysql(process.env.CONNECION_STRING);
-const repositoryContext = new RepositoryContext(databaseStrategy);
-const service = new UserService(repositoryContext);
+const service = new UserService(databaseStrategy);
 
 process.on("message", async ({ actionName, data }) => {
     if (actionName == "findUser") {

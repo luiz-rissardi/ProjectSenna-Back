@@ -2,21 +2,21 @@ import { RepositoryOperationError } from "../../core/aplicationException/appErro
 import { Chat } from "../../core/models/chat.js";
 import { loggers } from "../../util/logger.js";
 import { Result } from "../errorHandling/result.js";
-import { BaseRepository } from "./base/database.js";
+import { Repository } from "./base/database.js";
 
 
 
 
-export class ChatMysql extends BaseRepository {
+export class ChatMysql extends Repository {
     constructor(connectionString) {
         super(connectionString)
     }
 
     /**
      * 
-     * @param {Chat[]} param0 
+     * @param {Chat} chat 
      */
-    async insertOne([chat]) {
+    async insertOne(chat) {
         try {
             const connection = await this.getConnection();
             await connection
