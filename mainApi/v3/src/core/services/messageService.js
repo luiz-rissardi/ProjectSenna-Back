@@ -45,7 +45,7 @@ class MessageService {
         }
     }
 
-    async getMessages({ chatId, skipMessage = 0 }) {
+    async getMessages({ chatId, skipMessage = 0}) {
         try {
             const result = await this.#messageStrategy.findMany(chatId,skipMessage);
             if (result.isSuccess) {

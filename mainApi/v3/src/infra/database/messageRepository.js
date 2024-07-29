@@ -121,8 +121,8 @@ export class MessageMysql extends Repository {
                 INNER JOIN user as U
                 on U.userId = M.userId
                 WHERE chatId = ?
-                LIMIT 50
-                `, [chatId])
+                LIMIT 50 OFFSET ${Number(skipMessage)}
+                `, [chatId,])
                 .stream();
             connection.release();
 
