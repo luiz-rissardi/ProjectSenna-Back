@@ -14,8 +14,9 @@ export class AdapterExpressController {
                 const { params, body } = req;
                 body["messageArrayBuffer"] = req?.file?.buffer;
                 
-                const stream = callback(params, body)
-                stream.pipe(res)
+                const result = await callback(params, body)
+                res.write(JSON.stringify({ ...result, value: result.getValue() }))
+                res.end();
             } catch (error) {
                 res.writeHead(500);
                 res.end(

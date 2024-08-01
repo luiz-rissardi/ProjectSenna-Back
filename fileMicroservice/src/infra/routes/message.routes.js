@@ -2,7 +2,7 @@
 import multer from "multer";
 import { Router } from "express";
 import { AdapterExpressController } from "../adpterRequests/adpaterExpress.js";
-import { MessageFileController } from "../../controller/messageController.js";
+import { MessageFileFactory } from "../factories/messageFileFactory.js";
 
 const upload = multer({
     storage: multer.memoryStorage(),
@@ -16,7 +16,7 @@ export class MessageFileRoutes {
 
     constructor() {
         this.#router = Router()
-        this.#controller = new MessageFileController()
+        this.#controller = MessageFileFactory.getController();
 
     }
 

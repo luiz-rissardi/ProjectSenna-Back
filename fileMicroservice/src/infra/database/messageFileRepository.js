@@ -4,9 +4,9 @@ import { RepositoryOperationError } from "../../core/aplicationException/appErro
 import { MessageFile } from "../../core/model/messageFile.js";
 import { loggers } from "../../util/logger.js";
 import { Result } from "../errorHandling/result.js"
-import { Repository } from "./base/database.js";
+import { Repository } from "./base/repository.js";
 
-export class MessageMysql extends Repository {
+export class MessageFileMysql extends Repository {
     constructor(connectionString) {
         super(connectionString)
     }
@@ -20,6 +20,7 @@ export class MessageMysql extends Repository {
             const buffer = Buffer.from(messageFile.data);
             const connection = await this.getConnection();
             await connection
+                .promise()
                 .query(`
                 INSERT INTO messageFile
                 VALUES(?,?,?)
@@ -27,7 +28,7 @@ export class MessageMysql extends Repository {
                     buffer, messageFile.messageId,
                     messageFile.fileName
                 ])
-                .stream();
+
 
             connection.release();
             return Result.ok(messageFile);
@@ -40,14 +41,15 @@ export class MessageMysql extends Repository {
     async findOne(messageId) {
         try {
             const connection = await this.getConnection();
-            const stream = await connection
+            const [messageFile] = await connection
+                .promise()
                 .query(`
                     SELECT * FROM messageFile
                     WHERE messageId = ?
                     `, [messageId])
-                .stream();
+
             connection.release();
-            return Result.ok(stream);
+            return Result.ok(messageFile);
         } catch (error) {
             loggers.error("não foi possivel pegar o arquivo da mensagem", error);
             return Result.fail(RepositoryOperationError.create())
@@ -58,12 +60,13 @@ export class MessageMysql extends Repository {
         try {
             const connection = await this.getConnection();
             await connection
+                .promise()
                 .query(`
                 DELETE  FROM messageFile
                 WHERE messageId = ?
                 `, [messageId])
-                .stream()
-                
+
+
             connection.release();
             return Result.ok();
         } catch (error) {

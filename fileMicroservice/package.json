@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx nodemon src/infra/server/index.js",
+    "ex": "npx nodemon src/infra/server/index.js",
     "fy": "npx nodemon src/infra/server/fastifyApi.js",
     "c": "npx climem 8999",
     "sc": "set CLIMEM=8999 && node -r climem src/infra/server/index.js",

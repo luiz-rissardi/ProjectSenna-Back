@@ -1,6 +1,6 @@
 import { UnexpectedError } from '../../core/aplicationException/appErrors.js';
 import { loggers } from '../../util/logger.js';
-import { Writable,Readable } from 'stream';
+import { Writable, Readable } from 'stream';
 
 export class AdapterFastifyController {
 
@@ -8,24 +8,13 @@ export class AdapterFastifyController {
     return async (request, reply) => {
       const { params, body } = request;
 
-      if(body != undefined){
-          body['messageArrayBuffer'] = request.file ? request.file.buffer : undefined;
+      if (body != undefined) {
+        body['messageArrayBuffer'] = request.file ? request.file.buffer : undefined;
       }
       try {
-        const stream = await callback(params, body);
-        reply.type('application/octet-stream');
+        const result = await callback(params, body);
         // Envia a stream como resposta diretamente usando reply.send
-        reply.send(stream)
-        // reply.send(new Readable({
-        //     read(){
-        //         stream.on("data",(chunk)=>{
-        //             this.push(chunk)
-        //         })
-        //         stream.on("end",()=>{
-        //             this.push(null)
-        //         })
-        //     }
-        // }));
+        reply.send({ ...result, value: result.getValue() })
 
         return reply
 

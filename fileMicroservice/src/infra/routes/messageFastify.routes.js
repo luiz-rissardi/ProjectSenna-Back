@@ -1,6 +1,6 @@
 import multer from 'multer';
 import { AdapterFastifyController } from '../adpterRequests/adapterFastify.js';
-import { MessageFileController } from '../../controller/messageController.js';
+import { MessageFileFactory } from '../factories/messageFileFactory.js';
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -11,7 +11,7 @@ export class MessageFileRoutesFastify {
 
   constructor(fastifyInstance) {
     this.fastify = fastifyInstance;
-    this.controller = new MessageFileController();
+    this.controller = MessageFileFactory.getController();
     this.#setupRoutes();
   }
 
