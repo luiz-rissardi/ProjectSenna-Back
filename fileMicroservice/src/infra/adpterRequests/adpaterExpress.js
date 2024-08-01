@@ -1,6 +1,5 @@
 import { UnexpectedError } from "../../core/aplicationException/appErrors.js";
 import { loggers } from "../../util/logger.js";
-import { Readable } from "stream";
 
 export class AdapterExpressController {
     /**
@@ -28,13 +27,5 @@ export class AdapterExpressController {
                 loggers.error(error)
             }
         }
-    }
-}
-
-
-
-function* toString(stream) {
-    for (let chunck of stream) {
-        yield JSON.stringify(chunck)
     }
 }
