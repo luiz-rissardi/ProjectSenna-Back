@@ -25,7 +25,7 @@ export class GroupMysql extends Repository {
             connection.release();
             return Result.ok(group);
         } catch (error) {
-            loggers.error("não foi possivel inserir um novo chat ", error);
+            loggers.error("não foi possivel criar um novo grupo ", error);
             return Result.fail(RepositoryOperationError.create())
         }
     }
@@ -47,7 +47,7 @@ export class GroupMysql extends Repository {
             connection.release();
             return Result.ok(group);
         } catch (error) {
-            loggers.error("não foi possivel inserir um novo chat ", error);
+            loggers.error("não foi possivel atualizar o grupo ", error);
             return Result.fail(RepositoryOperationError.create())
         }
     }
@@ -67,7 +67,7 @@ export class GroupMysql extends Repository {
             connection.release();
             return Result.ok(group);
         } catch (error) {
-            loggers.error("não foi possivel inserir um novo chat ", error);
+            loggers.error("não foi possivel verificar se a key é valida ", error);
             return Result.fail(RepositoryOperationError.create())
         }
     }

@@ -27,7 +27,7 @@ export class UserService {
             const contactId = v4();
             const isActive = false;
             const lastOnline = new Date();
-            const resultValidate = await this.#EmailAlreadyExistToCreate(email);
+            const resultValidate = await this.#EmailAlreadyExist(email,userId);
 
             if (!resultValidate.isSuccess) {
                 return Result.fail(resultValidate.error)
@@ -88,9 +88,9 @@ export class UserService {
         }
     }
 
-    async updateUser({userName, userDescription, email, photo, languages, isActive, lastOnline = new Date(), password, userId}) {
+    async updateUser({ userName, userDescription, email, photo, languages, isActive, lastOnline = new Date(), password, userId }) {
         try {
-            const resultValidate = await this.#EmailAlreadyExistToUpdate(email, userId);
+            const resultValidate = await this.#EmailAlreadyExist(email, userId);
             if (!resultValidate.isSuccess) {
                 return Result.fail(resultValidate.error)
             }
@@ -117,18 +117,9 @@ export class UserService {
     }
 
     // verifica se o email já existe
-    async #EmailAlreadyExistToCreate(userEmail) {
+    async #EmailAlreadyExist(userEmail,userId) {
         const result = await this.#userStrategy.findByEmail(userEmail)
-        if (result.getValue() != undefined) {
-            return Result.fail(EmailAlreadyExistsExeption.create());
-        }
-        return Result.ok();
-    }
-
-    // verifica se o email que voce quer mudar já existe em outro usuario
-    async #EmailAlreadyExistToUpdate(userEmail, userId) {
-        const result = await this.#userStrategy.findByEmail(userEmail)
-        if (result.getValue() != undefined && result.getValue().userId != userId) {
+        if (result.getValue() != undefined && result.getValue()?.userId != userId) {
             return Result.fail(EmailAlreadyExistsExeption.create());
         }
         return Result.ok();

@@ -5,8 +5,6 @@ import { NotificationContext } from "./DomainNotifications/notifications.js";
 export class Message {
 
     #notifications = new NotificationContext()
-    #messageTypes = ["text", "audio", "image", "file"]
-    #statusTypes = ["read", "unread"]
 
     /**
      * @param {string} message
@@ -34,6 +32,8 @@ export class Message {
     }
 
     isValid() {
+        const messageTypes = ["text", "audio", "image", "file"]
+        const statusTypes = ["read", "unread"]
         if (this.message.length >= 1000) {
             this.#notifications.addNotification({ name: "message", message: "limite do tamanha da mensagem atingido" })
         }
@@ -42,10 +42,10 @@ export class Message {
             this.#notifications.addNotification({ name: "dateSender", message: "a data de envio é invalida" })
         }
 
-        if (!this.#messageTypes.includes(this.messageType)) {
+        if (!messageTypes.includes(this.messageType)) {
             this.#notifications.addNotification({ name: "messageType", message: "o tipo da mensagem é invalido" })
         }
-        if (!this.#statusTypes.includes(this.status)) {
+        if (!statusTypes.includes(this.status)) {
             this.#notifications.addNotification({ name: "status", message: "o status da mensagem é invalido" })
         }
 

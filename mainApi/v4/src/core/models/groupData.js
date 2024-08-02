@@ -24,7 +24,8 @@ export class Group {
     }
 
     isValid(){
-        if(this.chatId == undefined){
+        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+        if(this.chatId == undefined && !uuidRegex.test(this.chatId)){
             this.#notifications.addNotification({ name: "chatId", message: "o chatId é Obrigatorio" })
         }
 

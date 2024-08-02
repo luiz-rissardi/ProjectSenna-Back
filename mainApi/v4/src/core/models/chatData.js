@@ -6,7 +6,6 @@ import { NotificationContext } from "./DomainNotifications/notifications.js";
 export class ChatData {
 
     #notifications = new NotificationContext()
-    #memberTypes = ["member","master"]
 
     /**
      * 
@@ -31,12 +30,14 @@ export class ChatData {
     }
 
     isValid(){
-        if(this.chatId == undefined){
-            this.#notifications.addNotification({ name: "chatId", message: "o chatId é Obrigatorio" })
+        const memberTypes = ["member","master"]
+        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+        if(this.chatId == undefined && !!uuidRegex.test(this.chatId)){
+            this.#notifications.addNotification({ name: "chatId", message: "o chatId é invalido" })
         }
 
-        if(this.userId == undefined){
-            this.#notifications.addNotification({ name: "userId", message: "o userId é Obrigatorio" })
+        if(this.userId == undefined && !uuidRegex.test(this.userId)){
+            this.#notifications.addNotification({ name: "userId", message: "o userId é invalido" })
         }
 
         if(this.dateOfBlocking !=  null && new RegExp('^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$').test(this.dateOfBlocking)){
@@ -47,7 +48,7 @@ export class ChatData {
             this.#notifications.addNotification({ name: "lastClear", message: "a data de limpeza é invalida" })
         }
 
-        if(!this.#memberTypes.includes(this.memberType)){
+        if(!memberTypes.includes(this.memberType)){
             this.#notifications.addNotification({ name: "memberType", message: "tipo de membro é invalido" })
         }
 
