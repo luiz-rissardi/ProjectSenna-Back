@@ -11,9 +11,9 @@ export class ExpressAdapterController {
 
         return async (req, res) => {
             try {
-                const { params, body } = req;
-                body["messageArrayBuffer"] = req?.file?.buffer;
-                const result = callback(params, body)
+                const { params, body,query } = req;
+     
+                const result = await callback({...params, ...query}, body)
                 res.write(JSON.stringify({...result,value:result.getValue()}))
             } catch (error) {
                 res.writeHead(500);

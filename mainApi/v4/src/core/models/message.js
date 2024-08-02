@@ -4,7 +4,7 @@ import { NotificationContext } from "./DomainNotifications/notifications.js";
 
 export class Message {
 
-    #notifications = new NotificationContext()
+    #notificationContext = new NotificationContext()
 
     /**
      * @param {string} message
@@ -28,28 +28,28 @@ export class Message {
     }
 
     getNotifications() {
-        return this.#notifications.notificationsData;
+        return this.#notificationContext.notificationsData;
     }
 
     isValid() {
         const messageTypes = ["text", "audio", "image", "file"]
         const statusTypes = ["read", "unread"]
         if (this.message.length >= 1000) {
-            this.#notifications.addNotification({ name: "message", message: "limite do tamanha da mensagem atingido" })
+            this.#notificationContext.addNotification({ name: "message", message: "limite do tamanha da mensagem atingido" })
         }
 
         if (this.dateSender != null && new RegExp('^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$').test(this.dateSender)) {
-            this.#notifications.addNotification({ name: "dateSender", message: "a data de envio é invalida" })
+            this.#notificationContext.addNotification({ name: "dateSender", message: "a data de envio é invalida" })
         }
 
         if (!messageTypes.includes(this.messageType)) {
-            this.#notifications.addNotification({ name: "messageType", message: "o tipo da mensagem é invalido" })
+            this.#notificationContext.addNotification({ name: "messageType", message: "o tipo da mensagem é invalido" })
         }
         if (!statusTypes.includes(this.status)) {
-            this.#notifications.addNotification({ name: "status", message: "o status da mensagem é invalido" })
+            this.#notificationContext.addNotification({ name: "status", message: "o status da mensagem é invalido" })
         }
 
-        return this.#notifications.hasNotification()
+        return this.#notificationContext.hasNotification()
     }
 
 

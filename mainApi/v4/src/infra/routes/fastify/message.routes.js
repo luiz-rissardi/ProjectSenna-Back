@@ -26,7 +26,7 @@ export class MessageRoutes {
         );
 
         // rotas para pegar todas messages de um chat
-        this.#fastify.get("/chat/:chatId/messages/:skipMessage",
+        this.#fastify.get("/chat/:chatId/messages",
             FastifyAdapterController.adapt(
                 this.#controller.getMessages.bind(this.#controller)
             )

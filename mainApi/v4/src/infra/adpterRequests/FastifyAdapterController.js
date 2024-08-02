@@ -5,13 +5,10 @@ export class FastifyAdapterController {
 
     static adapt(callback) {
         return async (request, reply) => {
-            const { params, body } = request;
+            const { params, body, query } = request;
             try {
-                if (body != undefined) {
-                    body["messageArrayBuffer"] = request.file ? request.file.buffer : undefined;
-                }
-                const result = await callback(params, body);
-                reply.send({...result,value:result.getValue()});
+                const result = await callback({ ...params,...query }, body);
+                reply.send({ ...result, value: result.getValue() });
                 return reply
 
             } catch (err) {

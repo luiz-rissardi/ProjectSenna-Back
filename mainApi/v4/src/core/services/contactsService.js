@@ -10,8 +10,8 @@ export class ContactService {
 
     #contactStrategy
 
-    constructor(contactRepository) {
-        this.#contactStrategy = contactRepository;
+    constructor(contactStrategy) {
+        this.#contactStrategy = contactStrategy;
     }
 
     async createContact({ userId, cotactId }) {

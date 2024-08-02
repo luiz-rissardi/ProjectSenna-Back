@@ -3,7 +3,7 @@ import { NotificationContext } from "./DomainNotifications/notifications.js";
 
 export class Group {
 
-    #notifications = new NotificationContext();
+    #notificationContext = new NotificationContext();
 
     /**
      * 
@@ -20,19 +20,19 @@ export class Group {
     }
 
     getNotifications(){
-        return this.#notifications.notificationsData
+        return this.#notificationContext.notificationsData
     }
 
     isValid(){
         const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
         if(this.chatId == undefined && !uuidRegex.test(this.chatId)){
-            this.#notifications.addNotification({ name: "chatId", message: "o chatId é Obrigatorio" })
+            this.#notificationContext.addNotification({ name: "chatId", message: "o chatId é Obrigatorio" })
         }
 
         if(this.groupName == undefined || this.groupName == ""){
-            this.#notifications.addNotification({ name: "groupName", message: "preencha o nome do grupo" })
+            this.#notificationContext.addNotification({ name: "groupName", message: "preencha o nome do grupo" })
         }
 
-        return this.#notifications.hasNotification()
+        return this.#notificationContext.hasNotification()
     }
 }

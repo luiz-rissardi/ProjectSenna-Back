@@ -10,6 +10,7 @@ import { ChatRoutes } from "../../routes/fastify/chat.routes.js";
 import { UserRoutes } from "../../routes/fastify/user.routes.js";
 import { MessageRoutes } from "../../routes/fastify/message.routes.js";
 import { GroupRoutes } from '../../routes/fastify/group.routes.js';
+import { ContactRoutes } from '../../routes/fastify/contact.routes.js';
 
 
 dotenv.config();
@@ -51,4 +52,5 @@ function setupRoutes(fastifyApp) {
     GroupRoutes.setup(fastifyApp);
     UserRoutes.setup(fastifyApp);
     ChatRoutes.setup(fastifyApp);
+    ContactRoutes.setup(fastifyApp);
 }

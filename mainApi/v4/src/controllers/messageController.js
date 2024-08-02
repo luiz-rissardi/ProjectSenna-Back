@@ -24,7 +24,7 @@ export class MessageController {
     }
 
     getMessages(params, body) {
-        return this.#service.getMessages({ ...params, ...body });
+        return this.#service.getMessages({...params, ...body });
     }
 
     sendMessage(params, body) {
