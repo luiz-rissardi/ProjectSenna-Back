@@ -3,7 +3,7 @@ import { UnexpectedError } from "../aplicationException/appErrors.js";
 import { ChatNotFoundException } from "../aplicationException/domainException.js";
 import { loggers } from "../../util/logger.js";
 import { randomUUID as v4 } from "crypto"
-import { Message } from "../models/message.js";
+import { Message } from "../entity/message.js";
 
 export class MessageService {
 
@@ -83,7 +83,7 @@ export class MessageService {
             const dateSender = new Date();
             const result = await this.#messageStrategy.patchOne(messageId, dateSender, message, originLanguage);
             if (result.isSuccess) {
-                return Result.ok("mensagem ediatda com sucesso")
+                return Result.ok("mensagem editada com sucesso")
             } else {
                 return Result.fail(result.error)
             }

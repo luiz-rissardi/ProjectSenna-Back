@@ -2,10 +2,10 @@ import { Repository } from "./base/repository.js";
 import { Result } from "../errorHandling/result.js";
 import { loggers } from "../../util/logger.js";
 import { RepositoryOperationError } from "../../core/aplicationException/appErrors.js";
-import { User } from "../../core/models/user.js";
+import { User } from "../../core/entity/user.js";
 
 
-export class UserMysql extends Repository{
+export class UserRepository extends Repository{
     constructor(connectionString) {
         super(connectionString)
     }
@@ -35,6 +35,7 @@ export class UserMysql extends Repository{
      */
     async insertOne(user) {
         try {
+            const buffer = Buffer.from(user.photo);
             const connection = await this.getConnection();
             await connection
                 .promise()
@@ -44,7 +45,7 @@ export class UserMysql extends Repository{
             `, [
                     user.userName,
                     user.isActive,
-                    user.photo,
+                    buffer,
                     user.email,
                     user.lastOnline,
                     user.languages,
@@ -56,6 +57,7 @@ export class UserMysql extends Repository{
             connection.release();
             return Result.ok(user);
         } catch (error) {
+            console.log(error);
             loggers.error("não foi possivel criar o usuario ", error);
             return Result.fail(RepositoryOperationError.create())
         }

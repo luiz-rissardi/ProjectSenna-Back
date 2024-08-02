@@ -1,4 +1,4 @@
-import { NotificationContext } from "./DomainNotifications/notifications.js";
+import { NotificationContext } from "../DomainNotifications/notifications.js";
 
 
 export class Group {
@@ -10,7 +10,7 @@ export class Group {
      * @param {string} chatId 
      * @param {string} groupName 
      * @param {string} groupDescription 
-     * @param {string} groupPhoto
+     * @param {Blob} groupPhoto
      */
     constructor(chatId,groupName,groupDescription,groupPhoto){
         this.chatId = chatId;
@@ -25,7 +25,7 @@ export class Group {
 
     isValid(){
         const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
-        if(this.chatId == undefined && !uuidRegex.test(this.chatId)){
+        if(this.chatId == undefined || !uuidRegex.test(this.chatId)){
             this.#notificationContext.addNotification({ name: "chatId", message: "o chatId é Obrigatorio" })
         }
 

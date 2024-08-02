@@ -1,4 +1,4 @@
-import { NotificationContext } from "./DomainNotifications/notifications.js";
+import { NotificationContext } from "../DomainNotifications/notifications.js";
 
 
 
@@ -32,11 +32,11 @@ export class ChatData {
     isValid(){
         const memberTypes = ["member","master"]
         const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
-        if(this.chatId == undefined && !!uuidRegex.test(this.chatId)){
+        if(this.chatId == undefined || !!uuidRegex.test(this.chatId)){
             this.#notificationContext.addNotification({ name: "chatId", message: "o chatId é invalido" })
         }
 
-        if(this.userId == undefined && !uuidRegex.test(this.userId)){
+        if(this.userId == undefined || !uuidRegex.test(this.userId)){
             this.#notificationContext.addNotification({ name: "userId", message: "o userId é invalido" })
         }
 

@@ -1,11 +1,11 @@
 import { RepositoryOperationError } from "../../core/aplicationException/appErrors.js";
-import { Group } from "../../core/models/groupData.js";
+import { Group } from "../../core/entity/groupData.js";
 import { loggers } from "../../util/logger.js";
 import { Result } from "../errorHandling/result.js";
 import { Repository } from "./base/repository.js";
 
 
-export class GroupMysql extends Repository {
+export class GroupRepository extends Repository {
     constructor(connectionString) {
         super(connectionString)
     }
@@ -15,12 +15,13 @@ export class GroupMysql extends Repository {
      */
     async insertOne(group) {
         try {
+            const buffer = Buffer.from(group.groupPhoto);
             const connection = await this.getConnection();
             await connection
                 .promise()
                 .query(`
                 INSERT INTO groupData VALUES(?,?,?,?)
-                `, [group.groupPhoto, group.groupName, group.groupDescription, group.chatId]);
+                `, [buffer, group.groupName, group.groupDescription, group.chatId]);
 
             connection.release();
             return Result.ok(group);
@@ -86,7 +87,7 @@ export class GroupMysql extends Repository {
             connection.release();
             return Result.ok(group);
         } catch (error) {
-            loggers.error("não foi possivel inserir um novo chat ", error);
+            loggers.error("não foi possivel pegar um grupo", error);
             return Result.fail(RepositoryOperationError.create())
         }
     }

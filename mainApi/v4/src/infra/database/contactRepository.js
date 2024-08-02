@@ -1,10 +1,10 @@
 import { Repository } from "./base/repository.js";
 import { loggers } from "../../util/logger.js";
 import { Result } from "../errorHandling/result.js";
-import { Contact } from "../../core/models/contact.js";
+import { Contact } from "../../core/entity/contact.js";
 import { RepositoryOperationError } from "../../core/aplicationException/appErrors.js";
 
-export class ContactMysql extends Repository {
+export class ContactRepository extends Repository {
 
     constructor(connectionString) {
         super(connectionString);
@@ -22,6 +22,7 @@ export class ContactMysql extends Repository {
                 .query("INSERT INTO contact VALUES (?,?)"
                     , [contact.contactId, contact.userId]
                 )
+            connection.release();
             return Result.ok()
         } catch (error) {
             loggers.error("não foi possivel adicionar um novo contato ", error);
@@ -41,6 +42,7 @@ export class ContactMysql extends Repository {
                 .query("DELETE contact WHERE contactId = ? and userId = ?"
                     , [contact.contactId, contact.userId]
                 )
+            connection.release();
             return Result.ok()
         } catch (error) {
             loggers.error("não foi possivel apagar o contato ", error);

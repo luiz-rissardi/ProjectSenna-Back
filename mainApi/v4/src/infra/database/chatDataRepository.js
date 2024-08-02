@@ -1,11 +1,11 @@
 import { Repository } from "./base/repository.js";
 import { Result } from "../errorHandling/result.js";
 import { RepositoryOperationError } from "../../core/aplicationException/appErrors.js";
-import { ChatData } from "../../core/models/chatData.js";
+import { ChatData } from "../../core/entity/chatData.js";
 import { loggers } from "../../util/logger.js";
 
 
-export class ChatDataMysql extends Repository {
+export class ChatDataRepository extends Repository {
 
     constructor(connectionString) {
         super(connectionString)

@@ -1,5 +1,11 @@
 import { FastifyAdapterController } from "../../adpterRequests/FastifyAdapterController.js";
 import { UserControllerFactory } from "../../factories/UserControllerFactory.js";
+import multer from "multer";
+
+const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 10 * 1024 * 1024 }
+});
 
 export class UserRoutes {
 
@@ -18,6 +24,7 @@ export class UserRoutes {
 
     #setupRoutes() {
         this.#fastify.post("/user/login",
+            { preHandler: upload.single('arrayBuffer') },
             FastifyAdapterController.adapt(
                 this.#controller.findUser.bind(this.#controller)
             )

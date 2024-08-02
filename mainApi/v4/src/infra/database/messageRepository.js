@@ -1,13 +1,13 @@
 
 
 import { RepositoryOperationError } from "../../core/aplicationException/appErrors.js";
-import { Message } from "../../core/models/message.js";
+import { Message } from "../../core/entity/message.js";
 import { loggers } from "../../util/logger.js";
 import { Result } from "../errorHandling/result.js";
 import { Repository } from "./base/repository.js";
 
 
-export class MessageMysql extends Repository {
+export class MessageRepository extends Repository {
     constructor(connectionString) {
         super(connectionString)
     }

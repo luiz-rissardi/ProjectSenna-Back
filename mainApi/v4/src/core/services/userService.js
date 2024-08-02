@@ -4,24 +4,19 @@ import { UserBlockingException } from "../../core/aplicationException/domainExce
 import { InvalidCredentialsException } from "../../core/aplicationException/domainException.js";
 import { loggers } from "../../util/logger.js";
 import { EmailAlreadyExistsExeption } from "../aplicationException/domainException.js";
-import { User } from "../models/user.js";
+import { User } from "../entity/user.js";
 import { randomUUID as v4 } from "crypto"
 import { EncryptService } from "../../util/encryptService.js";
-import { UserMysql } from "../../infra/database/userRepository.js";
 
 export class UserService {
 
     #userStrategy
 
-    /**
-     * 
-     * @param {UserMysql} userStrategy 
-     */
     constructor(userStrategy) {
         this.#userStrategy = userStrategy;
     }
 
-    async createUser({ userName, userDescription, email, photo, languages, password }) {
+    async createUser({ userName, userDescription, email, arrayBuffer, languages, password }) {
         try {
             const userId = v4();
             const contactId = v4();
@@ -32,7 +27,7 @@ export class UserService {
             if (!resultValidate.isSuccess) {
                 return Result.fail(resultValidate.error)
             }
-            const user = new User(userName, isActive, email, photo, userDescription, userId, lastOnline, languages, contactId, password);
+            const user = new User(userName, isActive, email, arrayBuffer, userDescription, userId, lastOnline, languages, contactId, password);
 
             if (user.isValid()) {
                 const result = await this.#userStrategy.insertOne(user);

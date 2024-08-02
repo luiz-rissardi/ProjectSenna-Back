@@ -1,8 +1,7 @@
 import { UnexpectedError } from "../aplicationException/appErrors.js";
 import { Result } from "../../infra/errorHandling/result.js";
 import { loggers } from "../../util/logger.js";
-import { Contact } from "../models/contact.js";
-import { ContactMysql } from "../../infra/database/contactRepository.js";
+import { Contact } from "../entity/contact.js";
 
 
 

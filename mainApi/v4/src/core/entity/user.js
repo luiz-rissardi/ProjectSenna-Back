@@ -1,5 +1,5 @@
 import { EncryptService } from "../../util/encryptService.js";
-import { NotificationContext } from "./DomainNotifications/notifications.js";
+import { NotificationContext } from "../DomainNotifications/notifications.js";
 
 export class User {
 
@@ -9,7 +9,7 @@ export class User {
      * @param {string} userName 
      * @param {boolean} isActive 
      * @param {string} email 
-     * @param {string} photo 
+     * @param {Blob} photo 
      * @param {string} userDescription 
      * @param {string} userId 
      * @param {Date} lastOnline 

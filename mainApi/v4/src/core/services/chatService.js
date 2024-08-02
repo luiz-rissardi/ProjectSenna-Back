@@ -1,8 +1,8 @@
 import { Result } from "../../infra/errorHandling/result.js";
 import { loggers } from "../../util/logger.js";
 import { UnexpectedError } from "../aplicationException/appErrors.js";
-import { Chat } from "../models/chat.js";
-import { ChatData } from "../models/chatData.js";
+import { Chat } from "../entity/chat.js";
+import { ChatData } from "../entity/chatData.js";
 import { randomUUID as v4 } from "crypto"
 
 export class ChatService {
