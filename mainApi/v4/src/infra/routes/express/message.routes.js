@@ -19,7 +19,7 @@ export class MessageRoutes {
         // rotas de send messages 
         this.#router.route("/chat/:chatId/message/send")
             .post(
-                ExpressAdapterController.adapt(this.#controller.sendMessage.bind(this.#controller))
+                ExpressAdapterController.adapt(this.#controller.saveMessage.bind(this.#controller))
             )
 
         // rotas para pegar todas messages de um chat

@@ -1,19 +1,16 @@
+
 import { NotificationContext } from "../DomainNotifications/notifications.js";
 
-export class ForumData {
+export class KeyWord {
     #notificationContext = new NotificationContext();
 
     /**
-     * @param {string} forumTitle 
-     * @param {string} forumDescription 
      * @param {string} chatId 
-     * @param {boolean} isActive 
+     * @param {string} keyWord 
      */
-    constructor(forumTitle, forumDescription, chatId, isActive) {
-        this.forumTitle = forumTitle;
-        this.forumDescription = forumDescription;
+    constructor(chatId, keyWord) {
         this.chatId = chatId;
-        this.isActive = isActive;
+        this.keyWord = keyWord;
     }
 
     getNotifications() {
@@ -23,8 +20,8 @@ export class ForumData {
     isValid() {
         const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 
-        if (this.forumTitle.length <= 4 || this.forumTitle == undefined) {
-            this.#notificationContext.addNotification({ name: "forumTitle", message: "o nome do forum deve conter no minimo 4 letras " })
+        if (this.keyWord == undefined) {
+            this.#notificationContext.addNotification({ name: "keyWord", message: "a palavra chave não pode estar vazio" })
         }
 
         if (this.chatId == undefined || !uuidRegex.test(this.chatId)) {

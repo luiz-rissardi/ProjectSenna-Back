@@ -62,16 +62,16 @@ export class GroupService {
     }
 
 
-    async #chatIdKeyValidate(groupId) {
-        const result = await this.#groupStrategy.chatIdIsValid(groupId)
+    async #chatIdKeyValidate(chatId) {
+        const result = await this.#groupStrategy.chatIdIsValid(chatId)
         if (result.getValue().length == 0) {
             return Result.fail(ChatInvalidKeyException.create());
         }
         return Result.ok();
     }
 
-    async #groupExists(groupId) {
-        const result = await this.#groupStrategy.findOne(groupId)
+    async #groupExists(chatId) {
+        const result = await this.#groupStrategy.findOne(chatId)
         if (result.getValue().length == 0) {
             return Result.fail(ChatNotFoundException.create());
         }

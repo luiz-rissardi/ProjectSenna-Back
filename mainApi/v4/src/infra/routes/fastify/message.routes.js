@@ -21,7 +21,7 @@ export class MessageRoutes {
         // rotas de send messages 
         this.#fastify.post("/chat/:chatId/message/send",
             FastifyAdapterController.adapt(
-                this.#controller.sendMessage.bind(this.#controller)
+                this.#controller.saveMessage.bind(this.#controller)
             )
         );
 

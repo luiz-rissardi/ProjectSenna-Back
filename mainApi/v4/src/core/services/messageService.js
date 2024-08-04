@@ -55,7 +55,7 @@ export class MessageService {
         }
     }
 
-    async sendMessage({ messageText, userId, chatId, language, messageType = "text" }) {
+    async saveMessage({ messageText, userId, chatId, language, messageType = "text" }) {
         try {
             const dateSenderMessage = new Date();
             const messageId = v4();
