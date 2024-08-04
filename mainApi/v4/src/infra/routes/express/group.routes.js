@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { ExpressAdapterController } from "../../adpterRequests/ExpressAdpaterController.js";
-import { GroupController } from "../../../controllers/groupController.js";
+import { GroupControllerFactory } from "../../factories/groupControllerFactory.js";
 
 export class GroupRoutes {
 
@@ -9,7 +9,7 @@ export class GroupRoutes {
 
     constructor() {
         this.#router = Router()
-        this.#controller = new GroupController()
+        this.#controller = GroupControllerFactory.getController()
 
     }
 

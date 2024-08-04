@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { UserController } from "../../../controllers/userController.js";
 import { ExpressAdapterController } from "../../adpterRequests/ExpressAdpaterController.js";
+import { UserControllerFactory } from "../../factories/UserControllerFactory.js";
 
 export class UserRoutes {
 
@@ -9,7 +9,7 @@ export class UserRoutes {
 
     constructor() {
         this.#router = Router()
-        this.#controller = new UserController();
+        this.#controller = UserControllerFactory.getController();
     }
 
     getRoutes() {

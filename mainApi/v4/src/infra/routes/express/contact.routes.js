@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { ExpressAdapterController } from "../../adpterRequests/ExpressAdpaterController.js";
-import { ContactController } from "../../../controllers/contactController.js";
+import { ContactControllerFactory } from "../../factories/contactControllerFactory.js";
 
 export class ContactRoutes {
 
@@ -9,7 +9,7 @@ export class ContactRoutes {
 
     constructor() {
         this.#router = Router()
-        this.#controller = new ContactController()
+        this.#controller = ContactControllerFactory.getController()
 
     }
 
