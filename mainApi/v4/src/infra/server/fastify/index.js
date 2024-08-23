@@ -3,6 +3,10 @@ import fastifyCors from "@fastify/cors";
 import fastifyHelmet from '@fastify/helmet';
 import dotenv from 'dotenv';
 import fastifyMonitor from "fastify-status"
+import { initalizeTracing } from '../tracing.js';
+
+await initalizeTracing();
+import { trace, context } from "@opentelemetry/api"
 
 import { SocketHandler } from '../socketHandler.js';
 import { loggers } from '../../../util/logger.js';
@@ -13,9 +17,26 @@ import { GroupRoutes } from '../../routes/fastify/group.routes.js';
 import { ContactRoutes } from '../../routes/fastify/contact.routes.js';
 import { ForumRoutes } from '../../routes/fastify/forum.routes.js';
 
+import { AsyncLocalStorage } from "async_hooks"
+
+const asyncStorage = new AsyncLocalStorage();
 
 dotenv.config();
 const app = fastify();
+
+// ativado com uma nova requisição
+app.addHook('onRequest', async (request, reply) => {
+    const span = trace.getSpan(context.active());
+    asyncStorage.enterWith(span);
+});
+
+// ativada quando a requisição for respondida
+app.addHook('onSend', async (request, reply, payload) => {
+    const span = asyncStorage.getStore();
+    span.setAttribute('http.response_payload', payload)
+    return payload
+});
+
 SocketHandler.setup(app.server)
 
 //para ver saude da aplicação

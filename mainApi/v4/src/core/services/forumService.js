@@ -22,7 +22,6 @@ export class ForumService {
 
     async createForum({ forumTitle, forumDescription, isActive, chatId }) {
         try {
-
             const resultValidate = await this.#chatIdKeyValidate(chatId);
             if (!resultValidate.isSuccess) {
                 return Result.fail(resultValidate.error)

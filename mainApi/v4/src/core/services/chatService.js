@@ -114,6 +114,7 @@ export class ChatService {
             return Result.fail(result.error);
 
         } catch (error) {
+            console.log("eeee");
             loggers.warn(UnexpectedError.create(error.message));
             return Result.fail(UnexpectedError.create("erro interno do servidor"))
         }

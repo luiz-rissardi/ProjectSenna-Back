@@ -101,6 +101,7 @@ export class ChatDataRepository extends Repository {
             connection.release();
             return Result.ok(chats);
         } catch (error) {
+            console.log(error);
             loggers.error("não foi possivel buscar os chats ", error);
             return Result.fail(RepositoryOperationError.create())
         }
