@@ -18,17 +18,16 @@ export class MessageRepository extends Repository {
     async patchMany(messagesId = []) {
         try {
             const connection = await this.getConnection();
-            await connection.promise().beginTransaction();
+            await connection.beginTransaction();
             for (const messageId of messagesId) {
-                connection
-                    .promise()
+                connection  
                     .query(`
                     UPDATE message
                     SET status = "read"
                     WHERE messageId = ?
                 `, [messageId])
             }
-            await connection.promise().commit()
+            await connection.commit()
             connection.release();
             return Result.ok();
         } catch (error) {
@@ -44,7 +43,6 @@ export class MessageRepository extends Repository {
         try {
             const connection = await this.getConnection();
             await connection
-                .promise()
                 .query(`
                 INSERT INTO message
                 VALUES(?,?,?,?,?,?,?,?)
@@ -67,7 +65,6 @@ export class MessageRepository extends Repository {
         try {
             const connection = await this.getConnection();
             await connection
-                .promise()
                 .query(`
                 UPDATE message
                 SET dateSender = ?, message = ?, originLanguage = ?
@@ -88,7 +85,6 @@ export class MessageRepository extends Repository {
         try {
             const connection = await this.getConnection();
             await connection
-                .promise()
                 .query(`
                 DELETE  FROM message
                 WHERE messageId = ?
@@ -106,7 +102,6 @@ export class MessageRepository extends Repository {
             // botar um skip para pular as ja pegas
             const connection = await this.getConnection();
             const [messages] = await connection
-                .promise()
                 .query(`
                SELECT 
                 M.messageId AS messageId,

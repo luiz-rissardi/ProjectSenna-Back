@@ -1,9 +1,8 @@
 
 import { NodeSDK } from "@opentelemetry/sdk-node";
-import { getNodeAutoInstrumentations } from "@opentelemetry/auto-instrumentations-node";
+// import { getNodeAutoInstrumentations } from "@opentelemetry/auto-instrumentations-node";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-grpc";
-import mySQLInstrumentation from "@opentelemetry/instrumentation-mysql";
-const { MySQLInstrumentation } = mySQLInstrumentation
+import { MySQL2Instrumentation } from "@opentelemetry/instrumentation-mysql2";
 import { HttpInstrumentation } from "@opentelemetry/instrumentation-http";
 
 const sdk = new NodeSDK({
@@ -14,7 +13,7 @@ const sdk = new NodeSDK({
     }),
     instrumentations: [
         new HttpInstrumentation(),
-        new MySQLInstrumentation()
+        new MySQL2Instrumentation()
 
     ]
 })

@@ -18,7 +18,6 @@ export class ContactRepository extends Repository {
         try {
             const connection = await this.getConnection();
             await connection
-                .promise()
                 .query("INSERT INTO contact VALUES (?,?)"
                     , [contact.contactId, contact.userId]
                 )
@@ -38,7 +37,6 @@ export class ContactRepository extends Repository {
         try {
             const connection = await this.getConnection();
             await connection
-                .promise()
                 .query("DELETE contact WHERE contactId = ? and userId = ?"
                     , [contact.contactId, contact.userId]
                 )

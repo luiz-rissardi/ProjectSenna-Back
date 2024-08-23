@@ -18,7 +18,6 @@ export class GroupRepository extends Repository {
             const buffer = Buffer.from(group.groupPhoto);
             const connection = await this.getConnection();
             await connection
-                .promise()
                 .query(`
                 INSERT INTO groupData VALUES(?,?,?,?)
                 `, [buffer, group.groupName, group.groupDescription, group.chatId]);
@@ -38,7 +37,6 @@ export class GroupRepository extends Repository {
         try {
             const connection = await this.getConnection();
             await connection
-                .promise()
                 .query(`
                 UPDATE groupData
                 SET groupPhoto = ?, groupName = ?, groupDescription = ?
@@ -57,7 +55,6 @@ export class GroupRepository extends Repository {
         try {
             const connection = await this.getConnection();
             const [group] = await connection
-                .promise()
                 .query(`
                 SELECT *
                 FROM Chat
@@ -77,7 +74,6 @@ export class GroupRepository extends Repository {
         try {
             const connection = await this.getConnection();
             const [group] = await connection
-                .promise()
                 .query(`
                 SELECT *
                 FROM groupData

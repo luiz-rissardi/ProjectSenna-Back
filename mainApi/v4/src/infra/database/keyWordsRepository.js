@@ -12,17 +12,16 @@ export class KeyWordsRepository extends Repository {
     async insertMany(chatId, words = []) {
         try {
             const connection = await this.getConnection();
-            await connection.promise().beginTransaction();
+            await connection.beginTransaction();
 
             words.forEach(async word => {
                 await connection
-                    .promise()
                     .query(` INSERT INTO keyword
                     VALUES(?,?)
                     `, [chatId,word]);
             })
 
-            await connection.promise().commit()
+            await connection.commit()
             connection.release();
             return Result.ok()
         } catch (error) {

@@ -20,7 +20,7 @@ export class ForumRepository extends Repository {
         try {
             const connection = await this.getConnection();
             await connection
-                .promise()
+                
                 .query(` INSERT INTO forumData
                     VALUES(?,?,?,?)
                     `, [forum.forumTitle, forum.forumDescription, forum.isActive, forum.chatId])
@@ -40,7 +40,7 @@ export class ForumRepository extends Repository {
         try {
             const connection = await this.getConnection();
             await connection
-                .promise()
+                
                 .query(`UPDATE forumData
                 SET forumTitle = ?, forumDescription = ?, isActive = ?
                 WHERE chatId = ?
@@ -57,7 +57,6 @@ export class ForumRepository extends Repository {
         try {
             const connection = await this.getConnection();
             const [foruns] = await connection
-                .promise()
                 .query(`SELECT *
                         FROM forumData f
                         WHERE f.forumTitle LIKE ?
@@ -79,7 +78,6 @@ export class ForumRepository extends Repository {
         try {
             const connection = await this.getConnection();
             const [group] = await connection
-                .promise()
                 .query(`
                 SELECT *
                 FROM forumData
@@ -98,7 +96,6 @@ export class ForumRepository extends Repository {
         try {
             const connection = await this.getConnection();
             const [group] = await connection
-                .promise()
                 .query(`
                 SELECT *
                 FROM Chat

@@ -14,7 +14,7 @@ export class UserRepository extends Repository{
         try {
             const connection = await this.getConnection();
             const [[user]] = await connection
-                .promise()
+                
                 .query(`
                 SELECT * 
                 FROM user
@@ -38,7 +38,7 @@ export class UserRepository extends Repository{
             const buffer = Buffer.from(user.photo);
             const connection = await this.getConnection();
             await connection
-                .promise()
+                
                 .query(`
                 INSERT INTO User (userName, isActive, photo, email, lastOnline, languages, userDescription, passwordHash, contactId, userId)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -68,7 +68,7 @@ export class UserRepository extends Repository{
         try {
             const connection = await this.getConnection();
             const [contacts] = await connection
-                .promise()
+                
                 .query(`
                 SELECT U.userName, U.photo, U.userId
                 FROM contact as C
@@ -113,7 +113,6 @@ export class UserRepository extends Repository{
                 .replace(/,\s*$/, '');  // Remove a última vírgula e qualquer espaço em branco
 
             await connection
-                .promise()
                 .query(`
                     UPDATE User 
                     SET ${query}
@@ -133,7 +132,7 @@ export class UserRepository extends Repository{
     async findByEmail(email) {
         try {
             const connection = await this.getConnection();
-            const [[user]] = await connection.promise().query(`SELECT * FROM user WHERE email = ?`, [email])
+            const [[user]] = await connection.query(`SELECT * FROM user WHERE email = ?`, [email])
             connection.release();
             return Result.ok(user);
         } catch (error) {

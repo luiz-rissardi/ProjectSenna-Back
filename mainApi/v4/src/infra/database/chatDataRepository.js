@@ -19,7 +19,7 @@ export class ChatDataRepository extends Repository {
         try {
             const connection = await this.getConnection();
             await connection
-            .promise()
+            
             .query(`
                 INSERT INTO chatData
                 VALUES (?,?,?,?,?,?)
@@ -74,7 +74,7 @@ export class ChatDataRepository extends Repository {
             `;
         
             // Executa a query com os valores dinâmicos
-            await connection.promise().query(query, values);
+            await connection.query(query, values);
             connection.release();
             
             return Result.ok(chatData);
@@ -89,7 +89,6 @@ export class ChatDataRepository extends Repository {
         try {
             const connection = await this.getConnection();
             const [ chats ] = await connection
-            .promise()
             .query(`
                 SELECT * 
                 FROM chatData as CT

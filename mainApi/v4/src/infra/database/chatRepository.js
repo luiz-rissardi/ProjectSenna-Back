@@ -20,7 +20,6 @@ export class ChatRepository extends Repository {
         try {
             const connection = await this.getConnection();
             await connection
-                .promise()
                 .query(`
                 INSERT INTO chat VALUES(?,?)
                 `, [chat.chatType, chat.chatId]);
