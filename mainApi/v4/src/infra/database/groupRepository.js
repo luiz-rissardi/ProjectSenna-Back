@@ -19,8 +19,8 @@ export class GroupRepository extends Repository {
             const connection = await this.getConnection();
             await connection
                 .query(`
-                INSERT INTO groupData VALUES(?,?,?,?)
-                `, [buffer, group.groupName, group.groupDescription, group.chatId]);
+                INSERT INTO groupData VALUES(?,?,?,?,?)
+                `, [buffer, group.groupName, group.groupDescription, group.chatId,group.chatType]);
 
             connection.release();
             return Result.ok(group);
@@ -47,25 +47,6 @@ export class GroupRepository extends Repository {
             return Result.ok(group);
         } catch (error) {
             loggers.error("não foi possivel atualizar o grupo ", error);
-            return Result.fail(RepositoryOperationError.create())
-        }
-    }
-
-    async chatIdIsValid(chatId) {
-        try {
-            const connection = await this.getConnection();
-            const [group] = await connection
-                .query(`
-                SELECT *
-                FROM Chat
-                WHERE chatId = ? and chatType = "group"
-                AND chatId NOT IN (SELECT chatId FROM GroupData);
-                `, [chatId]);
-
-            connection.release();
-            return Result.ok(group);
-        } catch (error) {
-            loggers.error("não foi possivel verificar se a key é valida ", error);
             return Result.fail(RepositoryOperationError.create())
         }
     }

@@ -84,11 +84,10 @@ export class ChatService {
         }
     }
 
-    async createChat({ chatType }) {
+    async createChat() {
         try {
             const chatId = v4();
-            const chat = new Chat(chatId, chatType);
-
+            const chat = new Chat(chatId, "conversation");
             if (chat.isValid()) {
                 const result = await this.#chatStrategy.insertOne(chat);
                 if (result.isSuccess) {
@@ -114,7 +113,6 @@ export class ChatService {
             return Result.fail(result.error);
 
         } catch (error) {
-            console.log("eeee");
             loggers.warn(UnexpectedError.create(error.message));
             return Result.fail(UnexpectedError.create("erro interno do servidor"))
         }

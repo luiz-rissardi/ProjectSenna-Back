@@ -22,11 +22,11 @@ export class Contact {
     }
 
     isValid() {
-        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
-        if (this.contactId == undefined || !uuidRegex.test(this.contactId)) {
+        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+        if (this.contactId == undefined || uuidRegex.test(this.contactId) == false) {
             this.#notificationContext.addNotification({ name: "contactId", message: "o contactId é inválido" })
         }
-        if (this.userId == undefined || !uuidRegex.test(this.userId)) {
+        if (this.userId == undefined || uuidRegex.test(this.userId) == false) {
             this.#notificationContext.addNotification({ name: "userId", message: "o contactId é inválido" })
         }
 

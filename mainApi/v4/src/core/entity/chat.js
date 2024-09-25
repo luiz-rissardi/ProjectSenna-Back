@@ -4,7 +4,6 @@ import { NotificationContext } from "../DomainNotifications/notifications.js";
 export class Chat {
 
     #notificationContext = new NotificationContext();
-
     /**
      * 
      * @param {string} chatId 
@@ -20,9 +19,9 @@ export class Chat {
     }
 
     isValid(){
-        const typesOfChat = ["group","forum","conversation"]
-        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
-        if(this.chatId == undefined || !!uuidRegex.test(this.chatId)){
+        const typesOfChat = ["group","conversation"]
+        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+        if(this.chatId == undefined || uuidRegex.test(this.chatId) == false){
             this.#notificationContext.addNotification({ name: "chatId", message: "o chatId é iválido" })
         }
 

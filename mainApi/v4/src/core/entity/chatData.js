@@ -6,7 +6,6 @@ import { NotificationContext } from "../DomainNotifications/notifications.js";
 export class ChatData {
 
     #notificationContext = new NotificationContext()
-
     /**
      * 
      * @param {string} chatId 
@@ -31,8 +30,8 @@ export class ChatData {
 
     isValid(){
         const memberTypes = ["member","master"]
-        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
-        if(this.chatId == undefined || !!uuidRegex.test(this.chatId)){
+        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+        if(this.chatId == undefined || uuidRegex.test(this.chatId) == false){
             this.#notificationContext.addNotification({ name: "chatId", message: "o chatId é invalido" })
         }
 

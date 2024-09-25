@@ -1,9 +1,8 @@
 import { NotificationContext } from "../DomainNotifications/notifications.js";
+import { Chat } from "./chat.js";
 
+export class Group extends Chat{
 
-export class Group {
-
-    #notificationContext = new NotificationContext();
 
     /**
      * 
@@ -13,26 +12,9 @@ export class Group {
      * @param {Blob} groupPhoto
      */
     constructor(chatId,groupName,groupDescription,groupPhoto){
-        this.chatId = chatId;
+        super(chatId,"group")
         this.groupName = groupName;
         this.groupDescription = groupDescription;
         this.groupPhoto = groupPhoto;
-    }
-
-    getNotifications(){
-        return this.#notificationContext.notificationsData
-    }
-
-    isValid(){
-        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
-        if(this.chatId == undefined || !uuidRegex.test(this.chatId)){
-            this.#notificationContext.addNotification({ name: "chatId", message: "o chatId é invalido" })
-        }
-
-        if(this.groupName == undefined || this.groupName == ""){
-            this.#notificationContext.addNotification({ name: "groupName", message: "preencha o nome do grupo" })
-        }
-
-        return this.#notificationContext.hasNotification()
     }
 }

@@ -5,8 +5,6 @@ import { Result } from "../errorHandling/result.js";
 import { Repository } from "./base/repository.js";
 
 
-
-
 export class ChatRepository extends Repository {
     constructor(connectionString) {
         super(connectionString)

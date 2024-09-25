@@ -50,7 +50,7 @@ export class User {
         if (this.userName == "") {
             this.#notificationContext.addNotification({ name: "userName", message: "o nome do usuario esta vazio" });
         }
-        if (!regex.test(this.email)) {
+        if (regex.test(this.email) == false) {
             this.#notificationContext.addNotification({ name: "email", message: "o email é invalido" });
         }
         if (this.languages == null) {

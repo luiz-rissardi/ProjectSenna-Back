@@ -12,7 +12,6 @@ import { ChatRoutes } from "../../routes/express/chat.routes.js";
 import { GroupRoutes } from "../../routes/express/group.routes.js";
 import { MessageRoutes } from "../../routes/express/message.routes.js";
 import { ContactRoutes } from "../../routes/express/contact.routes.js";
-import { ForumRoutes } from "../../routes/express/forum.routes.js";
 
 
 const app = express();
@@ -33,7 +32,6 @@ app.use(chatRoutes.getRoutes())
 app.use(messageRoutes.getRoutes())
 app.use(groupRoutes.getRoutes())
 app.use(contactRoutes.getRoutes())
-app.use(forumRoutes.getRoutes())
 
 server.listen(3000)
     .on("listening", () => {
@@ -47,7 +45,6 @@ function setupRoutes() {
     const messageRoutes = new MessageRoutes();
     const groupRoutes = new GroupRoutes();
     const contactRoutes = new ContactRoutes();
-    const forumRoutes = new ForumRoutes();
 
     return {
         messageRoutes,

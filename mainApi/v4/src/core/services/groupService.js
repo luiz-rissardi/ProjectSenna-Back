@@ -1,8 +1,9 @@
 import { Result } from "../../infra/errorHandling/result.js";
 import { UnexpectedError } from "../aplicationException/appErrors.js";
-import { ChatInvalidKeyException, ChatNotFoundException } from "../aplicationException/domainException.js";
+import { ChatNotFoundException } from "../aplicationException/domainException.js";
 import { loggers } from "../../util/logger.js";
-import { Group } from "../entity/groupData.js"
+import { Group } from "../entity/groupData.js";
+import { randomUUID as v4 } from "crypto"
 
 
 export class GroupService {
@@ -13,13 +14,9 @@ export class GroupService {
         this.#groupStrategy = groupStrategy;
     }
 
-    async createGroup({chatId, groupName, groupDescription, arrayBuffer}) {
+    async createGroup({groupName, groupDescription, arrayBuffer}) {
         try {
-            const resultValidate = await this.#chatIdKeyValidate(chatId);
-            if (!resultValidate.isSuccess) {
-                return Result.fail(resultValidate.error)
-            }
-
+            const chatId = v4();
             const group = new Group(chatId, groupName, groupDescription, arrayBuffer);
             if (group.isValid()) {
                 const result = await this.#groupStrategy.insertOne(group);
@@ -59,15 +56,6 @@ export class GroupService {
             loggers.warn(UnexpectedError.create(error.message));
             return Result.fail(UnexpectedError.create("erro interno do servidor"))
         }
-    }
-
-
-    async #chatIdKeyValidate(chatId) {
-        const result = await this.#groupStrategy.chatIdIsValid(chatId)
-        if (result.getValue().length == 0) {
-            return Result.fail(ChatInvalidKeyException.create());
-        }
-        return Result.ok();
     }
 
     async #groupExists(chatId) {

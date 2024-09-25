@@ -3,9 +3,9 @@ import fastifyCors from "@fastify/cors";
 import fastifyHelmet from '@fastify/helmet';
 import dotenv from 'dotenv';
 import fastifyMonitor from "fastify-status"
-import { initalizeTracing } from '../tracing.js';
+// import { initalizeTracing } from '../tracing.js';
 
-await initalizeTracing();
+// await initalizeTracing();
 
 import { SocketHandler } from '../socketHandler.js';
 import { loggers } from '../../../util/logger.js';
@@ -14,7 +14,6 @@ import { UserRoutes } from "../../routes/fastify/user.routes.js";
 import { MessageRoutes } from "../../routes/fastify/message.routes.js";
 import { GroupRoutes } from '../../routes/fastify/group.routes.js';
 import { ContactRoutes } from '../../routes/fastify/contact.routes.js';
-import { ForumRoutes } from '../../routes/fastify/forum.routes.js';
 
 dotenv.config();
 const app = fastify();
@@ -58,5 +57,4 @@ function setupRoutes(fastifyApp) {
     UserRoutes.setup(fastifyApp);
     ChatRoutes.setup(fastifyApp);
     ContactRoutes.setup(fastifyApp);
-    ForumRoutes.setup(fastifyApp);
 }

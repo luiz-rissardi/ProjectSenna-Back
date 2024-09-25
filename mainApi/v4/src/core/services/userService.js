@@ -1,7 +1,7 @@
 import { Result } from "../../infra/errorHandling/result.js";
-import { UnexpectedError } from "../../core/aplicationException/appErrors.js";
-import { UserBlockingException } from "../../core/aplicationException/domainException.js";
-import { InvalidCredentialsException } from "../../core/aplicationException/domainException.js";
+import { UnexpectedError } from "../aplicationException/appErrors.js";
+import { UserBlockingException } from "../aplicationException/domainException.js";
+import { InvalidCredentialsException } from "../aplicationException/domainException.js";
 import { loggers } from "../../util/logger.js";
 import { EmailAlreadyExistsExeption } from "../aplicationException/domainException.js";
 import { User } from "../entity/user.js";
