@@ -8,7 +8,7 @@ o mesmo problema.
 export class Result {
     isSuccess;
     error;
-    #value;
+    #value; // private atributte
 
     constructor(isSuccess,error,value) {
         this.isSuccess = isSuccess;
