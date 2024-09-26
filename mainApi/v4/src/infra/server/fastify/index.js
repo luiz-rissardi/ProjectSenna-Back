@@ -58,3 +58,6 @@ function setupRoutes(fastifyApp) {
     ChatRoutes.setup(fastifyApp);
     ContactRoutes.setup(fastifyApp);
 }
+
+
+export default app

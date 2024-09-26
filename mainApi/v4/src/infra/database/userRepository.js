@@ -23,6 +23,7 @@ export class UserRepository extends Repository{
             connection.release();
             return Result.ok(user);
         } catch (error) {
+            console.log(error);
             loggers.error("não foi possivel buscar o usuario ", error);
             return Result.fail(RepositoryOperationError.create())
         }

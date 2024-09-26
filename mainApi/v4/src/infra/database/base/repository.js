@@ -12,7 +12,7 @@ export class Repository {
             this.#pool = createPool(connectionString);
             loggers.info(`banco conectado com sucesso`);
         } catch (error) {
-            console.log(error);
+            loggers.error(`RepositoryBae => constructor => error:${error}`)
             loggers.error(ConnectioDataBaseError.create())
         }
     }
