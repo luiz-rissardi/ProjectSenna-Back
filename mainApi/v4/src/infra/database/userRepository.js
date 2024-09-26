@@ -14,7 +14,6 @@ export class UserRepository extends Repository{
         try {
             const connection = await this.getConnection();
             const [[user]] = await connection
-                
                 .query(`
                 SELECT * 
                 FROM user
