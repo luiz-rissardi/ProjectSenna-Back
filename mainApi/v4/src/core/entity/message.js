@@ -33,12 +33,15 @@ export class Message {
 
     isValid() {
         const messageTypes = ["text", "audio", "image", "file"]
-        const statusTypes = ["read", "unread"]
+        const statusTypes = ["read", "unread"];
+        const dateRegex = /^(19|20)\d{2}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01]) (0[0-9]|1[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$/
+
+
         if (this.message.length >= 1000) {
-            this.#notificationContext.addNotification({ name: "message", message: "limite do tamanha da mensagem atingido" })
+            this.#notificationContext.addNotification({ name: "message", message: "limite do tamanho da mensagem atingido" })
         }
 
-        if (this.dateSender != null && new RegExp('^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$').test(this.dateSender) == false) {
+        if (this.dateSender != null && dateRegex.test(this.dateSender) == false) {
             this.#notificationContext.addNotification({ name: "dateSender", message: "a data de envio é invalida" })
         }
 

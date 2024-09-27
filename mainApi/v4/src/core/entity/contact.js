@@ -23,6 +23,7 @@ export class Contact {
 
     isValid() {
         const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+        
         if (this.contactId == undefined || uuidRegex.test(this.contactId) == false) {
             this.#notificationContext.addNotification({ name: "contactId", message: "o contactId é inválido" })
         }

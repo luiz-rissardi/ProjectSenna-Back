@@ -1,4 +1,3 @@
-import { NotificationContext } from "../DomainNotifications/notifications.js";
 import { Chat } from "./chat.js";
 
 export class Group extends Chat{
