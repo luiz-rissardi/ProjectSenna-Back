@@ -1,6 +1,5 @@
 import { UserMother } from "./motherObjects.js";
 
-
 describe("User Entity => Unit test", () => {
 
     it("Deve esperar que um usuário seja criado com dados corretos", () => {

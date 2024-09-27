@@ -1,7 +1,53 @@
 import { User } from "../../core/entity/user.js";
 import { ChatData } from "../../core/entity/chatData.js";
 import { Message } from "../../core/entity/message.js";
+import { Chat } from "../../core/entity/chat.js";
+import { Contact } from "../../core/entity/contact.js";
 import { randomUUID as v4 } from "crypto";
+
+
+export class ContactMother {
+    static createValidContact() {
+        return new Contact(v4(), v4());
+    }
+
+    static createContactWithInvalidUserId() {
+        return new Contact("invalid-id", v4());
+    }
+
+    static createContactWithInvalidContactId() {
+        return new Contact(v4(), "invalid-id");
+    }
+
+    static createContactWithoutUserId() {
+        return new Contact(undefined, v4());
+    }
+
+    static createContactWithoutContactId() {
+        return new Contact(v4(), undefined);
+    }
+}
+
+
+export class ChatMother {
+
+    static createValidChat() {
+        return new Chat(v4(), "conversation");
+    }
+
+    static createChatWithInvalidChatId() {
+        return new Chat("invalid-id", "conversation");
+    }
+
+    static createChatWithInvalidChatType() {
+        return new Chat(v4(), "invalid-type");
+    }
+
+    static createChatWithoutChatId() {
+        return new Chat(undefined, "conversation");
+    }
+}
+
 
 export class UserMother {
 
@@ -14,7 +60,7 @@ export class UserMother {
     }
 
     static createUserWithInvalidPassword() {
-        return new User("luiz", true, "luiz@gmail.com", null, "sou um usuario", v4(), "2024-09-07 10:00:00", "pt-br", v4(), "123"); // Senha inválida/fraca
+        return new User("luiz", true, "luiz@gmail.com", null, "sou um usuario", v4(), "2024-09-07 10:00:00", "pt-br", v4(), "123");
     }
 
     static createUserWithEmptyName() {
@@ -22,11 +68,11 @@ export class UserMother {
     }
 
     static createUserWithEmptyLanguage() {
-        return new User("luiz", true, "luiz@gmail.com", null, "sou um usuario", v4(), "2024-09-07 10:00:00",null, v4(), "Luiz2006@");
+        return new User("luiz", true, "luiz@gmail.com", null, "sou um usuario", v4(), "2024-09-07 10:00:00", null, v4(), "Luiz2006@");
     }
 }
 
-export class ChatMother {
+export class ChatDataMother {
 
     static createDefaultChat() {
         return new ChatData(v4(), v4(), "2024-09-07 10:00:00", true, "member", null);
@@ -41,11 +87,11 @@ export class ChatMother {
     }
 
     static createChatWithInvalidDateOfBlocking() {
-        return new ChatData(v4(), v4(), "2024-09-07 10:00:00", true, "member", "2024-0900:00"); // Data inválida
+        return new ChatData(v4(), v4(), "2024-09-07 10:00:00", true, "member", "94894");
     }
 
     static createChatWithInvalidLastClear() {
-        return new ChatData(v4(), v4(), "20 1:00dw3232", true, "member", null); // Data inválida
+        return new ChatData(v4(), v4(), "202:s09227 10:00:s", true, "member", null);
     }
 
     static createChatWithInvalidMemberType() {
@@ -61,18 +107,18 @@ export class MessageMother {
     }
 
     static createMessageWithLongText() {
-        return new Message("A".repeat(1001), "2024-07-09 02:28:16",v4(), v4(),v4(), "pt-br", "text", "unread");
+        return new Message("A".repeat(1001), "2024-07-09 02:28:16", v4(), v4(), v4(), "pt-br", "text", "unread");
     }
 
     static createMessageWithInvalidDate() {
-        return new Message("Mensagem válida", "2024-15-99 25:61:61", v4(), v4(),v4(), "pt-br", "text", "unread");
+        return new Message("Mensagem válida", "2024-15-99 25:61:61", v4(), v4(), v4(), "pt-br", "text", "unread");
     }
 
     static createMessageWithInvalidType() {
-        return new Message("Mensagem válida", "2024-07-09 02:28:16", v4(), v4(),v4(), "pt-br", "invalidType", "unread");
+        return new Message("Mensagem válida", "2024-07-09 02:28:16", v4(), v4(), v4(), "pt-br", "invalidType", "unread");
     }
 
     static createMessageWithInvalidStatus() {
-        return new Message("Mensagem válida", "2024-07-09 02:28:16", v4(), v4(),v4(), "pt-br", "text", "invalidStatus");
+        return new Message("Mensagem válida", "2024-07-09 02:28:16", v4(), v4(), v4(), "pt-br", "text", "invalidStatus");
     }
 }
