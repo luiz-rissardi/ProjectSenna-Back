@@ -30,6 +30,7 @@ export class ChatData {
 
     isValid(){
         const memberTypes = ["member","master"]
+        const dateRegex = /^(19|20)\d{2}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01]) (0[0-9]|1[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$/
         const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
         if(this.chatId == undefined || uuidRegex.test(this.chatId) == false){
             this.#notificationContext.addNotification({ name: "chatId", message: "o chatId é invalido" })
@@ -39,11 +40,11 @@ export class ChatData {
             this.#notificationContext.addNotification({ name: "userId", message: "o userId é invalido" })
         }
 
-        if(this.dateOfBlocking !=  null && new RegExp('^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$').test(this.dateOfBlocking)){
+        if(this.dateOfBlocking != null && dateRegex.test(this.dateOfBlocking) == false){
             this.#notificationContext.addNotification({ name: "dateOfBlocking", message: "a data de block é invalida" })
         }
 
-        if( this.lastClear != null && new RegExp('^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$').test(this.lastClear)){
+        if( this.lastClear != null && dateRegex.test(this.lastClear) ==  false){
             this.#notificationContext.addNotification({ name: "lastClear", message: "a data de limpeza é invalida" })
         }
 

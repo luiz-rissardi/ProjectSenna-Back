@@ -38,7 +38,7 @@ export class Message {
             this.#notificationContext.addNotification({ name: "message", message: "limite do tamanha da mensagem atingido" })
         }
 
-        if (this.dateSender != null && new RegExp('^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$').test(this.dateSender)) {
+        if (this.dateSender != null && new RegExp('^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$').test(this.dateSender) == false) {
             this.#notificationContext.addNotification({ name: "dateSender", message: "a data de envio é invalida" })
         }
 

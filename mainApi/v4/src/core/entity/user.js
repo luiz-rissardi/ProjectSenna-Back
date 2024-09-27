@@ -37,7 +37,7 @@ export class User {
 
     #validatePassword(password) {
         const regexPasswordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
-        if (password == null || password == undefined || String(password).trim() == "" || !regexPasswordPattern.test(password)) {
+        if (password == null || password == undefined || String(password).trim() == "" || regexPasswordPattern.test(password) == false) {
             this.#notificationContext.addNotification({
                 name: "password", message:
                     `senha invalida, a senha deve conter no minimo: - 8 digitos - 1 carater especial - 1 letra maiuscula - 1 letra minuscula - 1 numero`
