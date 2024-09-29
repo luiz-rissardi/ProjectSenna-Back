@@ -19,7 +19,6 @@ describe("User Entity => Unit test", () => {
     it("Deve esperar que um usuário seja criado com a senha invalida", () => {
         const model = UserMother.createUserWithInvalidPassword();
         const validate = model.isValid();
-        console.log(model.getNotifications(),model);
         expect(validate).toBe(false);
         expect(model.getNotifications()[0]).toEqual({
             name: "password", message:

@@ -16,12 +16,15 @@ export class MessageService {
 
     async changeStatusMessage({ messagesId }) {
         try {
-            const result = await this.#messageStrategy.patchMany(messagesId);
-            if (result.isSuccess) {
-                return Result.ok("");
-            } else {
-                return Result.fail(result.error);
+            if(Array.isArray(messagesId)){
+                const result = await this.#messageStrategy.patchMany(messagesId);
+                if (result.isSuccess) {
+                    return Result.ok("");
+                } else {
+                    return Result.fail(result.error);
+                }
             }
+            return Result.fail("messageIds precisa ser um array");
         } catch (error) {
             loggers.warn(UnexpectedError.create(error.message));
             return Result.fail(UnexpectedError.create("erro interno no servidor"))
@@ -32,7 +35,7 @@ export class MessageService {
         try {
             const result = await this.#messageStrategy.deleteOne(messageId);
             if (result.isSuccess) {
-                return Result.ok("messagem apagada com sucesso")
+                return Result.ok("mensagem apagada com sucesso")
             } else {
                 return Result.fail(result.error);
             }
