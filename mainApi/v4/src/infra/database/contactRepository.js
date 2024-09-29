@@ -22,7 +22,7 @@ export class ContactRepository extends Repository {
                     , [contact.contactId, contact.userId]
                 )
             connection.release();
-            return Result.ok()
+            return Result.ok();
         } catch (error) {
             loggers.error("não foi possivel adicionar um novo contato ", error);
             return Result.fail(RepositoryOperationError.create())

@@ -1,8 +1,8 @@
 import { User } from "../../core/entity/user.js";
-import { ChatData } from "../../core/entity/chatData.js";
 import { Message } from "../../core/entity/message.js";
-import { Chat } from "../../core/entity/chat.js";
+import { ChatData } from "../../core/entity/chatData.js";
 import { Contact } from "../../core/entity/contact.js";
+import { Chat } from "../../core/entity/chat.js";
 import { randomUUID as v4 } from "crypto";
 
 
