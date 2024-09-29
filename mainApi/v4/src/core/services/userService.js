@@ -7,6 +7,7 @@ import { EmailAlreadyExistsExeption } from "../aplicationException/domainExcepti
 import { User } from "../entity/user.js";
 import { randomUUID as v4 } from "crypto"
 import { EncryptService } from "../../util/encryptService.js";
+import { DateFormat } from "../../util/dateFormated.js";
 
 export class UserService {
 
@@ -21,7 +22,7 @@ export class UserService {
             const userId = v4();
             const contactId = v4();
             const isActive = false;
-            const lastOnline = new Date();
+            const lastOnline = DateFormat(new Date().toISOString());
             const resultValidate = await this.#EmailAlreadyExist(email,userId);
 
             if (!resultValidate.isSuccess) {
@@ -83,7 +84,7 @@ export class UserService {
         }
     }
 
-    async updateUser({ userName, userDescription, email, photo, languages, isActive, lastOnline = new Date(), password, userId }) {
+    async updateUser({ userName, userDescription, email, photo, languages, isActive, lastOnline = DateFormat(new Date().toISOString()), password, userId }) {
         try {
             const resultValidate = await this.#EmailAlreadyExist(email, userId);
             if (!resultValidate.isSuccess) {

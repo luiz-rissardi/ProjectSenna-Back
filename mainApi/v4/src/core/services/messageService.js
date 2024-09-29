@@ -4,6 +4,7 @@ import { ChatNotFoundException } from "../aplicationException/domainException.js
 import { loggers } from "../../util/logger.js";
 import { randomUUID as v4 } from "crypto"
 import { Message } from "../entity/message.js";
+import { DateFormat } from "../../util/dateFormated.js";
 
 export class MessageService {
 
@@ -57,7 +58,7 @@ export class MessageService {
 
     async saveMessage({ messageText, userId, chatId, language, messageType = "text" }) {
         try {
-            const dateSenderMessage = new Date();
+            const dateSenderMessage = DateFormat(new Date().toISOString());
             const messageId = v4();
             const status = "unread";
 
@@ -80,7 +81,7 @@ export class MessageService {
 
     async updateMessage({ messageId, message, originLanguage }) {
         try {
-            const dateSender = new Date();
+            const dateSender = DateFormat(new Date().toISOString());
             const result = await this.#messageStrategy.patchOne(messageId, dateSender, message, originLanguage);
             if (result.isSuccess) {
                 return Result.ok("mensagem editada com sucesso")

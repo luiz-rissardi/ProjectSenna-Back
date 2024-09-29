@@ -1,4 +1,5 @@
 import { Result } from "../../infra/errorHandling/result.js";
+import { DateFormat } from "../../util/dateFormated.js";
 import { loggers } from "../../util/logger.js";
 import { UnexpectedError } from "../aplicationException/appErrors.js";
 import { Chat } from "../entity/chat.js";
@@ -42,11 +43,10 @@ export class ChatService {
                 dateOfBlock = null
             }  // bloquear / sair do chat 
             else {
-                dateOfBlock = new Date();
+                dateOfBlock = DateFormat(new Date().toISOString());
             }
 
             const chatData = new ChatData(chatId, userId, null, isActive, null, dateOfBlock);
-
             if (chatData.isValid()) {
                 const result = await this.#chatDataStrategy.patchOne(chatData);
                 if (result.isSuccess) {
@@ -65,9 +65,8 @@ export class ChatService {
 
     async clearMessages({ chatId, userId }) {
         try {
-            const dateLastClear = new Date();
+            const dateLastClear = DateFormat(new Date().toISOString());
             const chatData = new ChatData(chatId, userId, dateLastClear, null, null, null);
-
             if (chatData.isValid()) {
                 const result = await this.#chatDataStrategy.patchOne(chatData);
                 if (result.isSuccess) {
