@@ -2,17 +2,18 @@ import { MessageRepositoryMock } from "./mocks/messageRepositoryMock.js";
 import { MessageService } from "../../core/services/messageService.js";
 import { randomUUID as v4 } from "crypto"
 
+
 describe("Message Service => unit test", () => {
     const messageStrategy = new MessageRepositoryMock();
     const service = new MessageService(messageStrategy);
 
-    it("Deve salvar uma mensagem com sucesso",async ()=>{
+    it("Deve salvar uma mensagem com sucesso", async () => {
         const message = {
             chatId: v4(),
             userId: v4(),
-            messageText:"ola tudo bem com voce?",
-            language:"pt-br",
-            messageType:"text"
+            messageText: "ola tudo bem com voce?",
+            language: "pt-br",
+            messageType: "text"
         }
         const result = await service.saveMessage(message);
 
@@ -22,11 +23,11 @@ describe("Message Service => unit test", () => {
         expect(result.getValue().status).toBe("unread")
     })
 
-    it("Deve atualizar uma mensagem com sucesso",async ()=>{
+    it("Deve atualizar uma mensagem com sucesso", async () => {
         const message = {
             messageId: v4(),
-            message:"ola tudo bem com voce?",
-            originLanguage :"pt-br",
+            message: "ola tudo bem com voce?",
+            originLanguage: "pt-br",
         }
         const result = await service.updateMessage(message);
 
@@ -35,31 +36,31 @@ describe("Message Service => unit test", () => {
         expect(result.getValue()).toBe("mensagem editada com sucesso")
     })
 
-    it("Deve atualizar os status para read das mensagem com sucesso",async ()=>{
-        const result = await service.changeStatusMessage({messagesId:[v4(),v4(),v4()]});
+    it("Deve atualizar os status para read das mensagem com sucesso", async () => {
+        const result = await service.changeStatusMessage({ messagesId: [v4(), v4(), v4()] });
 
         expect(result.error).toBe(null)
         expect(result.isSuccess).toBe(true)
         expect(result.getValue()).toBe("")
     })
 
-    it("Deve retornar erro se messagesId não for um array",async ()=>{
-        const result = await service.changeStatusMessage({messagesId:v4()});
+    it("Deve retornar erro se messagesId não for um array", async () => {
+        const result = await service.changeStatusMessage({ messagesId: v4() });
 
         expect(result.error).toBe("messageIds precisa ser um array")
         expect(result.isSuccess).toBe(false)
     })
 
-    it("Deve apagar a mensagem com sucesso",async ()=>{
-        const result = await service.deleteMessage({messagesId:v4()});
+    it("Deve apagar a mensagem com sucesso", async () => {
+        const result = await service.deleteMessage({ messagesId: v4() });
 
         expect(result.error).toBe(null)
         expect(result.isSuccess).toBe(true)
         expect(result.getValue()).toBe("mensagem apagada com sucesso")
     })
 
-    it("Deve pegar as mensagens com sucesso",async ()=>{
-        const result = await service.getMessages({chatId:v4(),skipMessage:0});
+    it("Deve pegar as mensagens com sucesso", async () => {
+        const result = await service.getMessages({ chatId: v4(), skipMessage: 0 });
 
         expect(result.error).toBe(null)
         expect(result.isSuccess).toBe(true)

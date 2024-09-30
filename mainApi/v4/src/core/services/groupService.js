@@ -60,7 +60,7 @@ export class GroupService {
 
     async #groupExists(chatId) {
         const result = await this.#groupStrategy.findOne(chatId)
-        if (result.getValue().length == 0) {
+        if (result.getValue()?.length == 0) {
             return Result.fail(ChatNotFoundException.create());
         }
         return Result.ok();
