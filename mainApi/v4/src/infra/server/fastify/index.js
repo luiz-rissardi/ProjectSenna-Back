@@ -2,7 +2,6 @@ import fastify from 'fastify';
 import fastifyCors from "@fastify/cors";
 import fastifyHelmet from '@fastify/helmet';
 import dotenv from 'dotenv';
-import fastifyMonitor from "fastify-status"
 // import { initalizeTracing } from '../tracing.js';
 
 // await initalizeTracing();
@@ -20,12 +19,6 @@ const app = fastify();
 
 
 SocketHandler.setup(app.server)
-
-//para ver saude da aplicação
-app.register(fastifyMonitor, {
-    info: '/__info__',
-    logLevel: "trace"
-});
 
 // Configurações adicionais do servidor
 app.register(fastifyHelmet);
@@ -58,6 +51,5 @@ function setupRoutes(fastifyApp) {
     ChatRoutes.setup(fastifyApp);
     ContactRoutes.setup(fastifyApp);
 }
-
 
 export default app

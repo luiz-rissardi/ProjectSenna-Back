@@ -7,7 +7,7 @@ export class FastifyAdapterController {
         return async (request, reply) => {
             const { params, body, query } = request;
             try {
-                if (body != undefined) {
+                if (body != undefined &&  Reflect.has(body,"arrayBuffer")) {
                     body["arrayBuffer"] = request.file ? request.file.buffer : Buffer.from("");
                 }
                 const result = await callback({ ...params,...query }, body);

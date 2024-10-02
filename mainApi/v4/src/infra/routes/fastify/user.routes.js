@@ -24,19 +24,20 @@ export class UserRoutes {
 
     #setupRoutes() {
         this.#fastify.post("/user/login",
-            { preHandler: upload.single('arrayBuffer') },
             FastifyAdapterController.adapt(
                 this.#controller.findUser.bind(this.#controller)
             )
         );
 
         this.#fastify.post("/user",
+            { preHandler: upload.single('arrayBuffer') },
             FastifyAdapterController.adapt(
                 this.#controller.createUser.bind(this.#controller)
             )
         );
 
         this.#fastify.patch("/user/:userId",
+            { preHandler: upload.single('arrayBuffer') },
             FastifyAdapterController.adapt(
                 this.#controller.updateUser.bind(this.#controller)
             )
