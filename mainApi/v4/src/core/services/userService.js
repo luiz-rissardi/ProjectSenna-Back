@@ -17,7 +17,7 @@ export class UserService {
         this.#userStrategy = userStrategy;
     }
 
-    async createUser({ userName, userDescription, email, arrayBuffer, languages, password }) {
+    async createUser({ userName, userDescription, email, arrayBuffer=new ArrayBuffer(), language, password }) {
         try {
             const userId = v4();
             const contactId = v4();
@@ -28,7 +28,7 @@ export class UserService {
             if (!resultValidate.isSuccess) {
                 return Result.fail(resultValidate.error)
             }
-            const user = new User(userName, isActive, email, arrayBuffer, userDescription, userId, lastOnline, languages, contactId, password);
+            const user = new User(userName, isActive, email, arrayBuffer, userDescription, userId, lastOnline, language, contactId, password);
 
             if (user.isValid()) {
                 const result = await this.#userStrategy.insertOne(user);

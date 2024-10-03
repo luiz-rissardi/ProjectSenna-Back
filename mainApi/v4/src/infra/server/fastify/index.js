@@ -2,6 +2,8 @@ import fastify from 'fastify';
 import fastifyCors from "@fastify/cors";
 import fastifyHelmet from '@fastify/helmet';
 import dotenv from 'dotenv';
+import multipart from "@fastify/multipart"
+
 // import { initalizeTracing } from '../tracing.js';
 
 // await initalizeTracing();
@@ -15,13 +17,16 @@ import { GroupRoutes } from '../../routes/fastify/group.routes.js';
 import { ContactRoutes } from '../../routes/fastify/contact.routes.js';
 
 dotenv.config();
-const app = fastify();
+const app = fastify({
+    bodyLimit: 10 * 1024 * 1024
+});
 
 
 SocketHandler.setup(app.server)
 
 // Configurações adicionais do servidor
 app.register(fastifyHelmet);
+app.register(multipart);
 app.register(fastifyCors, {
     origin: "*", // Permite todos os domínios, ajuste conforme necessário
     methods: ['GET', 'POST', 'DELETE'], // Métodos permitidos
@@ -53,3 +58,18 @@ function setupRoutes(fastifyApp) {
 }
 
 export default app
+
+
+app.post('/user2', async (req, reply) => {
+    // Use req.file() para pegar o arquivo
+    
+    
+    // Para acessar os outros campos do formulário
+    
+
+    console.log('Received body:', req.body);
+
+    // Aqui você pode fazer o que precisa com os dados
+
+    reply.send({ status: 'success' });
+});

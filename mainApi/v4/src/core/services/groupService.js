@@ -11,7 +11,7 @@ export class GroupService {
     #groupStrategy;
 
     constructor(groupStrategy) {
-        this.#groupStrategy = groupStrategy;
+        this.#groupStrategy = groupStrategy;  
     }
 
     async createGroup({groupName, groupDescription, arrayBuffer}) {
