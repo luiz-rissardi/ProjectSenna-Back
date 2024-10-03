@@ -2,10 +2,6 @@ import multer from 'multer';
 import { AdapterFastifyController } from '../adpterRequests/adapterFastify.js';
 import { MessageFileFactory } from '../factories/messageFileFactory.js';
 
-const upload = multer({
-  storage: multer.memoryStorage(),
-  limits: { fileSize: 10 * 1024 * 1024 }
-});
 
 export class MessageFileRoutesFastify {
 
@@ -18,7 +14,6 @@ export class MessageFileRoutesFastify {
   #setupRoutes() {
     // Rota para enviar arquivos para mensagens
     this.fastify.post("/chat/message/:messageId/file", 
-      // { preHandler: upload.single('messageArrayBuffer') },
       AdapterFastifyController.adapt(
         this.controller.sendFileIntoMessage.bind(this.controller)
       )
