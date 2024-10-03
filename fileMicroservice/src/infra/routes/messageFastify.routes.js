@@ -17,7 +17,8 @@ export class MessageFileRoutesFastify {
 
   #setupRoutes() {
     // Rota para enviar arquivos para mensagens
-    this.fastify.post("/chat/message/:messageId/file", { preHandler: upload.single('messageArrayBuffer') },
+    this.fastify.post("/chat/message/:messageId/file", 
+      // { preHandler: upload.single('messageArrayBuffer') },
       AdapterFastifyController.adapt(
         this.controller.sendFileIntoMessage.bind(this.controller)
       )

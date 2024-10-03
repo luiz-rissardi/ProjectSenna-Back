@@ -2,6 +2,7 @@ import fastify from 'fastify';
 import fastifyCors from "@fastify/cors";
 import fastifyHelmet from '@fastify/helmet';
 import dotenv from 'dotenv';
+import fastifyMultipart from '@fastify/multipart';
 // import fastifyMonitor from "fastify-status"
 
 import { loggers } from '../../util/logger.js';
@@ -12,16 +13,9 @@ dotenv.config();
 const app = fastify();
 
 
-//para ver saude da aplicação
-// app.register(fastifyMonitor, {
-//     info: '/__info__',
-//     alive: '/__alive__',
-//     logLevel:"trace"
-// });
-
-
 // Configurações adicionais do servidor
 app.register(fastifyHelmet);
+app.register(fastifyMultipart);
 app.register(fastifyCors, {
     origin: 'https://www.teste/domain', // Permite todos os domínios, ajuste conforme necessário
     methods: ['GET', 'POST', 'DELETE'], // Métodos permitidos
@@ -41,5 +35,5 @@ app.listen({
         loggers.error(err);
         process.exit(1);
     }
-    loggers.info(`O microserviço está sendo executado na porta ${port}`);
+    loggers.info(`O microserviço de messageFile está sendo executado na porta ${port}`);
 })
