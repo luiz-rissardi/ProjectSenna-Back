@@ -24,6 +24,7 @@ export class FastifyAdapterController {
         }
 
         const result = await callback(params, body);
+        console.log(result);
         // Envia a resposta como JSON, incluindo o valor de retorno
         reply.send({ ...result, value: result.getValue() });
         return reply;
