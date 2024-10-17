@@ -14,7 +14,6 @@ describe("Contact Service => unit Tests", () => {
         v4.mockReturnValue('95171413-c9f0-42f9-9a83-81913a4c4dfc');
         const contact = { userId: v4(), cotactId: v4() }
         const result = await service.createContact(contact);
-        console.log(result.getValue());
         expect(result.error).toBe(null)
         expect(result.isSuccess).toBe(true)
         expect(result.getValue()).toEqual({

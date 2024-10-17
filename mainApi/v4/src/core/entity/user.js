@@ -26,7 +26,11 @@ export class User {
         this.contactId = contactId;
         this.languages = languages;
         this.lastOnline = lastOnline;
-        this.passwordHash = EncryptService.encrypt(password);
+        if(!password.trim() == ""){
+            this.passwordHash = EncryptService.encrypt(password);
+        }else{
+            this.passwordHash = ""
+        }
         this.userId = userId;
         this.#validatePassword(password);
     }
@@ -37,7 +41,7 @@ export class User {
 
     #validatePassword(password) {
         const regexPasswordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
-        if (password == null || password == undefined || String(password).trim() == "" || regexPasswordPattern.test(password) == false) {
+        if ((password != undefined && password.trim() != "" ) && regexPasswordPattern.test(password) == false) {
             this.#notificationContext.addNotification({
                 name: "password", message:
                     `senha invalida, a senha deve conter no minimo: - 8 digitos - 1 carater especial - 1 letra maiuscula - 1 letra minuscula - 1 numero`
@@ -54,7 +58,7 @@ export class User {
             this.#notificationContext.addNotification({ name: "email", message: "o email é invalido" });
         }
         if (this.languages == null) {
-            this.#notificationContext.addNotification({ name: "lenguages", message: "o idioma a ser escolhido esta vazio" });
+            this.#notificationContext.addNotification({ name: "languages", message: "o idioma a ser escolhido esta vazio" });
         }
 
         return this.#notificationContext.hasNotification();

@@ -4,9 +4,9 @@ import fastifyHelmet from '@fastify/helmet';
 import dotenv from 'dotenv';
 import multipart from "@fastify/multipart"
 
-import { initalizeTracing } from '../tracing.js';
+// import { initalizeTracing } from '../tracing.js';
 
-await initalizeTracing();
+// await initalizeTracing();
 
 import { SocketHandler } from '../socketHandler.js';
 import { loggers } from '../../../util/logger.js';

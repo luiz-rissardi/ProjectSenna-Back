@@ -29,6 +29,7 @@ export class UserService {
                 return Result.fail(resultValidate.error)
             }
             const user = new User(userName, isActive, email, arrayBuffer, userDescription, userId, lastOnline, language, contactId, password);
+            user.photo = Buffer.from(arrayBuffer)
 
             if (user.isValid()) {
                 const result = await this.#userStrategy.insertOne(user);
@@ -84,14 +85,17 @@ export class UserService {
         }
     }
 
-    async updateUser({ userName, userDescription, email, photo, languages, isActive, lastOnline = DateFormat(new Date().toISOString()), password, userId }) {
+    async updateUser({ userName, userDescription, email, arrayBuffer=new ArrayBuffer(), languages, isActive, password, userId }) {
+        const lastOnline = DateFormat(new Date().toISOString())
         try {
             const resultValidate = await this.#EmailAlreadyExist(email, userId);
             if (!resultValidate.isSuccess) {
                 return Result.fail(resultValidate.error)
             }
 
-            const user = new User(userName, isActive, email, photo, userDescription, userId, lastOnline, languages, null, password)
+            const user = new User(userName, isActive, email, arrayBuffer, userDescription, userId, lastOnline, languages, null, password)
+            user.photo = Buffer.from(arrayBuffer)
+
             if (user.isValid()) {
                 const result = await this.#userStrategy.patchOne(user);
                 if (result.isSuccess) {

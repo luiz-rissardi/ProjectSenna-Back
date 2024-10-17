@@ -31,7 +31,7 @@ export class UserRoutes {
             )
         );
 
-        this.#fastify.patch("/user/:userId",
+        this.#fastify.post("/user/:userId",
             FastifyAdapterController.adapt(
                 this.#controller.updateUser.bind(this.#controller)
             )

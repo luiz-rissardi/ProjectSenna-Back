@@ -5,7 +5,7 @@ import { RepositoryOperationError } from "../../core/aplicationException/appErro
 import { User } from "../../core/entity/user.js";
 
 
-export class UserRepository extends Repository{
+export class UserRepository extends Repository {
     constructor(connectionString) {
         super(connectionString)
     }
@@ -35,17 +35,16 @@ export class UserRepository extends Repository{
      */
     async insertOne(user) {
         try {
-            const buffer = Buffer.from(user.photo);
             const connection = await this.getConnection();
             await connection
-                
+
                 .query(`
                 INSERT INTO User (userName, isActive, photo, email, lastOnline, languages, userDescription, passwordHash, contactId, userId)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             `, [
                     user.userName,
                     user.isActive,
-                    buffer,
+                    user.photo,
                     user.email,
                     user.lastOnline,
                     user.languages,
@@ -67,7 +66,7 @@ export class UserRepository extends Repository{
         try {
             const connection = await this.getConnection();
             const [contacts] = await connection
-                
+
                 .query(`
                 SELECT U.userName, U.photo, U.userId
                 FROM contact as C
@@ -93,6 +92,7 @@ export class UserRepository extends Repository{
             const connection = await this.getConnection();
 
             // atualizar somente os campos preenchidos
+            // console.log(user);
             const forbidensMutateFields = ["userId", "contactId"]
             const fields = Object.keys(user)
                 .map(key => {
@@ -111,13 +111,14 @@ export class UserRepository extends Repository{
                 }, "")
                 .replace(/,\s*$/, '');  // Remove a última vírgula e qualquer espaço em branco
 
+            // console.log(user.photo);
             await connection
                 .query(`
                     UPDATE User 
                     SET ${query}
                     WHERE userId = ?
                 `, values);
-
+// 
             connection.release();
             return Result.ok(user);
         } catch (error) {
@@ -140,5 +141,5 @@ export class UserRepository extends Repository{
         }
     }
 
-    
+
 }
