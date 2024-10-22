@@ -20,12 +20,14 @@ export class GroupRoutes {
     #setupRoutes() {
 
         this.#fastify.post("/group",
+            { preValidation: [this.#fastify.authenticate] },
             FastifyAdapterController.adapt(
                 this.#controller.createGroup.bind(this.#controller)
             )
         );
 
         this.#fastify.patch("/group",
+            { preValidation: [this.#fastify.authenticate] },
             FastifyAdapterController.adapt(
                 this.#controller.updateGroup.bind(this.#controller)
             )

@@ -20,6 +20,7 @@ export class MessageRoutes {
 
         // rotas de send messages 
         this.#fastify.post("/chat/:chatId/message/send",
+            { preValidation: [this.#fastify.authenticate] },
             FastifyAdapterController.adapt(
                 this.#controller.saveMessage.bind(this.#controller)
             )
@@ -27,6 +28,7 @@ export class MessageRoutes {
 
         // rotas para pegar todas messages de um chat (aqui pode haver uma queryString "skipMessage")
         this.#fastify.get("/chat/:chatId/messages",
+            { preValidation: [this.#fastify.authenticate] },
             FastifyAdapterController.adapt(
                 this.#controller.getMessages.bind(this.#controller)
             )
@@ -34,18 +36,21 @@ export class MessageRoutes {
 
         // mudar status da mensagem para read
         this.#fastify.patch("/chat/messages/read",
+            { preValidation: [this.#fastify.authenticate] },
             FastifyAdapterController.adapt(
                 this.#controller.readMessages.bind(this.#controller)
             )
         );
 
         this.#fastify.patch("/chat/message/:messageId",
+            { preValidation: [this.#fastify.authenticate] },
             FastifyAdapterController.adapt(
                 this.#controller.updateMessage.bind(this.#controller)
             )
         );
 
         this.#fastify.delete("/chat/message/:messageId",
+            { preValidation: [this.#fastify.authenticate] },
             FastifyAdapterController.adapt(
                 this.#controller.deleteMessage.bind(this.#controller)
             )

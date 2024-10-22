@@ -20,6 +20,7 @@ export class ChatRoutes {
     #setupRoutes() {
 
         this.#fastify.post("/chat",
+            { preValidation: [this.#fastify.authenticate] },
             FastifyAdapterController.adapt(
                 this.#controller.createChat.bind(this.#controller)
             )
@@ -27,6 +28,7 @@ export class ChatRoutes {
 
         // alterar o estado do chat para bloqueado e vice versa
         this.#fastify.patch("/user/:userId/chat/:chatId/state",
+            { preValidation: [this.#fastify.authenticate] },
             FastifyAdapterController.adapt(
                 this.#controller.changeStateOfChat.bind(this.#controller)
             )
@@ -34,18 +36,21 @@ export class ChatRoutes {
 
 
         this.#fastify.patch("/user/:userId/chat/:chatId/messages/clear",
+            { preValidation: [this.#fastify.authenticate] },
             FastifyAdapterController.adapt(
                 this.#controller.clearMessages.bind(this.#controller)
             )
         );
 
         this.#fastify.post("/chats/:chatId/participant/:userId",
+            { preValidation: [this.#fastify.authenticate] },
             FastifyAdapterController.adapt(
                 this.#controller.addUserInChat.bind(this.#controller)
             )
         );
 
         this.#fastify.get("/user/:userId/chats",
+            { preValidation: [this.#fastify.authenticate] },
             FastifyAdapterController.adapt(
                 this.#controller.findChats.bind(this.#controller)
             )

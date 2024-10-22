@@ -21,6 +21,7 @@ export class ContactRoutes {
 
         // adiciona um novo contato a partir de um userId de outro usuario no contactId do requisitante
         this.#fastify.post("/contact/:contactId",
+            { preValidation: [this.#fastify.authenticate] },
             FastifyAdapterController.adapt(
                 this.#controller.createContact.bind(this.#controller)
             )
@@ -29,6 +30,7 @@ export class ContactRoutes {
 
         // remove um contato do contactId indicado
         this.#fastify.delete("/contact/:contactId/remove/:userId",
+            { preValidation: [this.#fastify.authenticate] },
             FastifyAdapterController.adapt(
                 this.#controller.deleteContact.bind(this.#controller)
             )
