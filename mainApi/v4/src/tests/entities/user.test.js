@@ -37,7 +37,7 @@ describe("User Entity => Unit test", () => {
         const model = UserMother.createUserWithEmptyLanguage();
         const validate = model.isValid();
         expect(validate).toBe(false);
-        expect(model.getNotifications()[0]).toEqual({ name: "lenguages", message: "o idioma a ser escolhido esta vazio" });
+        expect(model.getNotifications()[0]).toEqual({ name: "languages", message: "o idioma a ser escolhido esta vazio" });
     })
 
 })

@@ -1,6 +1,5 @@
 import { FastifyAdapterController } from "../../adpterRequests/FastifyAdapterController.js";
 import { UserControllerFactory } from "../../factories/UserControllerFactory.js";
-import { setHeaders } from "../../server/middlewares.js";
 
 export class UserRoutes {
 
@@ -18,6 +17,7 @@ export class UserRoutes {
     }
 
     #setupRoutes() {
+        
         this.#fastify.post("/user/login",
             {
                 onSend: async (request, reply, payload) => {
@@ -51,10 +51,16 @@ export class UserRoutes {
             )
         );
 
-        this.#fastify.get("/user/contact/:contactId",
+        this.#fastify.post("/user/contact/:contactId",
             { preValidation: [this.#fastify.authenticate] },
             FastifyAdapterController.adapt(
                 this.#controller.findContactsOfUser.bind(this.#controller)
+            )
+        );
+
+        this.#fastify.post("/user/auth",
+            FastifyAdapterController.adapt(
+                this.#controller.authUser.bind(this.#controller)
             )
         );
     }

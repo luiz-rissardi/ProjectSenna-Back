@@ -8,6 +8,7 @@ import { User } from "../entity/user.js";
 import { randomUUID as v4 } from "crypto"
 import { EncryptService } from "../../util/encryptService.js";
 import { DateFormat } from "../../util/dateFormated.js";
+import jwt from "jsonwebtoken"
 
 export class UserService {
 
@@ -17,13 +18,13 @@ export class UserService {
         this.#userStrategy = userStrategy;
     }
 
-    async createUser({ userName, userDescription, email, arrayBuffer=new ArrayBuffer(), language, password }) {
+    async createUser({ userName, userDescription, email, arrayBuffer = new ArrayBuffer(), language, password }) {
         try {
             const userId = v4();
             const contactId = v4();
             const isActive = false;
             const lastOnline = DateFormat(new Date().toISOString());
-            const resultValidate = await this.#EmailAlreadyExist(email,userId);
+            const resultValidate = await this.#EmailAlreadyExist(email, userId);
 
             if (!resultValidate.isSuccess) {
                 return Result.fail(resultValidate.error)
@@ -85,7 +86,7 @@ export class UserService {
         }
     }
 
-    async updateUser({ userName, userDescription, email, arrayBuffer=new ArrayBuffer(), languages, isActive, password, userId }) {
+    async updateUser({ userName, userDescription, email, arrayBuffer = new ArrayBuffer(), languages, isActive, password, userId }) {
         const lastOnline = DateFormat(new Date().toISOString())
         try {
             const resultValidate = await this.#EmailAlreadyExist(email, userId);
@@ -116,8 +117,32 @@ export class UserService {
         }
     }
 
+    // verifica se determinado jwt é valido, e retona o usuário correspondete a ele
+    async authUser({ token }) {
+        try {
+            return new Promise((resolve, reject) => {
+                jwt.verify(token, process.env.HASHED_JWT, async (err, decoded) => {
+                    if (err) {
+                        loggers.error("Token inválido");
+                    } else {
+                        const result = await this.#userStrategy.findByEmail(decoded.email);
+                        if (result.isSuccess) {
+                            resolve(Result.ok(result.getValue()))
+                        }
+                        else{
+                            reject(Result.fail(result.error))
+                        }
+                    }
+                })
+            })
+        } catch (error) {
+            loggers.warn(UnexpectedError.create(error));
+            return Result.fail(UnexpectedError.create("erro interno do servidor"))
+        }
+    }
+
     // verifica se o email já existe
-    async #EmailAlreadyExist(userEmail,userId) {
+    async #EmailAlreadyExist(userEmail, userId) {
         const result = await this.#userStrategy.findByEmail(userEmail)
         if (result.getValue() != undefined && result.getValue()?.userId != userId) {
             return Result.fail(EmailAlreadyExistsExeption.create());

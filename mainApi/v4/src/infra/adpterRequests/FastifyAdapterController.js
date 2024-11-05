@@ -5,6 +5,7 @@ export class FastifyAdapterController {
 
   static adapt(callback) {
     return async (request, reply) => {
+
       let body = {};
       let params = request.params;
 

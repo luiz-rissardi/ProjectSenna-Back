@@ -3,6 +3,7 @@ import { Result } from "../errorHandling/result.js";
 import { RepositoryOperationError } from "../../core/aplicationException/appErrors.js";
 import { ChatData } from "../../core/entity/chatData.js";
 import { loggers } from "../../util/logger.js";
+import { DateFormat } from "../../util/dateFormated.js";
 
 
 export class ChatDataRepository extends Repository {
@@ -19,8 +20,8 @@ export class ChatDataRepository extends Repository {
         try {
             const connection = await this.getConnection();
             await connection
-            
-            .query(`
+
+                .query(`
                 INSERT INTO chatData
                 VALUES (?,?,?,?,?,?)
                 `, [chatData.memberType, chatData.lastClear, chatData.isActive, chatData.userId, chatData.chatId, chatData.dateOfBlocking]);
@@ -39,11 +40,11 @@ export class ChatDataRepository extends Repository {
     async patchOne(chatData) {
         try {
             const connection = await this.getConnection();
-            
+
             // Inicializa arrays para armazenar colunas e valores que serão atualizados
             const columns = [];
             const values = [];
-        
+
             // Verifica e adiciona ao array apenas os campos que estão definidos em chatData
             if (chatData.memberType !== null) {
                 columns.push('memberType');
@@ -55,7 +56,13 @@ export class ChatDataRepository extends Repository {
             }
             if (chatData.isActive !== null) {
                 columns.push('isActive');
-                values.push(chatData.isActive);
+                if(chatData.isActive == "true"){
+                    chatData.dateOfBlocking = null;
+                    values.push(true);
+                }else{
+                    chatData.dateOfBlocking = DateFormat(new Date().toISOString());
+                    values.push(false);
+                }
             }
 
             columns.push('dateOfBlocking');
@@ -64,7 +71,7 @@ export class ChatDataRepository extends Repository {
             // Adiciona os campos de filtro
             values.push(chatData.userId);
             values.push(chatData.chatId);
-        
+
             // Constrói a query dinamicamente
             const updateColumns = columns.map(col => `${col} = ?`).join(', ');
             const query = `
@@ -72,30 +79,38 @@ export class ChatDataRepository extends Repository {
                 SET ${updateColumns}
                 WHERE userId = ? AND chatId = ?
             `;
-        
+
             // Executa a query com os valores dinâmicos
             await connection.query(query, values);
             connection.release();
-            
+
             return Result.ok(chatData);
         } catch (error) {
+            console.log(error);
             loggers.error("não foi possivel atualizar o chat usuario ", error);
             return Result.fail(RepositoryOperationError.create());
         }
-        
+
     }
 
     async findMany(userId) {
         try {
             const connection = await this.getConnection();
-            const [ chats ] = await connection
-            .query(`
-                SELECT * 
-                FROM chatData as CT
-                INNER JOIN chat as C
-                on C.chatId = CT.chatId
-                WHERE userId = ?
-                `,[userId])
+            const [chats] = await connection
+                .query(`
+                    SELECT 
+                    CT.*,
+                    U2.userId AS otherUserId,
+                    U2.userName AS otherUserName,
+                    U2.userDescription AS otherUserDescription,
+                    U2.photo AS otherUserPhoto,
+                    U2.lastOnline AS otherUserLastOnline
+                    FROM chatData AS CT
+                    INNER JOIN user AS U1 ON U1.userId = CT.userId
+                    INNER JOIN chatData AS CT2 ON CT2.chatId = CT.chatId AND CT2.userId != U1.userId
+                    INNER JOIN user AS U2 ON U2.userId = CT2.userId
+                    WHERE U1.userId = ?;
+                    `, [userId])
 
             connection.release();
             return Result.ok(chats);

@@ -73,7 +73,7 @@ describe("User Service => Unit tests", () => {
             isActive: true,
             email: "emilioRufolfoFey@gmail.com",
             lastOnline: "2024-07-26 09:13:32",
-            language: "pt-br",
+            languages: "pt-br",
             userDescription: "sou programador sou e engenheiro de software",
             password: "Luiz2006@",
             userId: "5d6432e3-3902-44d1-ae89-ee289e2189aa"

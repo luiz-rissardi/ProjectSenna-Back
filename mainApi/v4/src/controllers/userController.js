@@ -26,4 +26,8 @@ export class UserController {
         return this.#service.findContactsOfUser({ ...params })
     }
 
+    authUser(param, body){
+        return this.#service.authUser({ ...body })
+    }
+
 }
