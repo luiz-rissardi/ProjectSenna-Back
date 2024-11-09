@@ -1,29 +1,3 @@
-import nodemailer from "nodemailer"
-import { google } from "googleapis"
-import { config } from 'dotenv';
-
-config()
-
-
-export class EmailService {
-
-    #userAuth;
-    constructor() {
-        const REDIRECT_URI = "https://developers.google.com/oauthplayground"
-
-        this.#userAuth = new google.auth.OAuth2(
-            process.env.CLIENT_ID,
-            process.env.CLIENT_SECRET,
-            REDIRECT_URI)
-
-        this.#userAuth.setCredentials({ refresh_token: process.env.REFRESH_TOKEN })
-    }
-
-
-    async sendAccountConfirmationEmail(user) {
-        try {
-
-            const html = `
 <!DOCTYPE html>
 <html lang="en">
 
@@ -102,10 +76,15 @@ export class EmailService {
 <body>
     <div class="container">
         <h1>Account Confirmation</h1>
-        <p>Hello ${user.userName}</p>
+        <p>Hello {{username}},</p>
         <p>Congratulations on signing up for Just Translate. <br> Click the button below to confirm your new account:</p>
-        <form id="emailForm" action="http://localhost:8729/user/${user.userId}/confirm" method="GET">
+        <form id="emailForm" action="http://localhost:3000/test" method="POST">
+            <label for="email" hidden>Email: {{ email }} </label>
             <button type="submit" class="btn-send">Send</button>
+            <input type="hidden" value=${userName} name="userName">
+            <input type="hidden" value=${email} name="email">
+            <input type="hidden" value="true" name="isActive">
+            <input type="hidden" value=${languages} name="languages">
         </form>
         <p>If you have already confirmed your account, please ignore this email.</p>
         <p>Thank you!</p>
@@ -114,38 +93,13 @@ export class EmailService {
         <p>&copy; 2024 Just Translate. All rights reserved.</p>
     </div>
 </body>
-</html>
-`
 
-            const accessToken = await this.#userAuth
-                .getAccessToken();
+<script>
 
-            const transport = nodemailer.createTransport({
-                service: 'gmail',
-                auth: {
-                    type: 'OAuth2',
-                    user: "rissardi.luiz2006@gmail.com",
-                    password: "Fabio24031981",
-                    clientId: process.env.CLIENT_ID,
-                    clientSecret: process.env.CLIENT_SECRET,
-                    refreshToken: process.env.REFRESH_TOKEN,
-                    accessToken: accessToken,
-                },
-            });
-
-            const mailOptions = {
-                to: "rissardi.luiz2006@gmail.com",
-                subject: 'Hello from gmail using API',
-                text: 'Hello from gmail email using API',
-                html: html,
-            };
-
-            const result = await transport.sendMail(mailOptions);
-            return result;
-        } catch (error) {
-            console.log(error);
-        }
+    function confirm(){
+        
     }
+    
+</script>
 
-}
-
+</html>
