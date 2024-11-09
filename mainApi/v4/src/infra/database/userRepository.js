@@ -92,7 +92,6 @@ export class UserRepository extends Repository {
             const connection = await this.getConnection();
 
             // atualizar somente os campos preenchidos
-            // console.log(user);
             const forbidensMutateFields = ["userId", "contactId"]
             const fields = Object.keys(user)
                 .map(key => {
@@ -118,11 +117,25 @@ export class UserRepository extends Repository {
                     SET ${query}
                     WHERE userId = ?
                 `, values);
-// 
+            // 
             connection.release();
             return Result.ok(user);
         } catch (error) {
-            console.log(error);
+            loggers.error("não foi possivel atualizar o usuario ", error);
+            return Result.fail(RepositoryOperationError.create());
+        }
+    }
+
+    async changeOnlyStateOfUser(userId, isActive) {
+        try {
+            const connection = await this.getConnection();
+            await connection.query(`
+                UPDATE User 
+                SET isActive = ?
+                WHERE userId = ?`, [isActive,userId]);
+            connection.release();
+            return Result.ok("usuario atualizado com sucesso");
+        } catch (error) {
             loggers.error("não foi possivel atualizar o usuario ", error);
             return Result.fail(RepositoryOperationError.create());
         }

@@ -123,18 +123,32 @@ export class UserService {
             return new Promise((resolve, reject) => {
                 jwt.verify(token, process.env.HASHED_JWT, async (err, decoded) => {
                     if (err) {
-                        loggers.error("Token inválido");
+                        resolve(Result.fail("token inválido"))
                     } else {
                         const result = await this.#userStrategy.findByEmail(decoded.email);
                         if (result.isSuccess) {
                             resolve(Result.ok(result.getValue()))
                         }
-                        else{
+                        else {
                             reject(Result.fail(result.error))
                         }
                     }
                 })
             })
+        } catch (error) {
+            loggers.warn(UnexpectedError.create(error));
+            return Result.fail(UnexpectedError.create("erro interno do servidor"))
+        }
+    }
+
+    async confirmAccount({ userId }) {
+        try {
+            const result = await this.#userStrategy.changeOnlyStateOfUser(userId,true);
+            if(result.isSuccess){
+                return Result.ok(result.getValue());
+            }else{
+                return Result.fail(result.error);
+            }
         } catch (error) {
             loggers.warn(UnexpectedError.create(error));
             return Result.fail(UnexpectedError.create("erro interno do servidor"))

@@ -1,5 +1,8 @@
 import { FastifyAdapterController } from "../../adpterRequests/FastifyAdapterController.js";
 import { UserControllerFactory } from "../../factories/UserControllerFactory.js";
+import { config } from "dotenv";
+
+config()
 
 export class UserRoutes {
 
@@ -17,7 +20,7 @@ export class UserRoutes {
     }
 
     #setupRoutes() {
-        
+
         this.#fastify.post("/user/login",
             {
                 onSend: async (request, reply, payload) => {
@@ -48,6 +51,24 @@ export class UserRoutes {
             { preValidation: [this.#fastify.authenticate] },
             FastifyAdapterController.adapt(
                 this.#controller.updateUser.bind(this.#controller)
+            )
+        );
+
+        this.#fastify.patch("/user/:userId/confirm",
+            {
+                onRequest: async (request, reply) => {
+                    try {
+                        const token = request.headers["xxx-confirm-a-token"]; // Captura o cabeçalho de autorização
+                        if (token !== process.env.XXX_CONFIRM_A_TOKEN) {
+                            reply.code(401).send({ error: 'Unauthorized' });
+                        }
+                    } catch (error) {
+                        reply.send(error);
+                    }
+                }
+            },
+            FastifyAdapterController.adapt(
+                this.#controller.confirmAccount.bind(this.#controller)
             )
         );
 

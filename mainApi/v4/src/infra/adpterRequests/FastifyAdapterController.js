@@ -11,16 +11,18 @@ export class FastifyAdapterController {
 
       try {
         // Captura todas as partes do request (incluindo arquivos e campos)
-        const parts = request.parts();
-        let data = null;
+        if (request.isMultipart()) {
+          const parts = request.parts();
+          let data = null;
 
-        // Processa cada parte do request multipart
-        for await (const part of parts) {
-          if (part.file) {
-            data = await readStreamToBuffer(part.file);
-            body['arrayBuffer'] = data ? bufferToArrayBuffer(data) : undefined;
-          } else {
-            body[part.fieldname] = part.value;
+          // Processa cada parte do request multipart
+          for await (const part of parts) {
+            if (part.file) {
+              data = await readStreamToBuffer(part.file);
+              body['arrayBuffer'] = data ? bufferToArrayBuffer(data) : undefined;
+            } else {
+              body[part.fieldname] = part.value;
+            }
           }
         }
 
