@@ -84,6 +84,12 @@ export class UserRoutes {
                 this.#controller.authUser.bind(this.#controller)
             )
         );
+
+        this.#fastify.post("/user/recover/password/:email",
+            FastifyAdapterController.adapt(
+                this.#controller.recoverPassword.bind(this.#controller)
+            )
+        );
     }
 
 }

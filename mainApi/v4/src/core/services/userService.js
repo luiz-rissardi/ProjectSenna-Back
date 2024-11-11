@@ -1,6 +1,6 @@
 import { Result } from "../../infra/errorHandling/result.js";
 import { UnexpectedError } from "../aplicationException/appErrors.js";
-import { UserBlockingException } from "../aplicationException/domainException.js";
+import { UserBlockingException, UserNotFoundException } from "../aplicationException/domainException.js";
 import { InvalidCredentialsException } from "../aplicationException/domainException.js";
 import { loggers } from "../../util/logger.js";
 import { EmailAlreadyExistsExeption } from "../aplicationException/domainException.js";
@@ -143,11 +143,37 @@ export class UserService {
 
     async confirmAccount({ userId }) {
         try {
-            const result = await this.#userStrategy.changeOnlyStateOfUser(userId,true);
-            if(result.isSuccess){
+            const result = await this.#userStrategy.changeOnlyStateOfUser(userId, true);
+            if (result.isSuccess) {
                 return Result.ok(result.getValue());
-            }else{
+            } else {
                 return Result.fail(result.error);
+            }
+        } catch (error) {
+            loggers.warn(UnexpectedError.create(error));
+            return Result.fail(UnexpectedError.create("erro interno do servidor"))
+        }
+    }
+
+    async recoverPassword({ email, password }) {
+        try {
+            const resultUser = await this.#userStrategy.findByEmail(email);
+            if (resultUser.isSuccess) {
+                const user = resultUser.getValue();
+                if(user != undefined){
+                    const newPasswordHash = EncryptService.encrypt(password);
+                    user.passwordHash = newPasswordHash;
+                    const resultFinaly = await this.#userStrategy.patchOne(user);
+                    if (resultFinaly.isSuccess) {
+                        return Result.ok();
+                    } else {
+                        return Result.fail(resultFinaly.error);
+                    }
+                }else{
+                    return Result.fail(UserNotFoundException.create());
+                }
+            } else {
+                return Result.fail(resultUser.error);
             }
         } catch (error) {
             loggers.warn(UnexpectedError.create(error));

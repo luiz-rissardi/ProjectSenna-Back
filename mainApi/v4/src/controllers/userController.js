@@ -34,4 +34,8 @@ export class UserController {
         return this.#service.confirmAccount({ ...params })
     }
 
+    recoverPassword(params, body){
+        return this.#service.recoverPassword({...params,...body})
+    }
+
 }
