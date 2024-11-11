@@ -34,9 +34,11 @@
             text-align: center;
         }
 
-        .button {
+        a {
             display: inline-block;
-            margin: 20px auto;
+            width: 10%;
+            text-align: center;
+            margin-inline: 42%;
             padding: 10px 20px;
             font-size: 16px;
             color: #ffffff;
@@ -46,7 +48,7 @@
             transition: background-color 0.3s;
         }
 
-        .button:hover {
+        a:hover {
             background-color: #0056b3;
         }
 
@@ -69,37 +71,34 @@
 
         form {
             display: flex;
+            padding-inline: 15%;
+            flex-direction: column;
+        }
+
+        input {
+            width: 100%;
+            margin-top: 10px;
+            margin-bottom: 30px;
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <h1>Account Confirmation</h1>
-        <p>Hello {{username}},</p>
-        <p>Congratulations on signing up for Just Translate. <br> Click the button below to confirm your new account:</p>
-        <form id="emailForm" action="http://localhost:3000/test" method="POST">
-            <label for="email" hidden>Email: {{ email }} </label>
-            <button type="submit" class="btn-send">Send</button>
-            <input type="hidden" value=${userName} name="userName">
-            <input type="hidden" value=${email} name="email">
-            <input type="hidden" value="true" name="isActive">
-            <input type="hidden" value=${languages} name="languages">
-        </form>
-        <p>If you have already confirmed your account, please ignore this email.</p>
+        <h1> Change the password </h1>
+        <p>Hello ${emailUser}</p>
+        <p> Click here to redirect and change password </p>
+        <br />
+        <a href="http://localhost:4200/recover/password" style="margin-inline: 42%">
+            Here
+        </a>
+        <br />
+        <p>If you have already change the password, please ignore this email.</p>
         <p>Thank you!</p>
     </div>
     <div class="footer">
         <p>&copy; 2024 Just Translate. All rights reserved.</p>
     </div>
 </body>
-
-<script>
-
-    function confirm(){
-        
-    }
-    
-</script>
 
 </html>
