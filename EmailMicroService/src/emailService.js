@@ -106,7 +106,7 @@ export class EmailService {
     <div class="container">
         <h1>Account Confirmation</h1>
         <p>Hello ${user.userName}</p>
-        <p>Congratulations on signing up for Just Translate. <br> Click the button below to confirm your new account:</p>
+        <p>Congratulations on sign-in on for Just Translate. <br> Click the button below to confirm your new account:</p>
         <form id="emailForm" action="http://localhost:8729/api/email/user/${user.userId}/confirm" method="GET">
             <button type="submit" class="btn-send">Send</button>
         </form>
