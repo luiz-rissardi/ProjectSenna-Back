@@ -25,7 +25,6 @@ export class UserService {
             const isActive = false;
             const lastOnline = DateFormat(new Date().toISOString());
             const resultValidate = await this.#EmailAlreadyExist(email, userId);
-
             if (!resultValidate.isSuccess) {
                 return Result.fail(resultValidate.error)
             }

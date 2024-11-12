@@ -27,7 +27,7 @@ export class UserBlockingException {
 // service errors
 export class InvalidCredentialsException {
     constructor() {
-        this.message = "nome de usuario ou senha invalidos";
+        this.message = "email de usuario ou senha invalidos";
         this.name = "InvalidCredentialsException";
     }
 
