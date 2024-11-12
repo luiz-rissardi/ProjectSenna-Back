@@ -13,16 +13,15 @@ const emailService = new EmailService();
 app.register(fastifyHelmet);
 app.register(fastifyCors, {
     // origin: 'https://www.teste/domain', // Permite todos os domínios, ajuste conforme necessário
-    methods: ['GET','POST'], // Métodos permitidos
-    allowedHeaders: ['Content-Type', 'Authorization', "IS-CONFIRMATED"], // Cabeçalhos permitidos
+    methods: ['GET', 'POST'], // Métodos permitidos
+    allowedHeaders: ['Content-Type', 'Authorization'], // Cabeçalhos permitidos
 });
 
 // Rotas
 
 // rota para enviar a confirmação de conta
 app.post("/api/email/confirmation/:userId", async (req, reply) => {
-    const user = req.body;
-    user.userId = req.params.userId;
+    const { user } = req.body;
     if (user != undefined) {
         const result = await emailService.sendAccountConfirmationEmail(user);
         if (result?.accepted.length >= 1) {
@@ -51,7 +50,6 @@ app.post("/api/email/change-password", async (req, reply) => {
 // rota para auxiliar a confirmação de conta 
 app.get("/api/email/user/:userId/confirm", async (req, reply) => {
     const userId = req.params.userId;
-
     const data = await fetch(`http://localhost:3000/user/${userId}/confirm`, {
         method: 'PATCH',
         headers: {
