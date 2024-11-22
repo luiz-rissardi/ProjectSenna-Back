@@ -27,7 +27,6 @@ export class ContactRoutes {
             )
         );
 
-
         // remove um contato do contactId indicado
         this.#fastify.delete("/contact/:contactId/remove/:userId",
             { preValidation: [this.#fastify.authenticate] },
@@ -35,6 +34,14 @@ export class ContactRoutes {
                 this.#controller.deleteContact.bind(this.#controller)
             )
         )
+
+        //pega o proprio contactId e procura o dados dos outros usuarios
+        this.#fastify.get("/contact/:contactId",
+            { preValidation: [this.#fastify.authenticate] },
+            FastifyAdapterController.adapt(
+                this.#controller.findContactsOfUser.bind(this.#controller)
+            )
+        );
 
     }
 

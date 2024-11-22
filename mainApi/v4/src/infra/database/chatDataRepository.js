@@ -20,7 +20,6 @@ export class ChatDataRepository extends Repository {
         try {
             const connection = await this.getConnection();
             await connection
-
                 .query(`
                 INSERT INTO chatData
                 VALUES (?,?,?,?,?,?)

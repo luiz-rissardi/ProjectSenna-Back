@@ -47,4 +47,26 @@ export class ContactRepository extends Repository {
             return Result.fail(RepositoryOperationError.create())
         }
     }
+
+    //pega o proprio contactId e procura o dados dos outros usuarios
+    async findManyByContactId(contactId) {
+        try {
+            const connection = await this.getConnection();
+            const [contacts] = await connection
+                .query(`
+                SELECT U.userName, U.photo, U.userId
+                FROM contact as C
+                inner join User as U
+                on C.userId = U.userId
+                WHERE C.contactId = ?;
+                `, [contactId])
+
+            connection.release();
+            return Result.ok(contacts);
+        } catch (error) {
+            loggers.error(`não foi possivel buscar contatos do usuário `, error);
+            return Result.fail(RepositoryOperationError.create())
+        }
+    }
+
 }

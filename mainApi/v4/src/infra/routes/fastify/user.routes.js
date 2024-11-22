@@ -47,6 +47,13 @@ export class UserRoutes {
             )
         );
 
+        this.#fastify.get("/user/find/:query/:skip",
+            { preValidation: [this.#fastify.authenticate] },
+            FastifyAdapterController.adapt(
+                this.#controller.findUserByUserNameOrEmail.bind(this.#controller)
+            )
+        );
+
         this.#fastify.post("/user/:userId",
             { preValidation: [this.#fastify.authenticate] },
             FastifyAdapterController.adapt(
@@ -69,13 +76,6 @@ export class UserRoutes {
             },
             FastifyAdapterController.adapt(
                 this.#controller.confirmAccount.bind(this.#controller)
-            )
-        );
-
-        this.#fastify.post("/user/contact/:contactId",
-            { preValidation: [this.#fastify.authenticate] },
-            FastifyAdapterController.adapt(
-                this.#controller.findContactsOfUser.bind(this.#controller)
             )
         );
 

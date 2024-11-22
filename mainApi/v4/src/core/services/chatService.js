@@ -37,7 +37,6 @@ export class ChatService {
     async changeStateOfChat({ chatId, userId, isActive }) {
         try {
             let dateOfBlock;
-
             // desbloquear / sair do chat
             if (isActive == true) {
                 dateOfBlock = null

@@ -20,7 +20,7 @@ export class MessageRepository extends Repository {
             const connection = await this.getConnection();
             await connection.beginTransaction();
             for (const messageId of messagesId) {
-                connection  
+                connection
                     .query(`
                     UPDATE message
                     SET status = "read"
@@ -117,8 +117,8 @@ export class MessageRepository extends Repository {
                 INNER JOIN user as U
                 on U.userId = M.userId
                 WHERE chatId = ?
-                LIMIT 50 OFFSET ${Number(skipMessage)}
-                `, [chatId,])
+                LIMIT 50 OFFSET ?
+                `, [chatId, Number(skipMessage)])
 
             connection.release();
 

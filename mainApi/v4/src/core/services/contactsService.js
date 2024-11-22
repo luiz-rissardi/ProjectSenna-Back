@@ -32,6 +32,19 @@ export class ContactService {
         }
     }
 
+    async findContactsOfUser({ contactId }) {
+        try {
+            const result = await this.#contactStrategy.findManyByContactId(contactId);
+            if (result.isSuccess) {
+                return Result.ok(result.getValue())
+            }
+            return Result.fail(result.error);
+        } catch (error) {
+            loggers.warn(UnexpectedError.create(error.message));
+            return Result.fail(UnexpectedError.create("erro interno do servidor"))
+        }
+    }
+
     async removeContact({ userId, cotactId }) {
         try {
             const contact = new Contact(userId, cotactId);

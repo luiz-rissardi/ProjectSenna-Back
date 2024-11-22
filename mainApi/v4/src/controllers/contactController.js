@@ -19,4 +19,8 @@ export class ContactController {
     deleteContact(params, body) {
         return this.#service.removeContact({ ...params, ...body })
     }
+
+    findContactsOfUser(params, body) {
+        return this.#service.findContactsOfUser({ ...params })
+    }
 }

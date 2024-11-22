@@ -60,29 +60,7 @@ export class UserRepository extends Repository {
             return Result.fail(RepositoryOperationError.create())
         }
     }
-
-    //pega o proprio contactId e procura o dados dos outros usuarios
-    async findMany(contactId) {
-        try {
-            const connection = await this.getConnection();
-            const [contacts] = await connection
-
-                .query(`
-                SELECT U.userName, U.photo, U.userId
-                FROM contact as C
-                inner join User as U
-                on C.userId = U.userId
-                WHERE C.contactId = ?;
-                `, [contactId])
-
-            connection.release();
-            return Result.ok(contacts);
-        } catch (error) {
-            loggers.error(`não foi possivel buscar contatos do usuário `, error);
-            return Result.fail(RepositoryOperationError.create())
-        }
-    }
-
+    
     /**
      * 
      * @param {User} user 
@@ -132,7 +110,7 @@ export class UserRepository extends Repository {
             await connection.query(`
                 UPDATE User 
                 SET isActive = ?
-                WHERE userId = ?`, [isActive,userId]);
+                WHERE userId = ?`, [isActive, userId]);
             connection.release();
             return Result.ok("usuario atualizado com sucesso");
         } catch (error) {
@@ -141,13 +119,28 @@ export class UserRepository extends Repository {
         }
     }
 
-
     async findByEmail(email) {
         try {
             const connection = await this.getConnection();
             const [[user]] = await connection.query(`SELECT * FROM user WHERE email = ?`, [email])
             connection.release();
             return Result.ok(user);
+        } catch (error) {
+            loggers.error("não foi possivel pegar usuário pelo email ", error);
+            return Result.fail(RepositoryOperationError.create())
+        }
+    }
+
+
+    async findMany(query, skip) {
+        try {
+            const connection = await this.getConnection();
+            const [users] = await connection.query(`
+                SELECT 
+                * FROM user
+                WHERE userName LIKE CONCAT('%', ?, '%') OR email LIKE CONCAT('%', ?, '%') LIMIT 5 OFFSET ? `, [query, query, Number(skip)])
+            connection.release();
+            return Result.ok(users);
         } catch (error) {
             loggers.error("não foi possivel pegar usuário pelo email ", error);
             return Result.fail(RepositoryOperationError.create())

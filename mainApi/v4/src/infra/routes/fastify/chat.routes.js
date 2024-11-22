@@ -37,14 +37,14 @@ export class ChatRoutes {
         );
 
 
-        this.#fastify.patch("/user/:userId/chat/:chatId/messages/clear",
+        this.#fastify.patch("/chat/:chatId/user/:userId/messages/clear",
             { preValidation: [this.#fastify.authenticate] },
             FastifyAdapterController.adapt(
                 this.#controller.clearMessages.bind(this.#controller)
             )
         );
 
-        this.#fastify.post("/chats/:chatId/participant/:userId",
+        this.#fastify.post("/chat/:chatId/participant/:userId",
             { preValidation: [this.#fastify.authenticate] },
             FastifyAdapterController.adapt(
                 this.#controller.addUserInChat.bind(this.#controller)

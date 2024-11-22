@@ -50,19 +50,6 @@ export class UserService {
         }
     }
 
-    async findContactsOfUser({ contactId }) {
-        try {
-            const result = await this.#userStrategy.findMany(contactId);
-            if (result.isSuccess) {
-                return Result.ok(result.getValue())
-            }
-            return Result.fail(result.error);
-        } catch (error) {
-            loggers.warn(UnexpectedError.create(error.message));
-            return Result.fail(UnexpectedError.create("erro interno do servidor"))
-        }
-    }
-
     async findUser({ email, password = "" }) {
         try {
             const passwordHash = EncryptService.encrypt(password);
@@ -159,7 +146,7 @@ export class UserService {
             const resultUser = await this.#userStrategy.findByEmail(email);
             if (resultUser.isSuccess) {
                 const user = resultUser.getValue();
-                if(user != undefined){
+                if (user != undefined) {
                     const newPasswordHash = EncryptService.encrypt(password);
                     user.passwordHash = newPasswordHash;
                     const resultFinaly = await this.#userStrategy.patchOne(user);
@@ -168,11 +155,25 @@ export class UserService {
                     } else {
                         return Result.fail(resultFinaly.error);
                     }
-                }else{
+                } else {
                     return Result.fail(UserNotFoundException.create());
                 }
             } else {
                 return Result.fail(resultUser.error);
+            }
+        } catch (error) {
+            loggers.warn(UnexpectedError.create(error));
+            return Result.fail(UnexpectedError.create("erro interno do servidor"))
+        }
+    }
+
+    async findUserByUserNameOrEmail({ query, skip = 0 }) {
+        try {
+            const result = await this.#userStrategy.findMany(query, skip);
+            if (result.isSuccess) {
+                return Result.ok(result.getValue());
+            } else {
+                return Result.fail(result.error);
             }
         } catch (error) {
             loggers.warn(UnexpectedError.create(error));
