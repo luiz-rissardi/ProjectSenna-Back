@@ -13,7 +13,7 @@ export class FastifyAdapterController {
         if (request.isMultipart()) {
           body = await this.processMultipart(request);
         }
-
+        
         const result = await callback(params, body);
         // Handler para fluxo de stream
         if (result?.isStream) {

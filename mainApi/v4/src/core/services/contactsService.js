@@ -13,9 +13,9 @@ export class ContactService {
         this.#contactStrategy = contactStrategy;
     }
 
-    async createContact({ userId, cotactId }) {
+    async createContact({ userId, contactId }) {
         try {
-            const contact = new Contact(userId, cotactId);
+            const contact = new Contact(userId, contactId);
             if (contact.isValid()){
                 const result = await this.#contactStrategy.insertOne(contact);
                 if(result.isSuccess){
@@ -45,9 +45,9 @@ export class ContactService {
         }
     }
 
-    async removeContact({ userId, cotactId }) {
+    async removeContact({ userId, contactId }) {
         try {
-            const contact = new Contact(userId, cotactId);
+            const contact = new Contact(userId, contactId);
             if (contact.isValid()){
                 const result = await this.#contactStrategy.deleteOne(contact);
                 if(result.isSuccess){

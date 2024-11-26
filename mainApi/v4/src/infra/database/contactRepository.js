@@ -37,7 +37,7 @@ export class ContactRepository extends Repository {
         try {
             const connection = await this.getConnection();
             await connection
-                .query("DELETE contact WHERE contactId = ? and userId = ?"
+                .query("DELETE FROM contact WHERE contactId = ? and userId = ?"
                     , [contact.contactId, contact.userId]
                 )
             connection.release();
