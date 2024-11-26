@@ -106,7 +106,7 @@ export class MessageRepository extends Repository {
                SELECT 
                 M.messageId AS messageId,
                 U.userName,
-                M.dateMessage,
+                M.dateSender,
                 M.messageType,
                 M.originLanguage,
                 M.chatId,
@@ -117,6 +117,7 @@ export class MessageRepository extends Repository {
                 INNER JOIN user as U
                 on U.userId = M.userId
                 WHERE chatId = ?
+                ORDER BY M.dateSender ASC 
                 LIMIT 50 OFFSET ?
                 `, [chatId, Number(skipMessage)])
 

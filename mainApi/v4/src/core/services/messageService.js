@@ -45,9 +45,9 @@ export class MessageService {
         }
     }
 
-    async getMessages({ chatId, skipMessage = 0}) {
+    async getMessages({ chatId, skipMessages = 0}) {
         try {
-            const result = await this.#messageStrategy.findMany(chatId,skipMessage);
+            const result = await this.#messageStrategy.findMany(chatId,skipMessages);
             if (result.isSuccess) {
                 return Result.ok(result.getValue())
             } else {
