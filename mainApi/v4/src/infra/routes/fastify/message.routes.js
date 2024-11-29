@@ -35,7 +35,7 @@ export class MessageRoutes {
         );
 
         // mudar status da mensagem para read
-        this.#fastify.patch("/chat/messages/read",
+        this.#fastify.post("/chat/messages/read",
             { preValidation: [this.#fastify.authenticate] },
             FastifyAdapterController.adapt(
                 this.#controller.readMessages.bind(this.#controller)

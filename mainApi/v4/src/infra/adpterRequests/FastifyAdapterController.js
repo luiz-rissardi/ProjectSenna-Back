@@ -5,7 +5,7 @@ export class FastifyAdapterController {
 
   static adapt(callback) {
     return async (request, reply) => {
-      let body = {};
+      let body = request.body;
       let params = request.params;
 
       try {

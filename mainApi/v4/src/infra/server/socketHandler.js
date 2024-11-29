@@ -21,12 +21,16 @@ export class SocketHandler {
 
             // adicionar chat quando outro usuario quer conversar com ele
             socket.on("new-chat", (chatId) => {
-                socket.join(chatId);
+                if (!socket.rooms.has(chatId)) {
+                    socket.join(chatId);
+                }
             })
 
             socket.on("create-chat", (chatId, userId) => {
-                socket.join(chatId);
-                this.createChat(userId,chatId);
+                if (!socket.rooms.has(chatId)) {
+                    socket.join(chatId);
+                    this.createChat(userId, chatId);
+                }
             })
 
             // sair da conversa / bloquear grupo forum e etc..
@@ -35,19 +39,18 @@ export class SocketHandler {
             })
 
             // escutar os chatsRoom que o usuario esta
-            socket.on("listen-chats",
-                /**
-                * @param {Chat[]} chats
-                */
+            socket.on("enter-rooms-chat",
                 (chats) => {
-                    chats.forEach(chat => {
-                        socket.join(chat.chatId)
+                    chats.forEach(chatId => {
+                        if (!socket.rooms.has(chatId)) {
+                            socket.join(chatId)
+                        }
                     })
                 });
 
             // enviar mensagem para o chat
-            socket.on("send-message", (chatId, message) => {
-                this.sendMessageToRoom(chatId, message);
+            socket.on("send-message", ({message}) => {
+                this.sendMessageToRoom(message.chatId, message);
             })
 
             //expulsar usuario de grupos e forums
@@ -58,20 +61,16 @@ export class SocketHandler {
         })
     }
 
-    /**
-     * @param {string} chatId 
-     * @param { Message } message 
-     */
     sendMessageToRoom(chatId, message) {
-        this.#socketServer.to(chatId).emit("message", { message, chatId })
+        this.#socketServer.to(chatId).emit("message",message)
     }
 
     /**
      * @param {string} userId 
-     * @param { ChatData } chatData 
+     * @param { any } chatData 
      */
     createChat(userId, chatData) {
-        this.#socketServer.to(userId).emit("new-chat", chatData.chatId)
+        this.#socketServer.to(userId).emit("new-chat", chatData)
     }
 
     leaveChat(userId, chatId) {
