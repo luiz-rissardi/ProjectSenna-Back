@@ -118,7 +118,7 @@ export class MessageRepository extends Repository {
                 on U.userId = M.userId
                 WHERE chatId = ?
                 ORDER BY M.dateSender ASC 
-                LIMIT 50 OFFSET ?
+                
                 `, [chatId, Number(skipMessage)])
 
             connection.release();

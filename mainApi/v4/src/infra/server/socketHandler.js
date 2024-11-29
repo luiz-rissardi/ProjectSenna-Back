@@ -26,7 +26,7 @@ export class SocketHandler {
                 }
             })
 
-            socket.on("create-chat", (chatId, userId) => {
+            socket.on("create-chat", ({ chatId, userId }) => {
                 if (!socket.rooms.has(chatId)) {
                     socket.join(chatId);
                     this.createChat(userId, chatId);
@@ -49,31 +49,36 @@ export class SocketHandler {
                 });
 
             // enviar mensagem para o chat
-            socket.on("send-message", ({message}) => {
+            socket.on("send-message", ({ message }) => {
                 this.sendMessageToRoom(message.chatId, message);
             })
 
             //expulsar usuario de grupos e forums
-            socket.on("kick-user", (chatId, userId) => {
+            socket.on("kick-user", ({ chatId, userId }) => {
                 this.leaveChat(userId, chatId)
+            })
+
+
+            socket.on("read-messages", ({ chatId, userId }) => {
+                this.readMessages(userId, chatId)
             })
 
         })
     }
 
     sendMessageToRoom(chatId, message) {
-        this.#socketServer.to(chatId).emit("message",message)
+        this.#socketServer.to(chatId).emit("message", message)
     }
 
-    /**
-     * @param {string} userId 
-     * @param { any } chatData 
-     */
     createChat(userId, chatData) {
         this.#socketServer.to(userId).emit("new-chat", chatData)
     }
 
     leaveChat(userId, chatId) {
         this.#socketServer.to(userId).emit("leave-chat", chatId)
+    }
+
+    readMessages(userId, chatId) {
+        this.#socketServer.to(userId).emit("read-messages", chatId )
     }
 }
