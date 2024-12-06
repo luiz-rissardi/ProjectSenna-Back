@@ -3,7 +3,6 @@ import fastifyCors from "@fastify/cors";
 import fastifyHelmet from '@fastify/helmet';
 import dotenv from 'dotenv';
 import fastifyMultipart from '@fastify/multipart';
-// import fastifyMonitor from "fastify-status"
 
 import { loggers } from '../../util/logger.js';
 import { MessageFileRoutesFastify } from '../routes/messageFastify.routes.js';
@@ -17,10 +16,10 @@ const app = fastify();
 app.register(fastifyHelmet);
 app.register(fastifyMultipart);
 app.register(fastifyCors, {
-    origin: 'https://www.teste/domain', // Permite todos os domínios, ajuste conforme necessário
+    origin: "*", // Permite todos os domínios, ajuste conforme necessário
     methods: ['GET', 'POST', 'DELETE'], // Métodos permitidos
     allowedHeaders: ['Content-Type', 'Authorization'], // Cabeçalhos permitidos
-    credentials: true
+    exposedHeaders: ['XXX-token-auth']
 });
 
 // Rotas

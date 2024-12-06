@@ -41,7 +41,7 @@ export class MessageFileMysql extends Repository {
     async findOne(messageId) {
         try {
             const connection = await this.getConnection();
-            const [messageFile] = await connection
+            const [[messageFile]] = await connection
                 .promise()
                 .query(`
                     SELECT * FROM messageFile

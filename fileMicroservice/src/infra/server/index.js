@@ -5,7 +5,7 @@ import bodyParser from "body-parser";
 import express from "express";
 import dotenv from "dotenv";
 import { loggers } from "../../util/logger.js";
-import { MessageFileRoutes } from "../routes/message.routes.js";
+import { MessageFileRoutes } from "../routes/messageExpress.routes.js";
 import expressMonitor from "express-status-monitor"
 
 

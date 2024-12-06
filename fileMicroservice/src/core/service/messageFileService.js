@@ -29,9 +29,9 @@ export class MessageFileService {
         }
     }
 
-    async sendMessageFile({ messageArrayBuffer, fileName, messageId }) {
+    async sendMessageFile({ arrayBuffer, fileName, messageId }) {
         try {
-            const message = new MessageFile(messageId, messageArrayBuffer, fileName);
+            const message = new MessageFile(messageId, arrayBuffer, fileName);
             if (message.isValid()) {
                 const result = await this.#messageFileStrategy.insertOne(message);
                 if (result.isSuccess) {
