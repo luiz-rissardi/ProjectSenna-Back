@@ -20,11 +20,11 @@ export class SocketHandler {
             socket.join(userId);
 
             // adicionar chat quando outro usuario quer conversar com ele
-            socket.on("new-chat", (chatId) => {
-                if (!socket.rooms.has(chatId)) {
-                    socket.join(chatId);
-                }
-            })
+            // socket.on("new-chat", (chatId) => {
+            //     if (!socket.rooms.has(chatId)) {
+            //         socket.join(chatId);
+            //     }
+            // })
 
             socket.on("create-chat", ({ chatId, userId }) => {
                 if (!socket.rooms.has(chatId)) {
@@ -57,6 +57,10 @@ export class SocketHandler {
                 this.updateMessageToRoom(message.chatId, message);
             })
 
+            socket.on("delete-message", ({ message }) => {
+                this.deleteMessageToRoom(message.chatId, message);
+            })
+
             //expulsar usuario de grupos e forums
             socket.on("kick-user", ({ chatId, userId }) => {
                 this.leaveChat(userId, chatId)
@@ -76,6 +80,10 @@ export class SocketHandler {
 
     updateMessageToRoom(chatId, message) {
         this.#socketServer.to(chatId).emit("update-message", message)
+    }
+
+    deleteMessageToRoom(chatId, message) {
+        this.#socketServer.to(chatId).emit("delete-message", message)
     }
 
     createChat(userId, chatData) {
