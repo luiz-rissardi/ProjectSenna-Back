@@ -82,10 +82,10 @@ export class MessageService {
         }
     }
 
-    async updateMessage({ messageId, message, originLanguage }) {
+    async updateMessage({ messageId, messageText, language }) {
         try {
             const dateSender = DateFormat(new Date().toISOString());
-            const result = await this.#messageStrategy.patchOne(messageId, dateSender, message, originLanguage);
+            const result = await this.#messageStrategy.patchOne(messageId, dateSender, messageText, language);
             if (result.isSuccess) {
                 return Result.ok("mensagem editada com sucesso")
             } else {

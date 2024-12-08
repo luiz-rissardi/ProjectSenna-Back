@@ -67,7 +67,7 @@ export class MessageRepository extends Repository {
             await connection
                 .query(`
                 UPDATE message
-                SET dateSender = ?, message = ?, originLanguage = ?
+                SET dateSender = ?, message = ?, originLanguage = ?, status='unread'
                 WHERE messageId = ?
                 `, [
                     dateSender, message, originLanguage,

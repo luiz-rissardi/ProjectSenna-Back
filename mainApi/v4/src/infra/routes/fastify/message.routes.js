@@ -42,7 +42,7 @@ export class MessageRoutes {
             )
         );
 
-        this.#fastify.patch("/chat/message/:messageId",
+        this.#fastify.post("/chat/message/:messageId",
             { preValidation: [this.#fastify.authenticate] },
             FastifyAdapterController.adapt(
                 this.#controller.updateMessage.bind(this.#controller)

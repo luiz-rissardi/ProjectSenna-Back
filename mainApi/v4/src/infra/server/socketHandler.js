@@ -53,6 +53,10 @@ export class SocketHandler {
                 this.sendMessageToRoom(message.chatId, message);
             })
 
+            socket.on("update-message", ({ message }) => {
+                this.updateMessageToRoom(message.chatId, message);
+            })
+
             //expulsar usuario de grupos e forums
             socket.on("kick-user", ({ chatId, userId }) => {
                 this.leaveChat(userId, chatId)
@@ -68,6 +72,10 @@ export class SocketHandler {
 
     sendMessageToRoom(chatId, message) {
         this.#socketServer.to(chatId).emit("message", message)
+    }
+
+    updateMessageToRoom(chatId, message) {
+        this.#socketServer.to(chatId).emit("update-message", message)
     }
 
     createChat(userId, chatData) {
