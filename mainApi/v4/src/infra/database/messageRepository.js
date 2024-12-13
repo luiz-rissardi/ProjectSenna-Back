@@ -97,29 +97,34 @@ export class MessageRepository extends Repository {
         }
     }
 
-    async findMany(chatId, skipMessage) {
+    async findMany(chatId, userId, skipMessage) {
         try {
             // botar um skip para pular as ja pegas
             const connection = await this.getConnection();
             const [messages] = await connection
                 .query(`
-               SELECT 
-                M.messageId AS messageId,
-                U.userName,
-                M.dateSender,
-                M.messageType,
-                M.originLanguage,
-                M.chatId,
-                M.message,
-				M.status,
-                M.userId
-                FROM message as M
-                INNER JOIN user as U
-                on U.userId = M.userId
-                WHERE chatId = ?
-                ORDER BY M.dateSender ASC 
-                
-                `, [chatId, Number(skipMessage)])
+                                   SELECT 
+                        M.messageId AS messageId,
+                        U.userName,
+                        M.dateSender,
+                        M.messageType,
+                        M.originLanguage,
+                        M.chatId,
+                        M.message,
+                        M.status,
+                        M.userId
+                    FROM message AS M
+                    INNER JOIN user AS U
+                        ON U.userId = M.userId
+                    INNER JOIN chatData AS CD
+                        ON CD.chatId = M.chatId AND CD.userId = ?
+                    WHERE M.chatId = ? AND 
+                    M.dateSender < COALESCE(CD.dateOfBlocking, '9999-12-31') AND
+                    M.dateSender > COALESCE(CD.lastClear, '0001-01-01')
+                    ORDER BY M.dateSender DESC
+                    LIMIT 50
+                    OFFSET ?;
+                `, [userId,chatId, Number(skipMessage)])
 
             connection.release();
 

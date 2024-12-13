@@ -33,9 +33,14 @@ export class SocketHandler {
                 }
             })
 
-            // sair da conversa / bloquear grupo forum e etc..
+            // sair da conversa / bloquear chat e etc..
             socket.on("leave-chat", (chatId) => {
                 socket.leave(chatId)
+            })
+
+            // entrar / desbloquar chat
+            socket.on("enter-chat", (chatId) => {
+                socket.join(chatId)
             })
 
             // escutar os chatsRoom que o usuario esta

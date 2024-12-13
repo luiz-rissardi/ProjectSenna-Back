@@ -37,7 +37,7 @@ export class ChatRoutes {
         );
 
 
-        this.#fastify.patch("/chat/:chatId/user/:userId/messages/clear",
+        this.#fastify.post("/chat/:chatId/user/:userId/messages/clear",
             { preValidation: [this.#fastify.authenticate] },
             FastifyAdapterController.adapt(
                 this.#controller.clearMessages.bind(this.#controller)

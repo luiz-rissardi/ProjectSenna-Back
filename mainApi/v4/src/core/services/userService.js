@@ -28,7 +28,7 @@ export class UserService {
             if (!resultValidate.isSuccess) {
                 return Result.fail(resultValidate.error)
             }
-            const user = new User(userName, isActive, email, arrayBuffer, userDescription, userId, lastOnline, language, contactId, password);
+            const user = new User(userName, isActive, email, arrayBuffer, userDescription, userId, lastOnline, language, contactId, password, true);
             user.photo = Buffer.from(arrayBuffer)
 
             if (user.isValid()) {
@@ -72,7 +72,7 @@ export class UserService {
         }
     }
 
-    async updateUser({ userName, userDescription, email, arrayBuffer = new ArrayBuffer(), languages, isActive, password, userId }) {
+    async updateUser({ userName, userDescription, email, arrayBuffer = new ArrayBuffer(), languages, isActive, password, userId, readMessages }) {
         const lastOnline = DateFormat(new Date().toISOString())
         try {
             const resultValidate = await this.#EmailAlreadyExist(email, userId);
@@ -80,7 +80,7 @@ export class UserService {
                 return Result.fail(resultValidate.error)
             }
 
-            const user = new User(userName, isActive, email, arrayBuffer, userDescription, userId, lastOnline, languages, null, password)
+            const user = new User(userName, isActive, email, arrayBuffer, userDescription, userId, lastOnline, languages, null, password, readMessages)
             user.photo = Buffer.from(arrayBuffer)
 
             if (user.isValid()) {

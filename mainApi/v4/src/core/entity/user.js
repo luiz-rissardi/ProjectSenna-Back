@@ -17,7 +17,7 @@ export class User {
      * @param {string} contactId 
      * @param {string} passwordHash 
      */
-    constructor(userName = "", isActive, email, photo, userDescription, userId, lastOnline, languages = null, contactId = null, password = "") {
+    constructor(userName = "", isActive, email, photo, userDescription, userId, lastOnline, languages = null, contactId = null, password = "", readMessages = true) {
         this.userName = userName;
         this.isActive = isActive;
         this.email = email;
@@ -26,9 +26,11 @@ export class User {
         this.contactId = contactId;
         this.languages = languages;
         this.lastOnline = lastOnline;
-        if(!password.trim() == ""){
+        this.readMessages = readMessages
+        
+        if (!password.trim() == "") {
             this.passwordHash = EncryptService.encrypt(password);
-        }else{
+        } else {
             this.passwordHash = ""
         }
         this.userId = userId;
@@ -41,7 +43,7 @@ export class User {
 
     #validatePassword(password) {
         const regexPasswordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
-        if ((password != undefined && password.trim() != "" ) && regexPasswordPattern.test(password) == false) {
+        if ((password != undefined && password.trim() != "") && regexPasswordPattern.test(password) == false) {
             this.#notificationContext.addNotification({
                 name: "password", message:
                     `senha invalida, a senha deve conter no minimo: - 8 digitos - 1 carater especial - 1 letra maiuscula - 1 letra minuscula - 1 numero`

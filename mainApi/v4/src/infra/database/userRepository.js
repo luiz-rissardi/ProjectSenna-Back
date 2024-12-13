@@ -39,8 +39,8 @@ export class UserRepository extends Repository {
             await connection
 
                 .query(`
-                INSERT INTO User (userName, isActive, photo, email, lastOnline, languages, userDescription, passwordHash, contactId, userId)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO User (userName, isActive, photo, email, lastOnline, languages, userDescription, passwordHash, contactId, userId, readMessages)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             `, [
                     user.userName,
                     user.isActive,
@@ -51,7 +51,8 @@ export class UserRepository extends Repository {
                     user.userDescription,
                     user.passwordHash,
                     user.contactId,
-                    user.userId
+                    user.userId,
+                    user.readMessages
                 ]);
             connection.release();
             return Result.ok(user);
