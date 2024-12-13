@@ -2,12 +2,10 @@ import requests
 import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from dotenv import load_dotenv
 import logging
 
 # Carregar variáveis de ambiente
-load_dotenv()
-DEEPL_API_KEY = os.getenv("DEEPL_API_KEY")
+DEEPL_API_KEY = "62bbde3e-4c12-4954-be15-45d4c358d069:fx"
 
 # Configuração de logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
