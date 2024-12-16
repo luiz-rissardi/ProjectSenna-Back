@@ -65,7 +65,7 @@ app.get("/api/email/user/:userId/confirm", async (req, reply) => {
 
 
 // Iniciar o servidor
-const port = process.env.PORT || 8729;
+const port = process.env.PORT || 8728;
 app.listen({
     port: port
 }, (err) => {
