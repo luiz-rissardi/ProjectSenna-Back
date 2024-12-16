@@ -12,17 +12,17 @@ export class Message {
      * @param {string} userId 
      * @param {string} chatId 
      * @param {number} messageId 
-     * @param {string} originLanguessage
+     * @param {string} language
      * @param {string} messageType 
      * @param {string} status 
      */
-    constructor(message, dateSender, userId, chatId, messageId, originLangue, messageType, status) {
+    constructor(message, dateSender, userId, chatId, messageId, language, messageType, status) {
         this.message = message;
         this.dateSender = dateSender;
         this.userId = userId;
         this.chatId = chatId;
         this.messageId = messageId;
-        this.originLangue = originLangue;
+        this.language = language;
         this.messageType = messageType;
         this.status = status;
     }

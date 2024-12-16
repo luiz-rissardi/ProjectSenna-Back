@@ -66,6 +66,7 @@ export class MessageService {
             const status = "unread";
 
             const message = new Message(messageText, dateSenderMessage, userId, chatId, messageId, language, messageType, status);
+            
             if (message.isValid()) {
                 const result = await this.#messageStrategy.insertOne(message);
                 if (result.isSuccess) {

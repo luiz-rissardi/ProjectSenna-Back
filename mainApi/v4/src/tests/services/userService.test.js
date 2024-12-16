@@ -29,24 +29,6 @@ describe("User Service => Unit tests", () => {
         mockFunction.mockRestore();
     })
 
-    it("Deve pegar os contatos do usuário com sucesso", async () => {
-
-        const result = await service.findContactsOfUser({ contactId: "any" });
-
-        expect(result.error).toBe(null)
-        expect(result.isSuccess).toBe(true)
-        expect(result.getValue()).toEqual([{
-            "userName": "roberto",
-            "photo": null,
-            "userId": "55ce460f-9e24-4cec-8aaf-4c79e499bef0"
-        },
-        {
-            "userName": "antonio",
-            "photo": null,
-            "userId": "ac9549fe-4f12-4a8c-9849-f7a8b192a246"
-        }])
-    })
-
     it("Deve pegar o usuário com sucesso", async () => {
 
         const result = await service.findUser({ email: "any@gmail.com", password: "Luiz2006@" });
@@ -73,7 +55,7 @@ describe("User Service => Unit tests", () => {
             isActive: true,
             email: "emilioRufolfoFey@gmail.com",
             lastOnline: "2024-07-26 09:13:32",
-            languages: "pt-br",
+            language: "pt-br",
             userDescription: "sou programador sou e engenheiro de software",
             password: "Luiz2006@",
             userId: "5d6432e3-3902-44d1-ae89-ee289e2189aa"
@@ -121,13 +103,13 @@ describe("User Service => Unit tests", () => {
         })
 
         expect(result.error).toEqual({
-            message: "nome de usuario ou senha invalidos",
-            name: "InvalidCredentialsException"
+            message: 'email de usuario ou senha invalidos',
+            name: 'InvalidCredentialsException'
         })
         expect(result.isSuccess).toBe(false)
 
         mockObject.mockRestore();
     })
-
-
 })
+
+

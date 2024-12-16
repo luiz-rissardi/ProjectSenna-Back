@@ -13,7 +13,7 @@ describe('Contact Entity => Unit test', () => {
         expect(contact.isValid()).toBe(false); // Deve haver notificação de userId inválido
         expect(contact.getNotifications()[0]).toEqual({
             name: "userId",
-            message: "o contactId é inválido"
+            message: "o userId é inválido"
         });
     });
 
@@ -31,7 +31,7 @@ describe('Contact Entity => Unit test', () => {
         expect(contact.isValid()).toBe(false); // Deve haver notificação de userId indefinido
         expect(contact.getNotifications()[0]).toEqual({
             name: "userId",
-            message: "o contactId é inválido"
+            message: "o userId é inválido"
         });
     });
 

@@ -7,7 +7,7 @@
   "scripts": {
     "start-express": "npx nodemon src/infra/server/express/index.js",
     "start-fastify": "npx nodemon src/infra/server/fastify/index.js",
-    "test": "jest",
+    "test": "jest --verbose",
     "cluster": "npx nodemon src/infra/server/cluster.js",
     "climem": "npx climem 8999",
     "doc": "npx clinic doctor -- node src/infra/server/express/index.js",

@@ -20,11 +20,11 @@ export class ContactMother {
     }
 
     static createContactWithoutUserId() {
-        return new Contact(undefined, v4());
+        return new Contact(undefined, "bd2e9856-1dfe-4f91-aa12-2357520a9618");
     }
 
     static createContactWithoutContactId() {
-        return new Contact(v4(), undefined);
+        return new Contact("bd2e9856-1dfe-4f91-aa12-2357520a9618", undefined);
     }
 }
 

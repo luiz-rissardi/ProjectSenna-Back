@@ -15,17 +15,6 @@ export class UserRepositoryMock {
         userId: "5d6432e3-3902-44d1-ae89-ee289e2189aa"
     }
 
-    #contacts = [{
-        "userName": "roberto",
-        "photo": null,
-        "userId": "55ce460f-9e24-4cec-8aaf-4c79e499bef0"
-    },
-    {
-        "userName": "antonio",
-        "photo": null,
-        "userId": "ac9549fe-4f12-4a8c-9849-f7a8b192a246"
-    }]
-
     constructor() {
     }
 
@@ -39,10 +28,6 @@ export class UserRepositoryMock {
 
     async patchOne(user) {
         return Result.ok(user);
-    }
-
-    async findMany(contactId) {
-        return Result.ok(this.#contacts);
     }
 
     async findByEmail(email){
