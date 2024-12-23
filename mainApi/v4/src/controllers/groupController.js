@@ -20,4 +20,8 @@ export class GroupController {
         return this.#service.createGroup({ ...params, ...body });
     }
 
+    findGroups(params, body) {
+        return this.#service.getGroups({ ...params, ...body });
+    }
+
 }

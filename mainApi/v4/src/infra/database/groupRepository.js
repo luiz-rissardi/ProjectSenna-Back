@@ -68,4 +68,34 @@ export class GroupRepository extends Repository {
             return Result.fail(RepositoryOperationError.create())
         }
     }
+
+    async findMany(userId) {
+        try {
+            const connection = await this.getConnection();
+            const [group] = await connection
+                .query(`
+                        SELECT 
+                        GD.groupPhoto, 
+                        GD.groupName, 
+                        GD.groupDescription, 
+                        GD.chatId, 
+                        GD.chatType, 
+                        CT.memberType, 
+                        CT.lastClear, 
+                        CT.isActive, 
+                        CT.chatId, 
+                        CT.dateOfBlocking
+                    FROM groupData AS GD
+                    INNER JOIN chatData AS CT 
+                        ON CT.userId = ?
+                    WHERE GD.chatId = CT.chatId;
+                `, [userId]);
+
+            connection.release();
+            return Result.ok(group);
+        } catch (error) {
+            loggers.error("não foi possivel pegar um grupo", error);
+            return Result.fail(RepositoryOperationError.create())
+        }
+    }
 }

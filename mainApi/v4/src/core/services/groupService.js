@@ -14,6 +14,20 @@ export class GroupService {
         this.#groupStrategy = groupStrategy;  
     }
 
+    async getGroups({ userId }){
+        try {
+            const result = await this.#groupStrategy.findMany(userId);
+            if(result.isSuccess){
+                return Result.ok(result.getValue())
+            }else{
+                return Result.fail(result.error);
+            }
+        } catch (error) {
+            loggers.warn(UnexpectedError.create(error.message));
+            return Result.fail(UnexpectedError.create("erro interno do servidor"))
+        }
+    }
+
     async createGroup({groupName, groupDescription, arrayBuffer}) {
         try {
             const chatId = v4();

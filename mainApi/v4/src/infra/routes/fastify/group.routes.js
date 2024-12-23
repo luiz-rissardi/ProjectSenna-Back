@@ -26,10 +26,17 @@ export class GroupRoutes {
             )
         );
 
-        this.#fastify.patch("/group",
+        this.#fastify.put("/group",
             { preValidation: [this.#fastify.authenticate] },
             FastifyAdapterController.adapt(
                 this.#controller.updateGroup.bind(this.#controller)
+            )
+        );
+
+        this.#fastify.get("/user/:userId/group",
+            { preValidation: [this.#fastify.authenticate] },
+            FastifyAdapterController.adapt(
+                this.#controller.findGroups.bind(this.#controller)
             )
         );
     }

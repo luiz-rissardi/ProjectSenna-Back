@@ -55,15 +55,15 @@ export class SocketHandler {
 
             // enviar mensagem para o chat
             socket.on("send-message", ({ message }) => {
-                this.sendMessageToRoom(message.chatId, message);
+                this.sendMessageToRoom(message?.chatId, message);
             })
 
             socket.on("update-message", ({ message }) => {
-                this.updateMessageToRoom(message.chatId, message);
+                this.updateMessageToRoom(message?.chatId, message);
             })
 
             socket.on("delete-message", ({ message }) => {
-                this.deleteMessageToRoom(message.chatId, message);
+                this.deleteMessageToRoom(message?.chatId, message);
             })
 
             //expulsar usuario de grupos e forums
@@ -72,8 +72,8 @@ export class SocketHandler {
             })
 
 
-            socket.on("read-messages", ({ chatId, userId }) => {
-                this.readMessages(userId, chatId)
+            socket.on("read-messages", ({ chatId, userId, readMessages }) => {
+                this.readMessages(userId, chatId, readMessages)
             })
 
         })
@@ -99,7 +99,7 @@ export class SocketHandler {
         this.#socketServer.to(userId).emit("leave-chat", chatId)
     }
 
-    readMessages(userId, chatId) {
-        this.#socketServer.to(userId).emit("read-messages", chatId )
+    readMessages(userId, chatId, readMessages) {
+        this.#socketServer.to(userId).emit("read-messages", { chatId, readMessages })
     }
 }
