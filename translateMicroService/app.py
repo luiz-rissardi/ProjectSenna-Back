@@ -46,7 +46,8 @@ def traduzir():
     try:
         dados = request.json
         textos = dados.get("texts", [])
-        idioma_de_destino = dados.get("dest_language", "").lower()
+        idioma_de_destino = dados.get("target_language", "").lower()
+        print(idioma_de_destino)
 
         if not isinstance(textos, list) or not all(isinstance(texto, str) for texto in textos):
             return jsonify({"erro": "O campo 'textos' deve ser uma lista de strings."}), 400
