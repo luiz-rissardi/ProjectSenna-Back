@@ -37,7 +37,6 @@ export class UserRepository extends Repository {
         try {
             const connection = await this.getConnection();
             await connection
-
                 .query(`
                 INSERT INTO User (userName, isActive, photo, email, lastOnline, languages, userDescription, passwordHash, contactId, userId, readMessages)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -89,7 +88,6 @@ export class UserRepository extends Repository {
                 }, "")
                 .replace(/,\s*$/, '');  // Remove a última vírgula e qualquer espaço em branco
 
-            // console.log(user.photo);
             await connection
                 .query(`
                     UPDATE User 

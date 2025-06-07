@@ -26,7 +26,7 @@ export class GroupRoutes {
             )
         );
 
-        this.#fastify.put("/group",
+        this.#fastify.post("/group/:chatId",
             { preValidation: [this.#fastify.authenticate] },
             FastifyAdapterController.adapt(
                 this.#controller.updateGroup.bind(this.#controller)

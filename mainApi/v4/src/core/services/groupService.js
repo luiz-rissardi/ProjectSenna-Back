@@ -32,6 +32,7 @@ export class GroupService {
         try {
             const chatId = v4();
             const group = new Group(chatId, groupName, groupDescription, arrayBuffer);
+            group.groupPhoto = Buffer.from(arrayBuffer);
             if (group.isValid()) {
                 const result = await this.#groupStrategy.insertOne(group);
                 if (result.isSuccess) {
@@ -48,14 +49,15 @@ export class GroupService {
         }
     }
 
-    async updateGroup({chatId, groupName, groupDescription, groupPhoto}) {
+    async updateGroup({chatId, groupName, groupDescription, arrayBuffer}) {
         try {
             const resultValidate = await this.#groupExists(chatId);
             if (!resultValidate.isSuccess) {
                 return Result.fail(resultValidate.error)
             }
 
-            const group = new Group(chatId, groupName, groupDescription, groupPhoto);
+            const group = new Group(chatId, groupName, groupDescription, arrayBuffer);
+            group.groupPhoto = Buffer.from(arrayBuffer);
             if (group.isValid()) {
                 const result = await this.#groupStrategy.patchOne(group);
                 if (result.isSuccess) {

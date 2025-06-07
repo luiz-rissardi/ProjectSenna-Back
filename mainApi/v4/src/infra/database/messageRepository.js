@@ -48,7 +48,7 @@ export class MessageRepository extends Repository {
                 VALUES(?,?,?,?,?,?,?,?)
                 `, [
                     message.messageId, message.dateSender,
-                    message.messageType, message.language,
+                    message.messageType, message.languages,
                     message.chatId, message.message,
                     message.userId, message.status
                 ]);
@@ -67,7 +67,7 @@ export class MessageRepository extends Repository {
             await connection
                 .query(`
                 UPDATE message
-                SET dateSender = ?, message = ?, language = ?, status='unread'
+                SET dateSender = ?, message = ?, languages = ?, status='unread'
                 WHERE messageId = ?
                 `, [
                     dateSender, message, originLanguage,
@@ -108,7 +108,7 @@ export class MessageRepository extends Repository {
                         U.userName,
                         M.dateSender,
                         M.messageType,
-                        M.language,
+                        M.languages,
                         M.chatId,
                         M.message,
                         M.status,

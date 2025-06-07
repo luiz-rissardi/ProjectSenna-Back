@@ -12,7 +12,7 @@ describe("Message Service => unit test", () => {
             chatId: v4(),
             userId: v4(),
             messageText: "ola tudo bem com voce?",
-            language: "pt-br",
+            languages: "pt-br",
             messageType: "text"
         }
         const result = await service.saveMessage(message);

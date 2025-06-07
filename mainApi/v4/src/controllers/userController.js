@@ -46,7 +46,6 @@ export class UserController {
             isStream:true,
             streamFlow
         }
-        // return this.#service.findUserByUserNameOrEmail({ ...params })
     }
 
     #executeActionStream(data) {

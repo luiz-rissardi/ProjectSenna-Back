@@ -15,12 +15,11 @@ export class GroupRepository extends Repository {
      */
     async insertOne(group) {
         try {
-            const buffer = Buffer.from(group.groupPhoto);
             const connection = await this.getConnection();
             await connection
                 .query(`
                 INSERT INTO groupData VALUES(?,?,?,?,?)
-                `, [buffer, group.groupName, group.groupDescription, group.chatId,group.chatType]);
+                `, [group.groupPhoto, group.groupName, group.groupDescription, group.chatId,group.chatType]);
 
             connection.release();
             return Result.ok(group);

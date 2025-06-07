@@ -1,6 +1,5 @@
 import { Result } from "../../infra/errorHandling/result.js";
 import { UnexpectedError } from "../aplicationException/appErrors.js";
-import { ChatNotFoundException } from "../aplicationException/domainException.js";
 import { loggers } from "../../util/logger.js";
 import { randomUUID as v4 } from "crypto"
 import { Message } from "../entity/message.js";
@@ -51,7 +50,7 @@ export class MessageService {
             if (result.isSuccess) {
                 return Result.ok(result.getValue())
             } else {
-                return Result.fail(ChatNotFoundException.create());
+                return Result.fail(result.error);
             }
         } catch (error) {
             loggers.warn(UnexpectedError.create(error.message));
@@ -59,13 +58,13 @@ export class MessageService {
         }
     }
 
-    async saveMessage({ messageText, userId, chatId, language, messageType = "text" }) {
+    async saveMessage({ messageText, userId, chatId, languages, messageType = "text" }) {
         try {
             const dateSenderMessage = DateFormat(new Date().toISOString());
             const messageId = v4();
             const status = "unread";
 
-            const message = new Message(messageText, dateSenderMessage, userId, chatId, messageId, language, messageType, status);
+            const message = new Message(messageText, dateSenderMessage, userId, chatId, messageId, languages, messageType, status);
             
             if (message.isValid()) {
                 const result = await this.#messageStrategy.insertOne(message);
@@ -83,10 +82,10 @@ export class MessageService {
         }
     }
 
-    async updateMessage({ messageId, messageText, language }) {
+    async updateMessage({ messageId, messageText, languages }) {
         try {
             const dateSender = DateFormat(new Date().toISOString());
-            const result = await this.#messageStrategy.patchOne(messageId, dateSender, messageText, language);
+            const result = await this.#messageStrategy.patchOne(messageId, dateSender, messageText, languages);
             if (result.isSuccess) {
                 return Result.ok("mensagem editada com sucesso")
             } else {

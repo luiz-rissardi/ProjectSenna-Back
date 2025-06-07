@@ -30,7 +30,7 @@ app.register(fastifyHelmet);
 app.register(multipart);
 app.register(fastifyCors, {
     origin: "*", // Permite todos os domínios, ajuste conforme necessário
-    methods: ['GET', 'POST', 'DELETE'], // Métodos permitidos
+    methods: ['GET', 'POST', 'DELETE','PATCH','PUT'], // Métodos permitidos
     allowedHeaders: ['Content-Type', 'Authorization'], // Cabeçalhos permitidos
     exposedHeaders: ['XXX-token-auth']
 });
@@ -76,17 +76,3 @@ function setupRoutes(fastifyApp) {
 
 export default app
 
-
-// app.post('/user2', { preValidation: [app.authenticate] }, async (req, reply) => {
-//     // Use req.file() para pegar o arquivo
-
-
-//     // Para acessar os outros campos do formulário
-
-
-//     console.log('Received body:', req.body);
-
-//     // Aqui você pode fazer o que precisa com os dados
-
-//     reply.send({ status: 'success' });
-// });
